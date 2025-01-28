@@ -1,68 +1,233 @@
+/* Font Family */
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("./assets/font/PretendardVariable.woff2") format("woff2");
+}
+
+/* Typography */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Text Size */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Web */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Display */
+  --web-display1: 50px;
+
+  /* Header */
+  --web-header1: 36px;
+  --web-header2: 32px;
+  --web-header3: 30px;
+
+  /* Title */
+  --web-title1: 28px;
+  --web-title2: 26px;
+  --web-title3: 24px;
+  --web-title4: 22px;
+  --web-title5: 20px;
+
+  /* Body */
+  --web-body1: 20px;
+  --web-body2: 18px;
+  --web-body3: 16px;
+
+  /* Body List */
+  --web-body-list1: 28px;
+  --web-body-list2: 24px;
+  --web-body-list3: 20px;
+  --web-body-list4: 18px;
+
+  /* Caption */
+  --web-caption1: 18px;
+  --web-caption2: 16px;
+  --web-caption3: 15px;
+  --web-caption4: 14px;
+
+  /* Button */
+  --web-button1: 28px;
+  --web-button2: 24px;
+  --web-button3: 18px;
+  --web-button4: 22px;
+
+  /* Mobile */
+
+  /* Title */
+  --mobile-title1: 20px;
+  --mobile-title2: 18px;
+  --mobile-title3: 16px;
+
+  /* Body */
+  --mobile-body1: 16px;
+  --mobile-body2: 14px;
+  --mobile-body3: 12px;
+
+  /* Caption */
+  --mobile-caption1: 14px;
+  --mobile-caption2: 12px;
+  --mobile-caption3: 10px;
+
+  /* Button */
+  --mobile-button1: 16px;
+  --mobile-button2: 14px;
+
+  /* Text Weight */
+  --text-bold: 700;
+  --text-medium: 500;
+  --text-regular: 400;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Typography System */
+:root {
+  /* Web */
+
+  /* Display */
+  --web-display1-bold: var(--text-bold) var(--web-display1) / normal 'Pretendard Variable';
+
+  /* Header */
+  --web-header1-bold: var(--text-bold) var(--web-header1) / normal 'Pretendard Variable';
+  --web-header1-medium: var(--text-medium) var(--web-header1) / normal 'Pretendard Variable';
+  --web-header2-bold: var(--text-bold) var(--web-header2) / normal 'Pretendard Variable';
+  --web-header2-medium: var(--text-medium) var(--web-header2) / normal 'Pretendard Variable';
+  --web-header3-bold: var(--text-bold) var(--web-header3) / normal 'Pretendard Variable';
+  --web-header3-medium: var(--text-medium) var(--web-header3) / normal 'Pretendard Variable';
+
+  /* Title */
+  --web-title1-bold: var(--text-bold) var(--web-title1) / normal 'Pretendard Variable';
+  --web-title1-medium: var(--text-medium) var(--web-title1) / normal 'Pretendard Variable';
+  --web-title2-bold: var(--text-bold) var(--web-title2) / normal 'Pretendard Variable';
+  --web-title2-medium: var(--text-medium) var(--web-title2) / normal 'Pretendard Variable';
+  --web-title3-bold: var(--text-bold) var(--web-title3) / normal 'Pretendard Variable';
+  --web-title3-medium: var(--text-medium) var(--web-title3) / normal 'Pretendard Variable';
+  --web-title4-bold: var(--text-bold) var(--web-title4) / normal 'Pretendard Variable';
+  --web-title4-medium: var(--text-medium) var(--web-title4) / normal 'Pretendard Variable';
+  --web-title5-bold: var(--text-bold) var(--web-title5) / normal 'Pretendard Variable';
+  --web-title5-medium: var(--text-medium) var(--web-title5) / normal 'Pretendard Variable';
+
+  /* Body */
+  --web-body1-bold: var(--text-bold) var(--web-body1) / normal 'Pretendard Variable';
+  --web-body1-medium: var(--text-medium) var(--web-body1) / normal 'Pretendard Variable';
+  --web-body2-bold: var(--text-bold) var(--web-body2) / normal 'Pretendard Variable';
+  --web-body2-medium: var(--text-medium) var(--web-body2) / normal 'Pretendard Variable';
+  --web-body3-bold: var(--text-bold) var(--web-body3) / normal 'Pretendard Variable';
+  --web-body3-medium: var(--text-medium) var(--web-body3) / normal 'Pretendard Variable';
+
+  /* Body List */
+  --web-body-list28-medium: var(--text-medium) var(--web-body-list1) / 40px 'Pretendard Variable';
+  --web-body-list24-medium: var(--text-medium) var(--web-body-list2) / 42px 'Pretendard Variable';
+  --web-body-list20-medium: var(--text-medium) var(--web-body-list3) / 30px 'Pretendard Variable';
+  --web-body-list20-regular: var(--text-regular) var(--web-body-list3) / 32px 'Pretendard Variable';
+  --web-body-list18-medium: var(--text-medium) var(--web-body-list4) / 30px 'Pretendard Variable';
+
+  /* Caption */
+  --web-caption1-bold: var(--text-bold) var(--web-caption1) / normal 'Pretendard Variable';
+  --web-caption1-medium: var(--text-medium) var(--web-caption1) / normal 'Pretendard Variable';
+  --web-caption2-bold: var(--text-bold) var(--web-caption2) / normal 'Pretendard Variable';
+  --web-caption2-medium: var(--text-medium) var(--web-caption2) / normal 'Pretendard Variable';
+  --web-caption3-medium: var(--text-medium) var(--web-caption3) / normal 'Pretendard Variable';
+  --web-caption4-bold: var(--text-bold) var(--web-caption4) / normal 'Pretendard Variable';
+  --web-caption4-medium: var(--text-medium) var(--web-caption4) / normal 'Pretendard Variable';
+
+  /* Button */
+  --web-button1-bold: var(--text-bold) var(--web-button1) / normal 'Pretendard Variable';
+  --web-button2-bold: var(--text-bold) var(--web-button2) / normal 'Pretendard Variable';
+  --web-button3-bold: var(--text-bold) var(--web-button3) / normal 'Pretendard Variable';
+  --web-button4-bold: var(--text-bold) var(--web-button4) / normal 'Pretendard Variable';
+
+  /* Mobile */
+
+  /* Title */
+  --mobile-title1-bold: var(--text-bold) var(--mobile-title1) / normal 'Pretendard Variable';
+  --mobile-title1-medium: var(--text-medium) var(--mobile-title1) / normal 'Pretendard Variable';
+  --mobile-title1-regular: var(--text-regular) var(--mobile-title1) / normal 'Pretendard Variable';
+  --mobile-title2-bold: var(--text-bold) var(--mobile-title2) / normal 'Pretendard Variable';
+  --mobile-title2-medium: var(--text-medium) var(--mobile-title2) / normal 'Pretendard Variable';
+  --mobile-title2-regular: var(--text-regular) var(--mobile-title2) / normal 'Pretendard Variable';
+  --mobile-title3-bold: var(--text-bold) var(--mobile-title3) / normal 'Pretendard Variable';
+  --mobile-title3-medium: var(--text-medium) var(--mobile-title3) / normal 'Pretendard Variable';
+  --mobile-title3-regular: var(--text-regular) var(--mobile-title3) / normal 'Pretendard Variable';
+
+  /* Body */
+  --mobile-body1-bold: var(--text-bold) var(--mobile-body1) / normal 'Pretendard Variable';
+  --mobile-body1-medium: var(--text-medium) var(--mobile-body1) / normal 'Pretendard Variable';
+  --mobile-body1-regular: var(--text-regular) var(--mobile-body1) / normal 'Pretendard Variable';
+  --mobile-body2-bold: var(--text-bold) var(--mobile-body2) / normal 'Pretendard Variable';
+  --mobile-body2-medium: var(--text-medium) var(--mobile-body2) / normal 'Pretendard Variable';
+  --mobile-body2-regular: var(--text-regular) var(--mobile-body2) / normal 'Pretendard Variable';
+  --mobile-body3-bold: var(--text-bold) var(--mobile-body3) / normal 'Pretendard Variable';
+  --mobile-body3-medium: var(--text-medium) var(--mobile-body3) / normal 'Pretendard Variable';
+  --mobile-body3-regular: var(--text-regular) var(--mobile-body3) / normal 'Pretendard Variable';
+
+  /* Caption */
+  --mobile-caption1-bold: var(--text-bold) var(--mobile-caption1) / normal 'Pretendard Variable';
+  --mobile-caption1-medium: var(--text-medium) var(--mobile-caption1) / normal 'Pretendard Variable';
+  --mobile-caption1-regular: var(--text-regular) var(--mobile-caption1) / normal 'Pretendard Variable';
+  --mobile-caption2-bold: var(--text-bold) var(--mobile-caption2) / normal 'Pretendard Variable';
+  --mobile-caption2-medium: var(--text-medium) var(--mobile-caption2) / normal 'Pretendard Variable';
+  --mobile-caption2-regular: var(--text-regular) var(--mobile-caption2) / normal 'Pretendard Variable';
+  --mobile-caption3-bold: var(--text-bold) var(--mobile-caption3) / normal 'Pretendard Variable';
+  --mobile-caption3-medium: var(--text-medium) var(--mobile-caption3) / normal 'Pretendard Variable';
+  --mobile-caption3-regular: var(--text-regular) var(--mobile-caption3) / normal 'Pretendard Variable';
+
+  /* Button */
+  --mobile-button1-bold: var(--text-bold) var(--mobile-button1) / normal 'Pretendard Variable';
+  --mobile-button1-medium: var(--text-medium) var(--mobile-button1) / normal 'Pretendard Variable';
+  --mobile-button1-regular: var(--text-regular) var(--mobile-button1) / normal 'Pretendard Variable';
+  --mobile-button2-bold: var(--text-bold) var(--mobile-button2) / normal 'Pretendard Variable';
+  --mobile-button2-medium: var(--text-medium) var(--mobile-button2) / normal 'Pretendard Variable';
+  --mobile-button2-regular: var(--text-regular) var(--mobile-button2) / normal 'Pretendard Variable';
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* Color System */
+:root {
+  /* Primary */
+  --blue-100: #E6EAFF;
+  --blue-200: #D9DFFF;
+  --blue-300: #B0BCFE;
+  --blue-400: #0028FD;
+  --blue-500: #0024E4;
+  --blue-600: #0020CA;
+  --blue-700: #001EBE;
+  --blue-800: #001898;
+  --blue-900: #001272;
+
+  /* Grayscale */
+  --gray-100: #EDF1F7;
+  --gray-200: #ECF2FB;
+  --gray-300: #E0E6F1;
+  --gray-400: #C6D0E2;
+  --gray-500: #8593B0;
+  --gray-600: #67738D;
+  --gray-700: #4D586F;
+  --gray-800: #3B4559;
+  --gray-900: #010515;
+
+  /* Background */
+  --bg: #F8F9FD;
+
+  /* Secondary Green */
+  --sub-green-200: #D9F9ED;
+  --sub-green-500: #00BC74;
+
+  /* Secondary Purple */
+  --sub-purple-200: #F5E4FF;
+  --sub-purple-500: #6900BC;
+
+  /* Secondary Orange */
+  --sub-orange-200: #FEEDD9;
+  --sub-orange-500: #FB8500;
+  --sub-orange-800: #F46600;
+
+  /* Alert */
+  --error-red-200: #FFECEC;
+  --error-red-500: #FF3A3A;
+
+  /* Black */
+  --black: #222222;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Radius */
+:root {
+  --xsmall: 4px;
+  --small: 8px;
+  --medium: 12px;
+  --large: 20px;
 }
