@@ -1,0 +1,11 @@
+.textButton {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.textButton:not(:disabled):hover {
+    opacity: 0.8;
+}
