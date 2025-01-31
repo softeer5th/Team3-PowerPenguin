@@ -1,0 +1,8 @@
+.buttonContainer {
+  width: 58px;
+  height: 58px;
+  background-color: var(--gray-200);
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+}

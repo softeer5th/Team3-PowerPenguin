@@ -1,0 +1,13 @@
+.buttonContainer {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+}
+
+.gray {
+  background-color: var(--gray-200);
+}
+
+.red {
+  background-color: var(--error-red-500);
+}
