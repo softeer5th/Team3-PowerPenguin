@@ -1,9 +1,4 @@
----
-name: PR 템플릿
-about: 'Pull Request를 위한 템플릿입니다. '
-title: "[FE/BE] PR 제목"
-assignees: ''
----
+## `[FE/BE] PR 제목`을 꼭 써주세요 
 
 ## #️⃣ 연관된 이슈
 
