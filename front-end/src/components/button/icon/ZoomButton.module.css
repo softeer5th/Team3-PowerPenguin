@@ -1,0 +1,11 @@
+.buttonContainer {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
+}
+
+.active {
+  opacity: 1;
+}
