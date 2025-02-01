@@ -1,0 +1,29 @@
+.chipContainer {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font: var(--web-body1-medium);
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+}
+
+.green {
+  background-color: var(--sub-green-200);
+  font: var(--web-body1-bold);
+  color: var(--sub-green-500);
+}
+
+.purple {
+  background-color: var(--sub-purple-200);
+  font: var(--web-body1-bold);
+  color: var(--sub-purple-500);
+}
+
+.gray {
+  background-color: var(--gray-400);
+  font: var(--web-body1-bold);
+  color: var(--gray-700);
+}
