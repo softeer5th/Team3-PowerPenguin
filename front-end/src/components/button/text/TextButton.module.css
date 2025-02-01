@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  word-break: keep-all;
 }
 
 .textButton:not(:disabled):hover {
