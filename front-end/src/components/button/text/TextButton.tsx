@@ -10,6 +10,44 @@ type TextButtonProps = {
   onClick: () => void;
 };
 
+function getColorClass(color: string): keyof typeof S {
+  switch (color) {
+    case 'blue':
+      return 'blueButton';
+    case 'red':
+      return 'redButton';
+    case 'green':
+      return 'greenButton';
+    case 'black':
+      return 'blackButton';
+    case 'white':
+      return 'whiteButton';
+    case 'inherit':
+      return 'inheritButton';
+    default:
+      return 'blueButton';
+  }
+}
+
+function getSizeClass(size: string): keyof typeof S {
+  switch (size) {
+    case 'web1':
+      return 'webButton1';
+    case 'web2':
+      return 'webButton2';
+    case 'web3':
+      return 'webButton3';
+    case 'web4':
+      return 'webButton4';
+    case 'mobile1':
+      return 'mobileButton1';
+    case 'mobile2':
+      return 'mobileButton2';
+    default:
+      return 'webButton1';
+  }
+}
+
 const TextButton = ({
   color,
   size,
@@ -19,46 +57,8 @@ const TextButton = ({
   onClick,
   isActive = true,
 }: TextButtonProps): JSX.Element => {
-  let colorClass, sizeClass;
-  switch (color) {
-    case 'blue':
-      colorClass = S.blueButton;
-      break;
-    case 'red':
-      colorClass = S.redButton;
-      break;
-    case 'green':
-      colorClass = S.greenButton;
-      break;
-    case 'black':
-      colorClass = S.blackButton;
-      break;
-    case 'white':
-      colorClass = S.whiteButton;
-      break;
-    case 'inherit':
-      colorClass = S.inheritButton;
-  }
-
-  switch (size) {
-    case 'web1':
-      sizeClass = S.webButton1;
-      break;
-    case 'web2':
-      sizeClass = S.webButton2;
-      break;
-    case 'web3':
-      sizeClass = S.webButton3;
-      break;
-    case 'web4':
-      sizeClass = S.webButton4;
-      break;
-    case 'mobile1':
-      sizeClass = S.mobileButton1;
-      break;
-    case 'mobile2':
-      sizeClass = S.mobileButton2;
-  }
+  const colorClass = getColorClass(color);
+  const sizeClass = getSizeClass(size);
 
   return (
     <button
