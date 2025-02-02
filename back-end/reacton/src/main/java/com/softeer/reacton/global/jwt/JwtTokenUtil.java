@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
@@ -25,19 +26,12 @@ public class JwtTokenUtil {
         this.accessTokenValidity = accessTokenValidity;
     }
 
-    public String createAccessToken(String oauthId) {
-        return createToken(oauthId, accessTokenValidity);
-    }
-
-    private String createToken(String payload, long expireLength) {
-        Claims claims = Jwts.claims().setSubject(payload);
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + expireLength);
-
+    public String createAccessToken(String oauthId, String email, Boolean isSignedUp) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiration)
+                .claim("sub", oauthId)
+                .claim("email", email)
+                .claim("isSignedUp", isSignedUp)
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity)) // 24시간
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }

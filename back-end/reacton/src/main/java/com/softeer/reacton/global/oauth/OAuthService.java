@@ -3,10 +3,7 @@ package com.softeer.reacton.global.oauth;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
-import com.softeer.reacton.global.oauth.dto.GoogleUserProfile;
-import com.softeer.reacton.global.oauth.dto.LoginResponse;
-import com.softeer.reacton.global.oauth.dto.OAuthTokenResponse;
-import com.softeer.reacton.global.oauth.dto.UserProfile;
+import com.softeer.reacton.global.oauth.dto.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -16,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Service
 public class OAuthService {
@@ -47,24 +45,23 @@ public class OAuthService {
     }
 
 
-    public LoginResponse processOauthLogin(String providerName, String code) {
+    public OAuthLoginResult processOauthLogin(String providerName, String code) {
         OAuthProvider provider = oauthConfig.getProvider(providerName);
 
         OAuthTokenResponse tokenResponse = getAccessTokenByOauth(code, provider);
         UserProfile userProfile = getUserProfile(providerName, provider, tokenResponse);
 
-        Professor professor = saveOrUpdate(userProfile);
+        Optional<Professor> existingUser = professorRepository.findByOauthId(userProfile.getOauthId());
 
-        String accessToken = jwtTokenUtil.createAccessToken(userProfile.getEmail());
+        if (existingUser.isPresent() && !existingUser.get().getEmail().equals(userProfile.getEmail())) {
+            existingUser.get().updateEmail(userProfile.getEmail());
+            professorRepository.save(existingUser.get());
+        }
 
-        return LoginResponse.builder()
-                .id(professor.getId())
-                .name(professor.getName())
-                .email(professor.getEmail())
-                .imageUrl(professor.getProfileImgUrl())
-                .tokenType("Bearer")
-                .accessToken(accessToken)
-                .build();
+        boolean isSignedUp = existingUser.isPresent();
+        String accessToken = jwtTokenUtil.createAccessToken(userProfile.getOauthId(), userProfile.getEmail(), existingUser.isPresent());
+
+        return new OAuthLoginResult(accessToken, isSignedUp);
     }
 
     private OAuthTokenResponse getAccessTokenByOauth(String code, OAuthProvider provider) {
@@ -96,19 +93,5 @@ public class OAuthService {
         }
 
         throw new IllegalArgumentException("지원하지 않는 OAuth 제공자: " + provider);
-    }
-
-    private Professor saveOrUpdate(UserProfile userProfile) {
-        Professor professor = professorRepository.findByOauthId(userProfile.getOauthId())
-                .map(entity -> {
-                    // 이메일이 변경된 경우에만 업데이트
-                    if (!entity.getEmail().equals(userProfile.getEmail())) {
-                        entity.updateEmail(userProfile.getEmail());
-                    }
-                    return entity;
-                })
-                .orElse(userProfile.toProfessor());
-
-        return professorRepository.save(professor);
     }
 }
