@@ -4,6 +4,7 @@ import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import com.softeer.reacton.global.oauth.dto.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class OAuthService {
 
     private final OAuthConfig oauthConfig;
     private final JwtTokenUtil jwtTokenUtil;
     private final ProfessorRepository professorRepository;
     private final WebClient webClient;
-
-    public OAuthService(OAuthConfig oauthConfig, JwtTokenUtil jwtTokenUtil,
-                        ProfessorRepository professorRepository, WebClient webClient) {
-        this.oauthConfig = oauthConfig;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.professorRepository = professorRepository;
-        this.webClient = webClient;
-    }
-
 
     public String getOauthLoginUrl(String providerName) {
         OAuthProvider provider = oauthConfig.getProvider(providerName);
