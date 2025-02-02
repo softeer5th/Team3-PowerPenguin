@@ -2,6 +2,7 @@ package com.softeer.reacton.global.oauth;
 
 import com.softeer.reacton.global.oauth.dto.LoginResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +12,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class OAuthController {
 
     private final OAuthService oauthService;
-
-    public OAuthController(OAuthService oauthService) {
-        this.oauthService = oauthService;
-    }
 
     @GetMapping("/{provider}/url")
     public void getOauthLoginUrl(HttpServletResponse response, @PathVariable String provider) throws IOException {
