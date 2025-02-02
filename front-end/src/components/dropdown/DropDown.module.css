@@ -1,0 +1,52 @@
+.dropDownContainer {
+  width: 150px;
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  cursor: pointer;
+}
+
+.dropDownTitle {
+  color: var(--gray-500);
+}
+
+.labelContainer {
+  position: absolute;
+  width: 150px;
+  background-color: var(--gray-200);
+  max-height: 208px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.labelContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.labelContainer::-webkit-scrollbar-thumb {
+  background-color: var(--gray-400);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 0;
+  border: none;
+  font: var(--web-body1-medium);
+  color: var(--gray-500);
+}
+
+.label:hover {
+  font: var(--web-body1-bold);
+  color: var(--blue-400);
+}
