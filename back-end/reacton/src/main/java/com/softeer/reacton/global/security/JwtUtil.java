@@ -35,9 +35,6 @@ public class JwtUtil {
         header.put("alg", "HS256");
         header.put("typ", "JWT");
 
-        System.out.println("userId = " + userId);
-        System.out.println("email = " + email);
-
         return Jwts.builder()
                 .setHeader(header)
                 .setSubject(userId)  // 사용자 고유 식별자
