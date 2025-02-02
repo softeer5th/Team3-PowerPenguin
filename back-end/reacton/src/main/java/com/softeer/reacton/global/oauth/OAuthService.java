@@ -1,5 +1,7 @@
 package com.softeer.reacton.global.oauth;
 
+import com.softeer.reacton.domain.professor.Professor;
+import com.softeer.reacton.domain.professor.ProfessorService;
 import com.softeer.reacton.global.security.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,9 +13,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class OAuthService {
+
+    private final ProfessorService professorService;
 
     private static final String GOOGLE_AUTH_BASE_URL = "https://accounts.google.com/o/oauth2/auth";
     private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -27,11 +32,13 @@ public class OAuthService {
 
     public OAuthService(@Value("${app.oauth.client-id}") String clientId,
                         @Value("${app.oauth.client-secret}") String clientSecret,
-                        @Value("${app.oauth.redirect-path}") String redirectUri
+                        @Value("${app.oauth.redirect-path}") String redirectUri,
+                        ProfessorService professorService
     ) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
+        this.professorService = professorService;
     }
 
     // google 로그인 url 생성
@@ -53,11 +60,18 @@ public class OAuthService {
         }
 
         // 사용자 정보에서 sub(고유 ID)와 email 가져오기
-        String userId = (String) userInfo.get("sub");
+        String oauthId = (String) userInfo.get("sub");
         String email = (String) userInfo.get("email");
+        String name = (String) userInfo.get("name");
+
+        // 신규 사용자일 경우 사용자 정보 저장
+        Optional<Professor> result = professorService.findByOauthId(oauthId);
+        if (result.isEmpty()) {
+            professorService.save(oauthId, email, name);
+        }
 
         // JWT 토큰 생성
-        String jwtToken = JwtUtil.generateJwt(userId, email);
+        String jwtToken = JwtUtil.generateJwt(oauthId, email);
 
         // 쿠키에 저장
         Cookie cookie = new Cookie("JWT", jwtToken);
