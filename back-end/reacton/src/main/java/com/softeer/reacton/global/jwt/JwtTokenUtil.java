@@ -10,6 +10,7 @@ import java.security.Key;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtTokenUtil {
@@ -45,12 +46,17 @@ public class JwtTokenUtil {
         }
     }
 
-    public String getUserOauthId(String token) {
-        return Jwts.parserBuilder()
+    public Map<String, Object> getUserInfoFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+
+        return Map.of(
+                "oauthId", claims.getSubject(),
+                "email", claims.get("email", String.class),
+                "isSignedUp", claims.get("isSignedUp", Boolean.class)
+        );
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -38,8 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getJwtFromCookie(request);
         if (token != null && jwtTokenUtil.validateToken(token)) {
-            String oauthId = jwtTokenUtil.getUserOauthId(token);
-            request.setAttribute("oauthId", oauthId);
+            Map<String, Object> userInfo = jwtTokenUtil.getUserInfoFromToken(token);
+
+            request.setAttribute("oauthId", userInfo.get("oauthId"));
+            request.setAttribute("email", userInfo.get("email"));
+            request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, AUTH_ERROR_MESSAGE);
             return;
