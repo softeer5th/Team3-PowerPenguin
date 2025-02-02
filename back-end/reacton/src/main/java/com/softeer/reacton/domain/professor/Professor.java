@@ -1,8 +1,12 @@
 package com.softeer.reacton.domain.professor;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "professor")
 @Entity
