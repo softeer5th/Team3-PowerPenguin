@@ -29,7 +29,7 @@ public class JwtTokenUtil {
 
     public String createAccessToken(String oauthId, String email, Boolean isSignedUp) {
         return Jwts.builder()
-                .claim("sub", oauthId)
+                .claim("oauthId", oauthId)
                 .claim("email", email)
                 .claim("isSignedUp", isSignedUp)
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity)) // 24시간
@@ -54,7 +54,7 @@ public class JwtTokenUtil {
                 .getBody();
 
         return Map.of(
-                "oauthId", claims.getSubject(),
+                "oauthId", claims.get("oauthId", String.class),
                 "email", claims.get("email", String.class),
                 "isSignedUp", claims.get("isSignedUp", Boolean.class)
         );
