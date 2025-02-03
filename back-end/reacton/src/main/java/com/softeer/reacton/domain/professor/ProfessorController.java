@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.professor;
 
+import com.softeer.reacton.global.config.CookieConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfessorController {
 
     private final ProfessorService professorService;
+    private final CookieConfig cookieConfig;
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(
@@ -30,7 +32,7 @@ public class ProfessorController {
                 .httpOnly(true)
                 .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
                 .path("/")
-                .maxAge(60 * 60 * 24)
+                .maxAge(cookieConfig.getAuthExpiration())
                 .sameSite("Strict")
                 .build();
 
