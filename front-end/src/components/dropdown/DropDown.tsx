@@ -18,7 +18,9 @@ const DropDown = ({ title, options, setTitle }: DropDownProps) => {
 
   return (
     <>
-      <div className={S.dropDownContainer}>
+      <div
+        className={`${S.dropDownContainer} ${isOpen ? S.dropDownActive : ''}`}
+      >
         <div
           className={S.titleContainer}
           onClick={() => setIsOpen((prev) => !prev)}
