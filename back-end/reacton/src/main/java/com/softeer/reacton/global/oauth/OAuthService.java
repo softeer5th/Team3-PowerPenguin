@@ -45,10 +45,12 @@ public class OAuthService {
 
         Optional<Professor> existingUser = professorRepository.findByOauthId(userProfile.getOauthId());
 
-        if (existingUser.isPresent() && !existingUser.get().getEmail().equals(userProfile.getEmail())) {
-            existingUser.get().updateEmail(userProfile.getEmail());
-            professorRepository.save(existingUser.get());
-        }
+        existingUser.ifPresent(professor -> {
+            if (!professor.getEmail().equals(userProfile.getEmail())) {
+                professor.updateEmail(userProfile.getEmail());
+                professorRepository.save(professor);
+            }
+        });
 
         boolean isSignedUp = existingUser.isPresent();
         String accessToken = isSignedUp
