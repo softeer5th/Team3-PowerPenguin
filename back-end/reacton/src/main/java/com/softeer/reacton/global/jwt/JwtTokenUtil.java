@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
@@ -16,23 +15,36 @@ import java.util.Map;
 public class JwtTokenUtil {
 
     private final Key secretKey;
-    private final long accessTokenValidity;
+    private final long authTokenExpiration;
+    private final long signUpTokenExpiration;
 
     public JwtTokenUtil(
             @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.access-token.expire-length}") long accessTokenValidity) {
+            @Value("${jwt.auth-access-token.expiration}") long authTokenExpiration,
+            @Value("${jwt.signup-access-token.expiration}") long signUpTokenExpiration) {
 
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
         this.secretKey = Keys.hmacShaKeyFor(encodedKey.getBytes());
-        this.accessTokenValidity = accessTokenValidity;
+        this.authTokenExpiration = authTokenExpiration;
+        this.signUpTokenExpiration = signUpTokenExpiration;
     }
 
-    public String createAccessToken(String oauthId, String email, Boolean isSignedUp) {
+    public String createAuthAccessToken(String oauthId, String email) {
         return Jwts.builder()
                 .claim("oauthId", oauthId)
                 .claim("email", email)
-                .claim("isSignedUp", isSignedUp)
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity)) // 24시간
+                .claim("isSignedUp", true)
+                .setExpiration(new Date(System.currentTimeMillis() + authTokenExpiration))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createSignUpToken(String oauthId, String email) {
+        return Jwts.builder()
+                .claim("oauthId", oauthId)
+                .claim("email", email)
+                .claim("isSignedUp", false)
+                .setExpiration(new Date(System.currentTimeMillis() + signUpTokenExpiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -37,11 +37,10 @@ public class OAuthService {
         return urlBuilder.toString();
     }
 
-
     public OAuthLoginResult processOauthLogin(String providerName, String code) {
         OAuthProvider provider = oauthConfig.getProvider(providerName);
 
-        OAuthTokenResponse tokenResponse = getAccessTokenByOauth(code, provider);
+        OAuthTokenResponse tokenResponse = getAuthAccessTokenByOauth(code, provider);
         UserProfile userProfile = getUserProfile(providerName, provider, tokenResponse);
 
         Optional<Professor> existingUser = professorRepository.findByOauthId(userProfile.getOauthId());
@@ -52,12 +51,14 @@ public class OAuthService {
         }
 
         boolean isSignedUp = existingUser.isPresent();
-        String accessToken = jwtTokenUtil.createAccessToken(userProfile.getOauthId(), userProfile.getEmail(), existingUser.isPresent());
+        String accessToken = isSignedUp
+                ? jwtTokenUtil.createAuthAccessToken(userProfile.getOauthId(), userProfile.getEmail())
+                : jwtTokenUtil.createSignUpToken(userProfile.getOauthId(), userProfile.getEmail());
 
         return new OAuthLoginResult(accessToken, isSignedUp);
     }
 
-    private OAuthTokenResponse getAccessTokenByOauth(String code, OAuthProvider provider) {
+    private OAuthTokenResponse getAuthAccessTokenByOauth(String code, OAuthProvider provider) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         System.out.println(code);
         formData.add("code", code);
