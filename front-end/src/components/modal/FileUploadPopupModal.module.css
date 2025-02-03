@@ -1,0 +1,89 @@
+.modal {
+  background-color: white;
+  border-radius: var(--large);
+  width: 42.25rem;
+  height: fit-content;
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  float: right;
+  top: 1.875rem;
+  right: 1.875rem;
+  cursor: pointer;
+}
+
+.modalContent {
+  padding-top: 5.125rem;
+  padding-left: 2.75rem;
+  padding-right: 2.75rem;
+  padding-bottom: 3.75rem;
+  gap: 6.1875rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalText {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.modalTitle {
+  font: var(--web-header2-bold);
+  color: var(--gray-900);
+}
+
+.modalDescription {
+  font: var(--web-body-list20-medium);
+  color: var(--gray-500);
+}
+
+.fileContainer {
+  background-color: var(--gray-200);
+  border-radius: var(--xsmall);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fileInfo {
+  font: var(--web-title4-bold);
+  color: var(--blue-400);
+  display: flex;
+  height: 3.5625rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0.75rem 1.25rem;
+}
+
+.fileSize {
+  font: var(--web-title4-medium);
+  color: var(--gray-900);
+}
+
+.deleteButton {
+  width: 1.875rem;
+  height: 1.875rem;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--blue-300);
+  border-radius: 50%;
+  margin: 0rem 1.25rem;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.625rem;
+  width: 100%;
+}
+
+.fileInput {
+  display: none;
+}
