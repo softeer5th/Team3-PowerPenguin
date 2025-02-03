@@ -1,0 +1,98 @@
+.modal {
+  background-color: white;
+  width: 42.25rem;
+  height: 25.25rem;
+  border-radius: var(--large);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0rem 0rem 3.125rem 0rem rgba(34, 34, 34, 0.3);
+}
+
+.closeButton {
+  position: absolute;
+  float: right;
+  top: 1.875rem;
+  right: 1.875rem;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.125rem;
+  margin: 2.5rem;
+  margin-top: auto;
+}
+
+.icon {
+  width: 4.875rem;
+  height: 4.875rem;
+}
+
+.redIcon {
+  composes: icon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 236, 236, 0.2) 0%,
+    rgba(255, 58, 58, 0.2) 100%
+  );
+  color: var(--error-red-500);
+  flex-shrink: 0;
+}
+
+.blueIcon {
+  composes: icon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(217, 223, 255, 0.2) 0%,
+    rgba(0, 40, 253, 0.2) 100%
+  );
+  color: white;
+  flex-shrink: 0;
+}
+
+.modalBody {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 3.375rem;
+}
+
+.modalText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modalTitle {
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
+  color: var(--gray-900);
+  font: var(--web-title1-bold);
+}
+
+.modalDescription {
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
+  color: var(--gray-500);
+  font: var(--web-body1-medium);
+}
+
+.modalButton {
+  width: 100%;
+}
