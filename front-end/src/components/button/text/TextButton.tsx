@@ -13,38 +13,38 @@ type TextButtonProps = {
 function getColorClass(color: string): keyof typeof S {
   switch (color) {
     case 'blue':
-      return 'blueButton';
+      return S.blueButton;
     case 'red':
-      return 'redButton';
+      return S.redButton;
     case 'green':
-      return 'greenButton';
+      return S.greenButton;
     case 'black':
-      return 'blackButton';
+      return S.blackButton;
     case 'white':
-      return 'whiteButton';
+      return S.whiteButton;
     case 'inherit':
-      return 'inheritButton';
+      return S.inheritButton;
     default:
-      return 'blueButton';
+      return S.blueButton;
   }
 }
 
 function getSizeClass(size: string): keyof typeof S {
   switch (size) {
     case 'web1':
-      return 'webButton1';
+      return S.webButton1;
     case 'web2':
-      return 'webButton2';
+      return S.webButton2;
     case 'web3':
-      return 'webButton3';
+      return S.webButton3;
     case 'web4':
-      return 'webButton4';
+      return S.webButton4;
     case 'mobile1':
-      return 'mobileButton1';
+      return S.mobileButton1;
     case 'mobile2':
-      return 'mobileButton2';
+      return S.mobileButton2;
     default:
-      return 'webButton1';
+      return S.webButton1;
   }
 }
 
