@@ -29,7 +29,7 @@ const FileUploadPopupModal = ({
         <CloseIcon
           width="1.1875rem"
           height="1.1875rem"
-          color="var(--gray-600"
+          color="var(--gray-600)"
         />
       </button>
       <div className={S.modalContent}>
