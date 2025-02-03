@@ -1,6 +1,5 @@
 package com.softeer.reacton.global.oauth;
 
-import com.softeer.reacton.global.oauth.dto.LoginResponse;
 import com.softeer.reacton.global.oauth.dto.OAuthLoginResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +25,7 @@ public class OAuthController {
     }
 
     @GetMapping("/{provider}/callback")
-    public ResponseEntity<LoginResponse> oauthCallback(@PathVariable String provider, @RequestParam String code) {
+    public ResponseEntity<Void> oauthCallback(@PathVariable String provider, @RequestParam String code) {
         OAuthLoginResult loginResult = oauthService.processOauthLogin(provider, code);
 
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", loginResult.getAccessToken())

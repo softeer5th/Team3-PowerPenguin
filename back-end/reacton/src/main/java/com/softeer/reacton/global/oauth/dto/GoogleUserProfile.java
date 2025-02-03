@@ -21,14 +21,4 @@ public class GoogleUserProfile implements UserProfile {
         this.name = name;
         this.imageUrl = imageUrl;
     }
-
-    @Override
-    public Professor toProfessor() {
-        return Professor.builder()
-                .oauthId(oauthId)
-                .email(email)
-                .name(name)
-                .profileImgUrl(imageUrl)
-                .build();
-    }
 }
