@@ -40,6 +40,6 @@ public class ProfessorService {
                 .build();
         professorRepository.save(professor);
 
-        return jwtTokenUtil.createAccessToken(oauthId, email, true);
+        return jwtTokenUtil.createAuthAccessToken(oauthId, email);
     }
 }
