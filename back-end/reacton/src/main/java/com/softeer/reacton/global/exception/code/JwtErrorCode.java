@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum JwtErrorCode implements ErrorCode {
-    // Todo : isSignUp = true이나, 데이터베이스에 존재하지 않는 사용자에 대한 예외 처리 구현
     EMPTY_JWT("JWT 토큰이 존재하지 않습니다.", HttpStatus.UNAUTHORIZED),
     INVALID_JWT("유효하지 않은 JWT 토큰입니다.", HttpStatus.UNAUTHORIZED),
     EXPIRED_JWT("만료된 JWT 토큰입니다.", HttpStatus.UNAUTHORIZED),
