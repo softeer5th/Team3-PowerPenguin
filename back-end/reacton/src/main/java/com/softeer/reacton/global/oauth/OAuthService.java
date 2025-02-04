@@ -4,6 +4,7 @@ import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
+import com.softeer.reacton.global.exception.code.OAuthErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import com.softeer.reacton.global.oauth.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +96,6 @@ public class OAuthService {
                     .block();
         }
 
-        throw new IllegalArgumentException("지원하지 않는 OAuth 제공자: " + provider);
+        throw new BaseException(OAuthErrorCode.UNSUPPORTED_OAUTH_PROVIDER);
     }
 }
