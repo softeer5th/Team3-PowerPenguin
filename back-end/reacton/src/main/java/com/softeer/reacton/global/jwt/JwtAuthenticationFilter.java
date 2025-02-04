@@ -1,5 +1,7 @@
 package com.softeer.reacton.global.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softeer.reacton.global.exception.BaseException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -11,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +24,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
 
     private static final String TOKEN_COOKIE_NAME = "access_token";
-    private static final String AUTH_ERROR_MESSAGE = "Unauthorized: Invalid or Expired JWT Token";
 
     private static final List<String> WHITE_LIST_URLS = List.of(
             "/auth/google/url",
@@ -37,19 +39,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = getJwtFromCookie(request);
-        if (token != null && jwtTokenUtil.validateToken(token)) {
+        try {
+            String token = getJwtFromCookie(request);
+            jwtTokenUtil.validateToken(token);
             Map<String, Object> userInfo = jwtTokenUtil.getUserInfoFromToken(token);
 
             request.setAttribute("oauthId", userInfo.get("oauthId"));
             request.setAttribute("email", userInfo.get("email"));
             request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
-        } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, AUTH_ERROR_MESSAGE);
-            return;
-        }
 
-        chain.doFilter(request, response);
+            chain.doFilter(request, response);
+        } catch (BaseException e) {
+            setErrorResponse(response, e);
+        }
     }
 
     private boolean isWhiteListed(String requestUri) {
@@ -64,5 +66,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private void setErrorResponse(HttpServletResponse response, BaseException e) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(e.getErrorCode().getStatus().value());
+        final Map<String, Object> body = new HashMap<>();
+        body.put("success", false);
+        body.put("message", e.getMessage());
+        body.put("error", e.getErrorCode());
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getOutputStream(), body);
     }
 }

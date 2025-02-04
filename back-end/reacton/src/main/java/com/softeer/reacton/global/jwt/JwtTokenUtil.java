@@ -1,5 +1,7 @@
 package com.softeer.reacton.global.jwt;
 
+import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.code.AuthErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,26 +51,52 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public void validateToken(String token) {
+        if (token == null || token.isBlank()) {
+            throw new BaseException(AuthErrorCode.EMPTY_JWT);
+        }
+
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(AuthErrorCode.EXPIRED_JWT);
+        } catch (SecurityException e) {
+            throw new BaseException(AuthErrorCode.INVALID_SIGNATURE);
+        } catch (MalformedJwtException e) {
+            throw new BaseException(AuthErrorCode.MALFORMED_SIGNATURE);
+        } catch (UnsupportedJwtException e) {
+            throw new BaseException(AuthErrorCode.TOKEN_PARSING_FAILED);
+        } catch (IllegalArgumentException e) {
+            throw new BaseException(AuthErrorCode.EMPTY_JWT);
+        } catch (JwtException e){
+            throw new BaseException(AuthErrorCode.INVALID_JWT);
         }
     }
 
     public Map<String, Object> getUserInfoFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException e) {
+            throw new BaseException(AuthErrorCode.INVALID_JWT);
+        }
+
+        String oauthId = claims.get("oauthId", String.class);
+        String email = claims.get("email", String.class);
+        Boolean isSignedUp = claims.get("isSignedUp", Boolean.class);
+
+        if (oauthId == null || email == null || isSignedUp == null) {
+            throw new BaseException(AuthErrorCode.MISSING_CLAIM);
+        }
 
         return Map.of(
-                "oauthId", claims.get("oauthId", String.class),
-                "email", claims.get("email", String.class),
-                "isSignedUp", claims.get("isSignedUp", Boolean.class)
+                "oauthId", oauthId,
+                "email", email,
+                "isSignedUp", isSignedUp
         );
     }
 }
