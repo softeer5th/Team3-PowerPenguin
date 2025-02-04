@@ -30,7 +30,7 @@ public class ProfessorService {
             try {
                 imageBytes = profileImageFile.getBytes();
             } catch (IOException e) {
-                throw new BaseException(ProfessorErrorCode.IMAGE_PROCESSING_ERROR);
+                throw new BaseException(ProfessorErrorCode.IMAGE_PROCESSING_FAILURE);
             }
         }
 
