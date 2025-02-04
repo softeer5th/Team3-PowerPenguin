@@ -1,7 +1,7 @@
 package com.softeer.reacton.global.jwt;
 
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.exception.code.AuthErrorCode;
+import com.softeer.reacton.global.exception.code.JwtErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,23 +53,23 @@ public class JwtTokenUtil {
 
     public void validateToken(String token) {
         if (token == null || token.isBlank()) {
-            throw new BaseException(AuthErrorCode.EMPTY_JWT);
+            throw new BaseException(JwtErrorCode.EMPTY_JWT);
         }
 
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
-            throw new BaseException(AuthErrorCode.EXPIRED_JWT);
+            throw new BaseException(JwtErrorCode.EXPIRED_JWT);
         } catch (SecurityException e) {
-            throw new BaseException(AuthErrorCode.INVALID_SIGNATURE);
+            throw new BaseException(JwtErrorCode.INVALID_SIGNATURE);
         } catch (MalformedJwtException e) {
-            throw new BaseException(AuthErrorCode.MALFORMED_SIGNATURE);
+            throw new BaseException(JwtErrorCode.MALFORMED_SIGNATURE);
         } catch (UnsupportedJwtException e) {
-            throw new BaseException(AuthErrorCode.TOKEN_PARSING_FAILED);
+            throw new BaseException(JwtErrorCode.TOKEN_PARSING_FAILED);
         } catch (IllegalArgumentException e) {
-            throw new BaseException(AuthErrorCode.EMPTY_JWT);
+            throw new BaseException(JwtErrorCode.EMPTY_JWT);
         } catch (JwtException e){
-            throw new BaseException(AuthErrorCode.INVALID_JWT);
+            throw new BaseException(JwtErrorCode.INVALID_JWT);
         }
     }
 
@@ -82,7 +82,7 @@ public class JwtTokenUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (JwtException e) {
-            throw new BaseException(AuthErrorCode.INVALID_JWT);
+            throw new BaseException(JwtErrorCode.INVALID_JWT);
         }
 
         String oauthId = claims.get("oauthId", String.class);
@@ -90,7 +90,7 @@ public class JwtTokenUtil {
         Boolean isSignedUp = claims.get("isSignedUp", Boolean.class);
 
         if (oauthId == null || email == null || isSignedUp == null) {
-            throw new BaseException(AuthErrorCode.MISSING_CLAIM);
+            throw new BaseException(JwtErrorCode.MISSING_CLAIM);
         }
 
         return Map.of(
