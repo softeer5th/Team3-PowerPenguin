@@ -2,6 +2,7 @@ package com.softeer.reacton.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.ExceptionResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -71,13 +72,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setErrorResponse(HttpServletResponse response, BaseException e) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         response.setContentType("application/json");
         response.setStatus(e.getErrorCode().getStatus().value());
-        final Map<String, Object> body = new HashMap<>();
-        body.put("success", false);
-        body.put("message", e.getMessage());
-        body.put("error", e.getErrorCode());
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), body);
+
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getErrorCode());
+
+        objectMapper.writeValue(response.getOutputStream(), exceptionResponse);
     }
 }
