@@ -1,5 +1,7 @@
 package com.softeer.reacton.domain.professor;
 
+import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,11 @@ public class ProfessorService {
 
     public String signUp(String name, MultipartFile profileImageFile, String oauthId, String email, Boolean isSignedUp) {
         if (isSignedUp) {
-            throw new IllegalStateException("이미 가입된 사용자입니다.");
+            throw new BaseException(ProfessorErrorCode.ALREADY_REGISTERED_USER);
         }
 
         if (professorRepository.findByOauthId(oauthId).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 사용자입니다.");
+            throw new BaseException(ProfessorErrorCode.ALREADY_REGISTERED_USER);
         }
 
         // TODO: 현재 파일을 DB에 저장하지만, 추후 클라우드 스토리지(S3 등)에 업로드하도록 변경 예정
@@ -28,7 +30,7 @@ public class ProfessorService {
             try {
                 imageBytes = profileImageFile.getBytes();
             } catch (IOException e) {
-                throw new RuntimeException("이미지 변환 중 오류 발생", e);
+                throw new BaseException(ProfessorErrorCode.IMAGE_PROCESSING_ERROR);
             }
         }
 
