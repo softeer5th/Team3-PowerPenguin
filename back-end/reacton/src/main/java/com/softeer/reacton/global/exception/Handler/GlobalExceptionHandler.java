@@ -41,18 +41,4 @@ public class GlobalExceptionHandler {
                 .status(GlobalErrorCode.UNSUPPORTED_MEDIA_TYPE.getStatus())
                 .body(ExceptionResponse.of(GlobalErrorCode.UNSUPPORTED_MEDIA_TYPE));
     }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
-        return ResponseEntity
-                .status(GlobalErrorCode.INVALID_PATH.getStatus())
-                .body(ExceptionResponse.of(GlobalErrorCode.INVALID_PATH));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleUnexpectedException(Exception e) {
-        return ResponseEntity
-                .status(GlobalErrorCode.SERVER_ERROR.getStatus())
-                .body(ExceptionResponse.of(GlobalErrorCode.SERVER_ERROR));
-    }
 }
