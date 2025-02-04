@@ -1,6 +1,7 @@
 package com.softeer.reacton.global.oauth;
 
-import com.softeer.reacton.global.oauth.dto.LoginResponse;
+import com.softeer.reacton.global.config.CookieConfig;
+import com.softeer.reacton.global.oauth.dto.OAuthLoginResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ public class OAuthController {
 
     private final OAuthService oauthService;
 
+    private final CookieConfig cookieConfig;
+
     @GetMapping("/{provider}/url")
     public ResponseEntity<Void> getOauthLoginUrl(@PathVariable String provider) {
         String oauthLoginUrl = oauthService.getOauthLoginUrl(provider);
@@ -25,20 +28,25 @@ public class OAuthController {
     }
 
     @GetMapping("/{provider}/callback")
-    public ResponseEntity<LoginResponse> oauthCallback(@PathVariable String provider, @RequestParam String code) {
-        LoginResponse loginResponse = oauthService.processOauthLogin(provider, code);
+    public ResponseEntity<Void> oauthCallback(@PathVariable String provider, @RequestParam String code) {
+        OAuthLoginResult loginResult = oauthService.processOauthLogin(provider, code);
+        boolean isSignedUp = loginResult.isSignedUp();
 
-        ResponseCookie jwtCookie = ResponseCookie.from("access_token", loginResponse.getAccessToken())
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", loginResult.getAccessToken())
                 .httpOnly(true)
                 .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
                 .path("/")
-                .maxAge(60 * 60 * 24)
+                .maxAge(isSignedUp ? cookieConfig.getAuthExpiration() : cookieConfig.getSignupExpiration())
                 .sameSite("Strict")
                 .build();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
         // TODO : 프론트 리다이렉트 코드 추가 예정
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(loginResponse);
+
+        return isSignedUp
+                ? ResponseEntity.ok().headers(headers).build()
+                : ResponseEntity.status(HttpStatus.ACCEPTED).headers(headers).build();
     }
 }

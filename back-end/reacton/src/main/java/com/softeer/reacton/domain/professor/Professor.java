@@ -25,15 +25,16 @@ public class Professor {
     @Column(unique = true, length = 255)
     private String oauthId;
 
-    @Column(length = 512)
-    private String profileImgUrl;
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private byte[] profileImage;
 
     @Builder
-    public Professor(String email, String name, String oauthId, String profileImgUrl) {
+    public Professor(String email, String name, String oauthId, byte[] profileImage) {
         this.email = email;
         this.name = name;
         this.oauthId = oauthId;
-        this.profileImgUrl = profileImgUrl;
+        this.profileImage = profileImage;
     }
 
     public void updateEmail(String email) {
