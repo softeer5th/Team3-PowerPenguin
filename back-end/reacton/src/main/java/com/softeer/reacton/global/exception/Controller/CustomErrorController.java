@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 public class CustomErrorController implements ErrorController {
 
@@ -17,13 +19,15 @@ public class CustomErrorController implements ErrorController {
     public ResponseEntity<ExceptionResponse> handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        if (status != null) {
-            int statusCode = Integer.parseInt(status.toString());
-            if (statusCode == HttpStatus.NOT_FOUND.value()) {
-                return ResponseEntity
-                        .status(GlobalErrorCode.INVALID_PATH.getStatus())
-                        .body(ExceptionResponse.of(GlobalErrorCode.INVALID_PATH));
-            }
+        Integer statusCode = Optional.ofNullable(status)
+                .filter(s -> s instanceof Integer || s instanceof String)
+                .map(s -> s instanceof Integer ? (Integer) s : Integer.parseInt(s.toString()))
+                .orElse(null);
+
+        if (statusCode != null && statusCode == HttpStatus.NOT_FOUND.value()) {
+            return ResponseEntity
+                    .status(GlobalErrorCode.INVALID_PATH.getStatus())
+                    .body(ExceptionResponse.of(GlobalErrorCode.INVALID_PATH));
         }
         return ResponseEntity
                 .status(GlobalErrorCode.SERVER_ERROR.getStatus())
