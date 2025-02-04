@@ -21,6 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    // Todo: JWT 토큰 검증을 하지 않아도 되는 페이지에 대해 filter 미적용 기능 추가
+
     private final JwtTokenUtil jwtTokenUtil;
 
     private static final String TOKEN_COOKIE_NAME = "access_token";
