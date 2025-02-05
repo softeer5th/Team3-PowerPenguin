@@ -2,7 +2,7 @@ package com.softeer.reacton.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.exception.ExceptionResponse;
+import com.softeer.reacton.global.DTO.FailResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -80,8 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.setStatus(e.getErrorCode().getStatus().value());
 
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getErrorCode());
+        FailResponse failResponse = FailResponse.of(e.getErrorCode());
 
-        objectMapper.writeValue(response.getOutputStream(), exceptionResponse);
+        objectMapper.writeValue(response.getOutputStream(), failResponse);
     }
 }
