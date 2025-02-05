@@ -7,13 +7,8 @@ import lombok.Getter;
 
 @Getter
 public class FailResponse {
-    @Schema(description = "성공 여부", example = "false")
     private final boolean success;
-
-    @Schema(description = "에러코드", example = "NOT_FOUND")
     private final String errorCode;
-
-    @Schema(description = "메시지", example = "유효하지 않은 경로입니다.")
     private final String message;
 
     @Builder
