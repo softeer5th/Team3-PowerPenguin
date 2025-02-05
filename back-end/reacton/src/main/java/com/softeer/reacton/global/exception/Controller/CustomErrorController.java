@@ -4,6 +4,7 @@ import com.softeer.reacton.global.exception.code.GlobalErrorCode;
 import com.softeer.reacton.global.exception.ExceptionResponse;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+@Log4j2
 @RestController
 public class CustomErrorController implements ErrorController {
 
@@ -25,10 +27,13 @@ public class CustomErrorController implements ErrorController {
                 .orElse(null);
 
         if (statusCode != null && statusCode == HttpStatus.NOT_FOUND.value()) {
+            log.warn(GlobalErrorCode.INVALID_PATH.getMessage());
             return ResponseEntity
                     .status(GlobalErrorCode.INVALID_PATH.getStatus())
                     .body(ExceptionResponse.of(GlobalErrorCode.INVALID_PATH));
         }
+
+        log.error(GlobalErrorCode.SERVER_ERROR.getMessage());
         return ResponseEntity
                 .status(GlobalErrorCode.SERVER_ERROR.getStatus())
                 .body(ExceptionResponse.of(GlobalErrorCode.SERVER_ERROR));
