@@ -55,14 +55,14 @@ public class JwtTokenUtil {
 
     public void validateToken(String token) {
         if (token == null || token.isBlank()) {
-            log.debug("JWT token is missing or empty.");
+            log.debug("JWT 토큰 검증 과정에서 발생한 에러입니다. : JWT token is missing or empty.");
             throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
         }
 
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
         } catch (RuntimeException e) {
-            log.debug(e.getMessage());
+            log.debug("JWT 토큰 검증 과정에서 발생한 에러입니다. : {}", e.getMessage());
             throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
         }
     }
@@ -76,7 +76,7 @@ public class JwtTokenUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (JwtException e) {
-            log.debug(e.getMessage());
+            log.debug("JWT 토큰으로부터 사용자 정보를 가져오는 과정에서 발생한 에러입니다. : {}", e.getMessage());
             throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
         }
 
@@ -85,7 +85,7 @@ public class JwtTokenUtil {
         Boolean isSignedUp = claims.get("isSignedUp", Boolean.class);
 
         if (oauthId == null || email == null || isSignedUp == null) {
-            log.debug("Missing required claims in JWT token.");
+            log.debug("JWT 토큰으로부터 사용자 정보를 가져오는 과정에서 발생한 에러입니다. : Missing required claims in JWT token.");
             throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
         }
 
