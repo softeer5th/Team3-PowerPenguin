@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum OAuthErrorCode implements ErrorCode {
-    UNSUPPORTED_OAUTH_PROVIDER("지원하지 않는 OAuth 제공자입니다.", HttpStatus.BAD_REQUEST);
+    UNSUPPORTED_OAUTH_PROVIDER(HttpStatus.BAD_REQUEST, "지원하지 않는 OAuth 제공자입니다.");
 
-    private final String message;
     private final HttpStatus status;
+    private final String message;
 
     @Override
     public String getCode() {

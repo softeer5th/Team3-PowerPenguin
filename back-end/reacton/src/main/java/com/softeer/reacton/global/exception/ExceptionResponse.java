@@ -7,20 +7,20 @@ import lombok.Getter;
 @Getter
 public class ExceptionResponse {
     private final boolean success;
-    private final String message;
     private final String errorCode;
+    private final String message;
 
     @Builder
     public ExceptionResponse(String message, String errorCode) {
         this.success = false;
-        this.message = message;
         this.errorCode = errorCode;
+        this.message = message;
     }
 
     public static ExceptionResponse of(ErrorCode errorCode) {
         return ExceptionResponse.builder()
-                .message(errorCode.getMessage())
                 .errorCode(errorCode.getCode())
+                .message(errorCode.getMessage())
                 .build();
     }
 }
