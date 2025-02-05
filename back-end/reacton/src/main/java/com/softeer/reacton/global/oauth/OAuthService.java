@@ -2,6 +2,9 @@ package com.softeer.reacton.global.oauth;
 
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
+import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.code.GlobalErrorCode;
+import com.softeer.reacton.global.exception.code.OAuthErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import com.softeer.reacton.global.oauth.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -69,13 +73,17 @@ public class OAuthService {
         formData.add("redirect_uri", provider.getRedirectUri());
         formData.add("grant_type", "authorization_code");
 
-        return webClient.post()
-                .uri(provider.getTokenUri())
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .bodyValue(formData)
-                .retrieve()
-                .bodyToMono(OAuthTokenResponse.class)
-                .block();
+        try {
+            return webClient.post()
+                    .uri(provider.getTokenUri())
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                    .bodyValue(formData)
+                    .retrieve()
+                    .bodyToMono(OAuthTokenResponse.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            throw new BaseException(GlobalErrorCode.SERVER_ERROR);
+        }
     }
 
     private UserProfile getUserProfile(String providerName, OAuthProvider provider, OAuthTokenResponse tokenResponse) {
@@ -88,6 +96,6 @@ public class OAuthService {
                     .block();
         }
 
-        throw new IllegalArgumentException("지원하지 않는 OAuth 제공자: " + provider);
+        throw new BaseException(OAuthErrorCode.UNSUPPORTED_OAUTH_PROVIDER);
     }
 }

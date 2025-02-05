@@ -1,7 +1,10 @@
 package com.softeer.reacton.global.jwt;
 
+import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.code.JwtErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +14,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
+@Log4j2
 @Component
 public class JwtTokenUtil {
 
@@ -49,26 +53,46 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public void validateToken(String token) {
+        if (token == null || token.isBlank()) {
+            log.debug("JWT 토큰 검증 과정에서 발생한 에러입니다. : JWT token is missing or empty.");
+            throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
+        }
+
         try {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+        } catch (RuntimeException e) {
+            log.debug("JWT 토큰 검증 과정에서 발생한 에러입니다. : {}", e.getMessage());
+            throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
         }
     }
 
     public Map<String, Object> getUserInfoFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException e) {
+            log.debug("JWT 토큰으로부터 사용자 정보를 가져오는 과정에서 발생한 에러입니다. : {}", e.getMessage());
+            throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
+        }
+
+        String oauthId = claims.get("oauthId", String.class);
+        String email = claims.get("email", String.class);
+        Boolean isSignedUp = claims.get("isSignedUp", Boolean.class);
+
+        if (oauthId == null || email == null || isSignedUp == null) {
+            log.debug("JWT 토큰으로부터 사용자 정보를 가져오는 과정에서 발생한 에러입니다. : Missing required claims in JWT token.");
+            throw new BaseException(JwtErrorCode.ACCESS_TOKEN_ERROR);
+        }
 
         return Map.of(
-                "oauthId", claims.get("oauthId", String.class),
-                "email", claims.get("email", String.class),
-                "isSignedUp", claims.get("isSignedUp", Boolean.class)
+                "oauthId", oauthId,
+                "email", email,
+                "isSignedUp", isSignedUp
         );
     }
 }
