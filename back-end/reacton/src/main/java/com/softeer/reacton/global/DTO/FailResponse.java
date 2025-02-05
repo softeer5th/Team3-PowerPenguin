@@ -1,7 +1,6 @@
 package com.softeer.reacton.global.DTO;
 
 import com.softeer.reacton.global.exception.code.ErrorCode;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
