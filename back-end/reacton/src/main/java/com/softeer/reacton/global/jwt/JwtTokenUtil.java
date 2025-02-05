@@ -1,6 +1,5 @@
 package com.softeer.reacton.global.jwt;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.JwtErrorCode;
 import io.jsonwebtoken.*;
