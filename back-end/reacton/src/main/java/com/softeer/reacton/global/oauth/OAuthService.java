@@ -80,7 +80,7 @@ public class OAuthService {
         log.debug("OAuth access 토큰을 요청합니다.");
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        System.out.println(code);
+
         formData.add("code", code);
         formData.add("client_id", provider.getClientId());
         formData.add("client_secret", provider.getClientSecret());
