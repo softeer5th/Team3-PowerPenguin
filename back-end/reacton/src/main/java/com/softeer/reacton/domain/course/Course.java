@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -26,8 +27,9 @@ public class Course {
     @Column(nullable = false, length = 100)
     private String university;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String type; // 수업 종류 (전공, 교양, 기타)
+    private CourseType type; // 수업 종류 (전공, 교양, 기타)
 
     @Column(nullable = false, unique = true, length = 10)
     private String accessCode;
