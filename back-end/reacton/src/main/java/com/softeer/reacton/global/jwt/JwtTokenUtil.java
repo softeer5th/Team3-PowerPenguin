@@ -34,7 +34,7 @@ public class JwtTokenUtil {
     }
 
     public String createAuthAccessToken(String oauthId, String email) {
-        log.debug("로그인 JWT 토큰을 생성합니다. : {}", email);
+        log.debug("로그인 JWT 토큰을 생성합니다. : email = {}", email);
 
         return Jwts.builder()
                 .claim("oauthId", oauthId)
@@ -46,7 +46,7 @@ public class JwtTokenUtil {
     }
 
     public String createSignUpToken(String oauthId, String email) {
-        log.debug("회원가입 JWT 토큰을 생성합니다. : {}", email);
+        log.debug("회원가입 JWT 토큰을 생성합니다. : email = {}", email);
 
         return Jwts.builder()
                 .claim("oauthId", oauthId)

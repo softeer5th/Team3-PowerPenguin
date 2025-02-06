@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String requestUri = request.getRequestURI();
         if (isWhiteListed(requestUri)) {
-            log.debug("필터를 적용하지 않는 URL 주소입니다. : {}", requestUri);
+            log.debug("필터를 적용하지 않는 URL 주소입니다. : requestUri = {}", requestUri);
             chain.doFilter(request, response);
             return;
         }
