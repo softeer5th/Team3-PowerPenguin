@@ -1,6 +1,6 @@
 package com.softeer.reacton.domain.course;
 
-import com.softeer.reacton.domain.course.dto.CourseCreateRequest;
+import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.schedule.Schedule;
@@ -67,7 +67,7 @@ public class Course {
         this.professor = professor;
     }
 
-    public static Course create(CourseCreateRequest request, int accessCode, Professor professor) {
+    public static Course create(CourseRequest request, int accessCode, Professor professor) {
         Course course = Course.builder()
                 .name(request.getName())
                 .courseCode(request.getCourseCode())
@@ -82,7 +82,7 @@ public class Course {
         return course;
     }
 
-    public void update(CourseCreateRequest request) {
+    public void update(CourseRequest request) {
         this.name = request.getName();
         this.courseCode = request.getCourseCode();
         this.capacity = request.getCapacity();
@@ -93,7 +93,7 @@ public class Course {
         this.schedules.addAll(createScheduleList(request, this));
     }
 
-    private static List<Schedule> createScheduleList(CourseCreateRequest request, Course course) {
+    private static List<Schedule> createScheduleList(CourseRequest request, Course course) {
         return request.getSchedules().stream()
                 .map(scheduleRequest -> Schedule.builder()
                         .day(scheduleRequest.getDay())

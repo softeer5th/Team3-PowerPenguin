@@ -1,6 +1,6 @@
 package com.softeer.reacton.domain.course;
 
-import com.softeer.reacton.domain.course.dto.CourseCreateRequest;
+import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.global.exception.BaseException;
@@ -21,7 +21,7 @@ public class ProfessorCourseService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public long createCourse(String oauthId, CourseCreateRequest request) {
+    public long createCourse(String oauthId, CourseRequest request) {
         log.debug("수업을 생성합니다.");
 
         Professor professor = professorRepository.findByOauthId(oauthId)
@@ -39,7 +39,7 @@ public class ProfessorCourseService {
     }
 
     @Transactional
-    public void updateCourse(String oauthId, long courseId, CourseCreateRequest request) {
+    public void updateCourse(String oauthId, long courseId, CourseRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
 
         Course course = findCourseByProfessor(oauthId, courseId);

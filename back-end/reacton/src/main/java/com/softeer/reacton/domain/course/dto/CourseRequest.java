@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class CourseCreateRequest {
+public class CourseRequest {
     private String name;
     private String courseCode;
     private int capacity;

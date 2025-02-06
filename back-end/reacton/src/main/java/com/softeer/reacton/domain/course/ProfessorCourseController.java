@@ -1,6 +1,6 @@
 package com.softeer.reacton.domain.course;
 
-import com.softeer.reacton.domain.course.dto.CourseCreateRequest;
+import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,10 +29,10 @@ public class ProfessorCourseController {
             description = "수업 데이터를 받아 데이터베이스 저장하고 courseId를 반환합니다.",
             responses = {@ApiResponse(responseCode = "201", description = "수업이 생성되었습니다.")}
     )
-    public ResponseEntity<SuccessResponse<Map<String, String>>> createCourse(HttpServletRequest request, @RequestBody CourseCreateRequest courseCreateRequest) {
+    public ResponseEntity<SuccessResponse<Map<String, String>>> createCourse(HttpServletRequest request, @RequestBody CourseRequest courseRequest) {
         String oauthId = (String) request.getAttribute("oauthId");
 
-        long courseId = professorCourseService.createCourse(oauthId, courseCreateRequest);
+        long courseId = professorCourseService.createCourse(oauthId, courseRequest);
 
         Map<String, String> response = new HashMap<>();
         response.put("courseId", String.valueOf(courseId));
@@ -48,9 +48,9 @@ public class ProfessorCourseController {
             description = "수업 데이터를 기존 데이터에 업데이트하고 courseId를 반환합니다.",
             responses = {@ApiResponse(responseCode = "200", description = "수업이 수정되었습니다.")}
     )
-    public ResponseEntity<SuccessResponse<Map<String, String>>> updateCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId, @RequestBody CourseCreateRequest courseCreateRequest) {
+    public ResponseEntity<SuccessResponse<Map<String, String>>> updateCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId, @RequestBody CourseRequest courseRequest) {
         String oauthId = (String) request.getAttribute("oauthId");
-        professorCourseService.updateCourse(oauthId, courseId, courseCreateRequest);
+        professorCourseService.updateCourse(oauthId, courseId, courseRequest);
 
         Map<String, String> response = new HashMap<>();
         response.put("courseId", String.valueOf(courseId));
