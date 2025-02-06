@@ -7,7 +7,7 @@ type PrivateProps = {
 
 const Private = ({ onClose }: PrivateProps) => {
   return (
-    <div className={S.container}>
+    <div className={S.container} onClick={(e) => e.stopPropagation()}>
       <button className={S.closeButton} onClick={onClose}>
         <CloseIcon width="19px" height="19px" />
       </button>
