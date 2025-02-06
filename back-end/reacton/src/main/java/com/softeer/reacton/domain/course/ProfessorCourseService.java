@@ -39,18 +39,36 @@ public class ProfessorCourseService {
     public void updateCourse(String oauthId, long courseId, CourseCreateRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
 
+        Course course = findCourseByProfessor(oauthId, courseId);
+
+        course.update(request);
+
+        log.info("수업 업데이트가 완료되었습니다. : courseId = {}", courseId);
+    }
+
+    @Transactional
+    public void deleteCourse(String oauthId, long courseId) {
+        log.debug("수업을 삭제합니다. : courseId = {}", courseId);
+
+        Course course = findCourseByProfessor(oauthId, courseId);
+
+        courseRepository.delete(course);
+        courseRepository.flush();
+
+        log.info("수업이 삭제되었습니다. : courseId = {}", courseId);
+    }
+
+    private Course findCourseByProfessor(String oauthId, long courseId) {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
 
-        if (!course.getProfessor().equals(professor)) {
+        if (!course.getProfessor().getId().equals(professor.getId())) {
             throw new BaseException(CourseErrorCode.UNAUTHORIZED_PROFESSOR);
         }
 
-        course.update(request);
-
-        log.info("수업 업데이트 완료: courseId = {}", courseId);
+        return course;
     }
 }
