@@ -2,9 +2,12 @@ package com.softeer.reacton.domain.course;
 
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
+import com.softeer.reacton.domain.schedule.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "course")
@@ -44,4 +47,6 @@ public class Course {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor; // 교수 정보 (외래 키)
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Schedule> schedules;
 }
