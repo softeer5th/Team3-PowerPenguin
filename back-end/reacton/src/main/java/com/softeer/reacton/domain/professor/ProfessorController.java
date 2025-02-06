@@ -55,7 +55,8 @@ public class ProfessorController {
 
         // TODO : 프론트 리다이렉트 코드 추가 예정
 
-        log.info("회원가입에 성공했습니다 : name = {}", name);
+        log.debug("회원가입에 성공했습니다 : name = {}", name);
+        log.info("회원가입에 성공했습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
