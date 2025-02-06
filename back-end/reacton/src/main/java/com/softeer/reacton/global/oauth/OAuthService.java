@@ -42,6 +42,10 @@ public class OAuthService {
     }
 
     public OAuthLoginResult processOauthLogin(String providerName, String code) {
+        if( code== null || code.isEmpty() ) {
+            throw new BaseException(GlobalErrorCode.MISSING_PARAMETER);
+        }
+
         OAuthProvider provider = oauthConfig.getProvider(providerName);
 
         OAuthTokenResponse tokenResponse = getAuthAccessTokenByOauth(code, provider);
