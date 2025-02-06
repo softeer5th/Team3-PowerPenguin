@@ -1,24 +1,67 @@
 import S from './ClassModal.module.css';
 import CloseSvg from '../../../../assets/icons/close.svg?react';
+import ClockSvg from '../../../../assets/icons/clock.svg?react';
+import PeopleSvg from '../../../../assets/icons/people.svg?react';
+import ClassChip from './ClassChip';
 
-const ClassModal = () => {
+type ClassModalProps = {
+  closeModal: () => void;
+  university: string;
+  courseTitle: string;
+  coursePeople: string;
+  courseDay: string;
+  courseNumber: string;
+  startTime: string;
+  endTime: string;
+  courseSort: string;
+};
+
+const ClassModal = ({
+  closeModal,
+  university,
+  courseTitle,
+  coursePeople,
+  courseDay,
+  startTime,
+  courseNumber,
+  endTime,
+  courseSort,
+}: ClassModalProps) => {
+  const handleEnterButton = () => {
+    closeModal();
+    // 입장하기 버튼
+  };
+
   return (
-    <div className={S.modalContainer}>
+    <div className={S.modalContainer} onClick={(e) => e.stopPropagation()}>
       <div className={S.modalTitle}>강의 정보를 확인해주세요</div>
-      <button className={S.closeButton}>
-        <CloseSvg width="12px" height="12px" />
+      <button onClick={closeModal} className={S.closeButton}>
+        <CloseSvg width="100%" height="100%" />
       </button>
       <div className={S.contentContainer}>
-        <div className={S.university}>소프대학교</div>
-        <div className={S.courseTitle}>학생의 생성과 발전</div>
+        <ClassChip text={courseSort} />
+        <div className={S.university}>{university}</div>
+        <div
+          className={S.courseTitle}
+        >{`${courseTitle} (${courseNumber})`}</div>
         <div className={S.courseDescBox}>
-          <span className={S.courseTime}>월 8:00-10:00</span>
-          <span className={S.coursePeople}>300명</span>
+          <span className={S.courseTime}>
+            <ClockSvg className={S.descSvg} />
+            {`${courseDay} ${startTime}-${endTime}`}
+          </span>
+          <span className={S.coursePeople}>
+            <PeopleSvg className={S.descSvg} />
+            {coursePeople}
+          </span>
         </div>
       </div>
       <div className={S.buttonContainer}>
-        <button className={S.backButton}>뒤로가기</button>
-        <button className={S.enterButton}>입장하기</button>
+        <button onClick={closeModal} className={S.backButton}>
+          뒤로가기
+        </button>
+        <button onClick={handleEnterButton} className={S.enterButton}>
+          입장하기
+        </button>
       </div>
     </div>
   );
