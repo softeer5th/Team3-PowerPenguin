@@ -96,3 +96,136 @@
   color: white;
   border-radius: 12px;
 }
+
+/*스플릿 뷰 */
+@media all and (min-width: 469px) and (max-width: 960px) {
+  .modalContainer {
+    max-width: 652px;
+    padding: 36px;
+    gap: 36px;
+  }
+
+  .modalTitle {
+    font: var(--web-title1-bold);
+  }
+
+  .closeButton {
+    top: 44px;
+    right: 44px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .contentContainer {
+    padding: 28px 0;
+  }
+
+  .university {
+    font: var(--web-body2-bold);
+    color: var(--sub-orange-500);
+    margin-top: 24px;
+  }
+
+  .courseTitle {
+    font: var(--web-title3-bold);
+    margin-bottom: 20px;
+  }
+
+  .courseDescBox {
+    font: var(--web-caption1-medium);
+  }
+
+  .descSvg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .courseTime {
+    gap: 8px;
+  }
+  .coursePeople {
+    gap: 8px;
+  }
+
+  .buttonContainer {
+    gap: 20px;
+  }
+
+  .backButton {
+    font: var(--web-button4-bold);
+    padding: 17px 0;
+  }
+
+  .enterButton {
+    font: var(--web-button4-bold);
+    padding: 17px 0;
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .modalContainer {
+    max-width: 676px;
+    padding: 40px 36px;
+    gap: 44px;
+  }
+
+  .modalTitle {
+    font: var(--web-title1-bold);
+  }
+
+  .closeButton {
+    top: 51px;
+    right: 51px;
+    width: 19px;
+    height: 19px;
+  }
+
+  .contentContainer {
+    padding: 44px 0 36px 0;
+  }
+
+  .university {
+    font: var(--web-body1-bold);
+    color: var(--sub-orange-500);
+    margin-top: 24px;
+  }
+
+  .courseTitle {
+    font: var(--web-title2-bold);
+    margin-bottom: 20px;
+  }
+
+  .courseDescBox {
+    font: var(--web-caption1-medium);
+    gap: 16px;
+  }
+
+  .descSvg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .courseTime {
+    gap: 8px;
+  }
+  .coursePeople {
+    gap: 8px;
+  }
+
+  .buttonContainer {
+    width: 100%;
+    display: flex;
+    gap: 9px;
+  }
+
+  .backButton {
+    font: var(--web-button4-bold);
+    padding: 17px 0;
+  }
+
+  .enterButton {
+    font: var(--web-button4-bold);
+    padding: 17px 0;
+  }
+}
