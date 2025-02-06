@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Log4j2
 @RestController
 @RequestMapping("/professors")
 @Tag(name = "Professor API", description = "교수 사용자 관련 API")
@@ -36,6 +38,8 @@ public class ProfessorController {
             @RequestParam("name") String name,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile,
             HttpServletRequest request) {
+        log.debug("회원가입 요청을 호출합니다. : name = {}, profileImageFile = {}", name, profileImageFile != null ? "yes" : "no");
+
         String oauthId = (String) request.getAttribute("oauthId");
         String email = (String) request.getAttribute("email");
         boolean isSignedUp = (boolean) request.getAttribute("isSignedUp");
@@ -50,6 +54,9 @@ public class ProfessorController {
                 .build();
 
         // TODO : 프론트 리다이렉트 코드 추가 예정
+
+        log.debug("회원가입에 성공했습니다 : name = {}", name);
+        log.info("회원가입에 성공했습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
