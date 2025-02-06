@@ -33,7 +33,6 @@ public class ProfessorCourseController {
         String oauthId = (String) request.getAttribute("oauthId");
 
         long courseId = professorCourseService.createCourse(oauthId, courseCreateRequest);
-        log.info("수업을 생성하고 DB에 저장했습니다. : courseId = {}", courseId);
 
         Map<String, String> response = new HashMap<>();
         response.put("courseId", String.valueOf(courseId));
@@ -52,7 +51,6 @@ public class ProfessorCourseController {
     public ResponseEntity<SuccessResponse<Map<String, String>>> updateCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId, @RequestBody CourseCreateRequest courseCreateRequest) {
         String oauthId = (String) request.getAttribute("oauthId");
         professorCourseService.updateCourse(oauthId, courseId, courseCreateRequest);
-        log.info("수업을 수정하고 DB에 저장했습니다. : courseId = {}", courseId);
 
         Map<String, String> response = new HashMap<>();
         response.put("courseId", String.valueOf(courseId));
