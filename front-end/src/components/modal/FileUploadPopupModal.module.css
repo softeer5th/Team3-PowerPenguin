@@ -1,26 +1,26 @@
 .modal {
   background-color: white;
   border-radius: var(--large);
-  width: 42.25rem;
+  width: 676px;
   height: fit-content;
-  box-shadow: 0rem 0rem 3.125rem 0rem rgba(34, 34, 34, 0.3);
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
   position: relative;
 }
 
 .closeButton {
   position: absolute;
   float: right;
-  top: 1.875rem;
-  right: 1.875rem;
+  top: 30px;
+  right: 30px;
   cursor: pointer;
 }
 
 .modalContent {
-  padding-top: 5.125rem;
-  padding-left: 2.75rem;
-  padding-right: 2.75rem;
-  padding-bottom: 3.75rem;
-  gap: 6.1875rem;
+  padding-top: 82px;
+  padding-left: 44px;
+  padding-right: 44px;
+  padding-bottom: 60px;
+  gap: 99px;
   display: flex;
   flex-direction: column;
 }
@@ -28,7 +28,7 @@
 .modalText {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 20px;
   text-align: left;
 }
 
@@ -54,10 +54,10 @@
   font: var(--web-title4-bold);
   color: var(--blue-400);
   display: flex;
-  height: 3.5625rem;
+  height: 57px;
   justify-content: center;
   align-items: center;
-  margin: 0.75rem 1.25rem;
+  margin: 12px 20px;
 }
 
 .fileSize {
@@ -66,21 +66,21 @@
 }
 
 .deleteButton {
-  width: 1.875rem;
-  height: 1.875rem;
+  width: 30px;
+  height: 30px;
   display: flex;
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
   background-color: var(--blue-300);
   border-radius: 50%;
-  margin: 0rem 1.25rem;
+  margin: 0px 20px;
 }
 
 .buttonContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.625rem;
+  gap: 26px;
   width: 100%;
 }
 
