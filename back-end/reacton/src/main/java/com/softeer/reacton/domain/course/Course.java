@@ -34,8 +34,8 @@ public class Course {
     @Column(nullable = false, unique = true, length = 10)
     private String accessCode;
 
-    @Column(nullable = false, length = 20)
-    private String status; // 상태 (진행중, 종료됨 등)
+    @Column(nullable = false)
+    private boolean isActive;
 
     @Column(length = 512)
     private String fileUrl; // 강의 자료 URL
