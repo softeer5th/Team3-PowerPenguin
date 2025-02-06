@@ -31,16 +31,6 @@ const useModal = () => {
           overflow: 'hidden',
         },
         onClick: closeModal,
-        tabIndex: 0,
-        autoFocus: true,
-        onScroll: (e: React.UIEvent<HTMLDivElement>) => {
-          e.stopPropagation();
-          e.preventDefault();
-        },
-        onWheel: (e: React.WheelEvent<HTMLDivElement>) => {
-          e.stopPropagation();
-          e.preventDefault();
-        },
       },
       children
     );
