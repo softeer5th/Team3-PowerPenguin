@@ -52,10 +52,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException e) {
-        log.warn(GlobalErrorCode.VALIDATION_FAIL.getMessage());
+        log.warn(GlobalErrorCode.VALIDATION_FAILURE.getMessage());
         return ResponseEntity
-                .status(GlobalErrorCode.VALIDATION_FAIL.getStatus())
-                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAIL));
+                .status(GlobalErrorCode.VALIDATION_FAILURE.getStatus())
+                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
