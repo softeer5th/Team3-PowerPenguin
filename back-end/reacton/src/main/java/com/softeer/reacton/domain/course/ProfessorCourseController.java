@@ -59,4 +59,19 @@ public class ProfessorCourseController {
                 .status(HttpStatus.OK)
                 .body(SuccessResponse.of("수업이 수정되었습니다.", response));
     }
+
+    @DeleteMapping("/{courseId}")
+    @Operation(
+            summary = "수업 삭제 요청",
+            description = "courseId에 해당하는 수업을 삭제합니다.",
+            responses = {@ApiResponse(responseCode = "200", description = "수업이 삭제되었습니다.")}
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> deleteCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        professorCourseService.deleteCourse(oauthId, courseId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("수업이 삭제되었습니다", null));
+    }
 }
