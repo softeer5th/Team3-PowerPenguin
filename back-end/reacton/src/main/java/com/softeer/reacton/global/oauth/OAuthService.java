@@ -66,7 +66,6 @@ public class OAuthService {
 
     private OAuthTokenResponse getAuthAccessTokenByOauth(String code, OAuthProvider provider) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        System.out.println(code);
         formData.add("code", code);
         formData.add("client_id", provider.getClientId());
         formData.add("client_secret", provider.getClientSecret());
