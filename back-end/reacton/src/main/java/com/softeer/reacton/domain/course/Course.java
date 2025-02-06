@@ -1,11 +1,11 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.course.dto.CourseCreateRequest;
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.schedule.Schedule;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -35,7 +36,7 @@ public class Course {
     private CourseType type; // 수업 종류 (전공, 교양, 기타)
 
     @Column(nullable = false, unique = true, length = 10)
-    private String accessCode;
+    private int accessCode;
 
     @Column(nullable = false)
     private boolean isActive;
