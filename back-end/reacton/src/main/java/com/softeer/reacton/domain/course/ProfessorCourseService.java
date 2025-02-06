@@ -32,7 +32,10 @@ public class ProfessorCourseService {
         log.debug("입장코드용 랜덤한 6자리 숫자를 생성합니다 : accessCode = {}", accessCode);
 
         Course course = Course.create(request, accessCode, professor);
-        return courseRepository.save(course).getId();
+        long courseId = courseRepository.save(course).getId();
+        log.info("수업이 생성되었습니다. : courseId = {}", courseId);
+
+        return courseId;
     }
 
     @Transactional
