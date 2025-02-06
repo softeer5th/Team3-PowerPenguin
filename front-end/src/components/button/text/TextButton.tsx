@@ -1,3 +1,4 @@
+import React from 'react';
 import S from './TextButton.module.css';
 
 type TextButtonProps = {
@@ -7,7 +8,7 @@ type TextButtonProps = {
   height?: string;
   text: string;
   isActive?: boolean;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent) => void;
 };
 
 function getColorClass(color: string): keyof typeof S {
@@ -65,7 +66,7 @@ const TextButton = ({
       style={{ width: width, height: height }}
       className={`${S.textButton} ${colorClass} ${sizeClass}`}
       disabled={!isActive}
-      onClick={onClick}
+      onClick={(e: React.MouseEvent) => onClick(e)}
     >
       {text}
     </button>

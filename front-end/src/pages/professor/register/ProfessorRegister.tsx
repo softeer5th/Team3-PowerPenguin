@@ -1,7 +1,8 @@
+import React, { useRef, useState } from 'react';
 import S from './ProfessorRegister.module.css';
 import BasicProfile from '../../../assets/icons/basic-profile.svg?react';
-import { useRef, useState } from 'react';
 import TextButton from '../../../components/button/text/TextButton';
+import { validateImage } from '../../../utils/util';
 
 const ProfessorRegister = () => {
   const [profile, setProfile] = useState<File | null>(null);
@@ -11,7 +12,9 @@ const ProfessorRegister = () => {
   const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      setProfile(files[0]);
+      if (validateImage(files[0])) {
+        setProfile(files[0]);
+      }
     }
   };
 
@@ -21,7 +24,17 @@ const ProfessorRegister = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!profile) {
+      alert('프로필 사진을 선택해 주세요.');
+      return;
+    }
+    if (name.length === 0) {
+      alert('사용자 이름을 입력해 주세요.');
+      return;
+    }
     console.log('회원가입하기');
+    console.log('이름:', name);
+    console.log('프로필 사진:', profile);
   };
 
   return (
@@ -58,7 +71,10 @@ const ProfessorRegister = () => {
                 size="web3"
                 width={profile ? '151px' : '136px'}
                 height="53px"
-                onClick={() => profileInputRef.current?.click()}
+                onClick={(event: React.MouseEvent) => {
+                  event.preventDefault();
+                  profileInputRef.current?.click();
+                }}
               />
             </div>
           </div>
@@ -76,10 +92,8 @@ const ProfessorRegister = () => {
             color="blue"
             size="web4"
             height="80px"
-            onClick={() => {
-              console.log('회원가입하기');
-            }}
-            isActive={name.length > 0}
+            onClick={() => {}}
+            isActive={name.length > 0 && profile !== null}
           />
         </form>
       </div>
