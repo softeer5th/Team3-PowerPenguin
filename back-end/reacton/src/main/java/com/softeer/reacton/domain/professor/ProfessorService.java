@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -58,6 +61,24 @@ public class ProfessorService {
         log.debug("회원가입 처리를 완료했습니다. : email = {}, name = {}", email, name);
 
         return jwtTokenUtil.createAuthAccessToken(oauthId, email);
+    }
+
+    public Map<String, String> getProfileInfo(String oauthId) {
+        log.debug("사용자의 이름, 이메일 주소를 가져옵니다.");
+
+        Map<String, String> profileInfo = new HashMap<>();
+
+        Optional<Professor> existingUser = professorRepository.findByOauthId(oauthId);
+
+        Professor professor = existingUser.orElseThrow(() -> {
+            log.debug("사용자 정보를 가져오는 과정에서 발생한 에러입니다. : User does not exist.");
+            return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
+        });
+
+        profileInfo.put("name", professor.getName());
+        profileInfo.put("email", professor.getEmail());
+
+        return profileInfo;
     }
 
     private void validateProfileImage(MultipartFile file) {
