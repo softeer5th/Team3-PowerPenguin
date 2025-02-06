@@ -1,0 +1,56 @@
+.popupContainer {
+  position: relative;
+  margin: 0 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 20px 12px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+}
+
+.closeButton {
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  width: 12px;
+  height: 12px;
+  color: var(--gray-600);
+}
+
+.warnSvg {
+  display: flex;
+  width: 46px;
+  height: 46px;
+  padding: 12px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 23px;
+  background: linear-gradient(
+    180deg,
+    var(--error-red_200, rgba(255, 236, 236, 0.2)) 0%,
+    var(--error-red_500, rgba(255, 58, 58, 0.2)) 100%
+  );
+  margin-bottom: 12px;
+}
+
+.popupTitle {
+  font: var(--mobile-title3-bold);
+  color: var(--gray-900);
+  margin-bottom: 8px;
+}
+
+.popupDesc {
+  font: var(--mobile-body3-medium);
+  color: var(--gray-500);
+  margin-bottom: 16px;
+}
+
+.checkButton {
+  font: var(--mobile-button1-bold);
+  color: var(--error-red-500);
+}
