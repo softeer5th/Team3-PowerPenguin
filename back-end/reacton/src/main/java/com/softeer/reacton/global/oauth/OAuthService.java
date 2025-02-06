@@ -48,6 +48,11 @@ public class OAuthService {
     public OAuthLoginResult processOauthLogin(String providerName, String code) {
         log.debug("OAuth 로그인을 진행합니다.");
 
+        if (code == null || code.isEmpty()) {
+            log.debug("OAuth 로그인을 진행하는 과정에서 발생한 에러입니다. : Parameter 'code' is empty.");
+            throw new BaseException(GlobalErrorCode.MISSING_PARAMETER);
+        }
+
         OAuthProvider provider = oauthConfig.getProvider(providerName);
 
         OAuthTokenResponse tokenResponse = getAuthAccessTokenByOauth(code, provider);
@@ -80,7 +85,6 @@ public class OAuthService {
         log.debug("OAuth access 토큰을 요청합니다.");
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-
         formData.add("code", code);
         formData.add("client_id", provider.getClientId());
         formData.add("client_secret", provider.getClientSecret());
