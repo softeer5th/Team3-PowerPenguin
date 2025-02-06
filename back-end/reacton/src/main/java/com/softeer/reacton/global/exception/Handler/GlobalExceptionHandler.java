@@ -3,6 +3,7 @@ package com.softeer.reacton.global.exception.Handler;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.DTO.ExceptionResponse;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.ResponseEntity;
@@ -72,5 +73,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(GlobalErrorCode.WRONG_TYPE.getStatus())
                 .body(ExceptionResponse.of(GlobalErrorCode.WRONG_TYPE));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        log.warn(GlobalErrorCode.VALIDATION_FAILURE.getMessage());
+        return ResponseEntity
+                .status(GlobalErrorCode.VALIDATION_FAILURE.getStatus())
+                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE, e.getMessage()));
     }
 }

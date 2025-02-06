@@ -23,4 +23,11 @@ public class ExceptionResponse {
                 .message(errorCode.getMessage())
                 .build();
     }
+
+    public static ExceptionResponse of(ErrorCode errorCode, String customMessage) {
+        return ExceptionResponse.builder()
+                .errorCode(errorCode.getCode())
+                .message(customMessage)
+                .build();
+    }
 }
