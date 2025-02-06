@@ -48,6 +48,31 @@ public class Course {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor; // 교수 정보 (외래 키)
 
+    @Setter
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Schedule> schedules;
+
+    @Builder
+    private Course(String name, String courseCode, int capacity, String university, CourseType type, int accessCode, Professor professor) {
+        this.name = name;
+        this.courseCode = courseCode;
+        this.capacity = capacity;
+        this.university = university;
+        this.type = type;
+        this.accessCode = accessCode;
+        this.isActive = false;
+        this.professor = professor;
+    }
+
+    public static Course of(CourseCreateRequest request, int accessCode, Professor professor) {
+        return Course.builder()
+                .name(request.getName())
+                .courseCode(request.getCourseCode())
+                .capacity(request.getCapacity())
+                .university(request.getUniversity())
+                .type(request.getType())
+                .accessCode(accessCode)
+                .professor(professor)
+                .build();
+    }
 }
