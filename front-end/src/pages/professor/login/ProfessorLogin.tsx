@@ -1,20 +1,12 @@
-import { useState } from 'react';
 import GoogleLoginButton from './components/GoogleLoginButton';
 import S from './ProfessorLogin.module.css';
 import Logo from '../../../assets/icons/logo.svg?react';
 import LoginImage from './assets/professor-login.svg?react';
 import Private from './components/Private20250121';
+import useModal from '../../../hooks/useModal';
 
 const ProfessorLogin = () => {
-  const [isPrivateOpen, setIsPrivateOpen] = useState(false);
-
-  const handlePrivateOpen = () => {
-    setIsPrivateOpen(true);
-  };
-
-  const handlePrivateClose = () => {
-    setIsPrivateOpen(false);
-  };
+  const { Modal, openModal, closeModal } = useModal();
 
   return (
     <>
@@ -43,17 +35,15 @@ const ProfessorLogin = () => {
             </div>
           </div>
           <div className={S.private}>
-            <button className={S.privateButton} onClick={handlePrivateOpen}>
+            <button className={S.privateButton} onClick={openModal}>
               개인정보 처리방침
             </button>
           </div>
         </div>
       </div>
-      {isPrivateOpen && (
-        <div className={S.modal}>
-          <Private onClose={handlePrivateClose} />
-        </div>
-      )}
+      <Modal>
+        <Private onClose={closeModal} />
+      </Modal>
     </>
   );
 };
