@@ -37,8 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+        log.debug("JWT 토큰 관련 필터 작업을 수행합니다.");
+
         String requestUri = request.getRequestURI();
         if (isWhiteListed(requestUri)) {
+            log.debug("필터를 적용하지 않는 URL 주소입니다. : {}", requestUri);
             chain.doFilter(request, response);
             return;
         }
@@ -52,6 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute("email", userInfo.get("email"));
             request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
 
+            log.info("JWT 검증에 성공했습니다. : email: {}", userInfo.get("email"));
+
             chain.doFilter(request, response);
         } catch (BaseException e) {
             setErrorResponse(response, e);
@@ -63,7 +68,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromCookie(HttpServletRequest request) {
-        if (request.getCookies() == null) return null;
+        if (request.getCookies() == null) {
+            log.debug("쿠키가 존재하지 않습니다.");
+            return null;
+        }
 
         return Arrays.stream(request.getCookies())
                 .filter(cookie -> TOKEN_COOKIE_NAME.equals(cookie.getName()))
