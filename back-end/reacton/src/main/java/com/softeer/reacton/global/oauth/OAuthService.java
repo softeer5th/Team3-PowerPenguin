@@ -47,8 +47,9 @@ public class OAuthService {
 
     public OAuthLoginResult processOauthLogin(String providerName, String code) {
         log.debug("OAuth 로그인을 진행합니다.");
-      
-        if( code== null || code.isEmpty() ) {
+
+        if (code == null || code.isEmpty()) {
+            log.debug("OAuth 로그인을 진행하는 과정에서 발생한 에러입니다. : Parameter 'code' is empty.");
             throw new BaseException(GlobalErrorCode.MISSING_PARAMETER);
         }
 
