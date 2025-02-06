@@ -52,6 +52,27 @@ public class ProfessorController {
                 .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
     }
 
+    @GetMapping("/image")
+    @Operation(
+            summary = "교수 프로필 이미지 조회",
+            description = "교수의 프로필 이미지 정보를 가져옵니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 조회했습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> getProfileImage(HttpServletRequest request) {
+        log.debug("사용자의 프로필 이미지를 요청합니다.");
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        Map<String, String> response = professorService.getProfileImage(oauthId);
+
+        log.info("사용자의 프로필 이미지를 가져오는 데 성공했습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
+    }
+
     @PostMapping("/signup")
     @Operation(
             summary = "사용자 등록",

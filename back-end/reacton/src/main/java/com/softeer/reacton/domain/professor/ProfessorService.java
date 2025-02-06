@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -80,6 +77,21 @@ public class ProfessorService {
 
         return profileInfo;
     }
+
+    public Map<String, String> getProfileImage(String oauthId) {
+        log.debug("사용자의 프로필 이미지를 가져옵니다.");
+
+        Optional<Professor> existingUser = professorRepository.findByOauthId(oauthId);
+
+        Professor professor = existingUser.orElseThrow(() -> {
+            log.debug("사용자 정보를 가져오는 과정에서 발생한 에러입니다. : User does not exist.");
+            return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
+        });
+
+        // TODO: S3 도입 후 imageUrl을 리턴하도록 수정 필요
+        return Map.of("imageUrl", Arrays.toString(professor.getProfileImage()));
+    }
+
 
     private void validateProfileImage(MultipartFile file) {
         if (file.getSize() > MAX_IMAGE_FILE_SIZE) {
