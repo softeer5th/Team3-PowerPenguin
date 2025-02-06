@@ -1,7 +1,7 @@
 package com.softeer.reacton.global.exception.Handler;
 
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.exception.ExceptionResponse;
+import com.softeer.reacton.global.DTO.ExceptionResponse;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.TypeMismatchException;
@@ -52,10 +52,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException e) {
-        log.warn(GlobalErrorCode.VALIDATION_FAIL.getMessage());
+        log.warn(GlobalErrorCode.VALIDATION_FAILURE.getMessage());
         return ResponseEntity
-                .status(GlobalErrorCode.VALIDATION_FAIL.getStatus())
-                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAIL));
+                .status(GlobalErrorCode.VALIDATION_FAILURE.getStatus())
+                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
