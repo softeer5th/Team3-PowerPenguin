@@ -30,7 +30,7 @@ public class ProfessorController {
     private final ProfessorService professorService;
     private final CookieConfig cookieConfig;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(
             summary = "교수 프로필 정보 조회",
             description = "교수의 이름과 이메일 정보를 가져옵니다.",
@@ -75,6 +75,8 @@ public class ProfessorController {
                 .status(HttpStatus.OK)
                 .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
     }
+
+    @PatchMapping("/name")
 
     @PostMapping("/signup")
     @Operation(
