@@ -1,6 +1,9 @@
 package com.softeer.reacton.domain.professor;
 
 import com.softeer.reacton.global.config.CookieConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/professors")
+@Tag(name = "Professor API", description = "교수 사용자 관련 API")
 @RequiredArgsConstructor
 public class ProfessorController {
 
@@ -19,6 +23,15 @@ public class ProfessorController {
     private final CookieConfig cookieConfig;
 
     @PostMapping("/signup")
+    @Operation(
+            summary = "사용자 등록",
+            description = "사용자 정보를 기반으로 회원가입 과정을 수행합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "성공적으로 생성되었습니다."),
+                    @ApiResponse(responseCode = "409", description = "이미 가입된 사용자입니다."),
+                    @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
+            }
+    )
     public ResponseEntity<Void> signUp(
             @RequestParam("name") String name,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile,

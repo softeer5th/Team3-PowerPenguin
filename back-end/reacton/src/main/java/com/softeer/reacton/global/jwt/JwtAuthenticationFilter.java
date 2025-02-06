@@ -2,7 +2,7 @@ package com.softeer.reacton.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.exception.ExceptionResponse;
+import com.softeer.reacton.global.DTO.ExceptionResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

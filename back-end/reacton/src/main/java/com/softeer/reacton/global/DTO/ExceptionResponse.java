@@ -1,4 +1,4 @@
-package com.softeer.reacton.global.exception;
+package com.softeer.reacton.global.DTO;
 
 import com.softeer.reacton.global.exception.code.ErrorCode;
 import lombok.Builder;
