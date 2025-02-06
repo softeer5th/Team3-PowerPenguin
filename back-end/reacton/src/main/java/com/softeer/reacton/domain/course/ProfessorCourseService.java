@@ -30,18 +30,7 @@ public class ProfessorCourseService {
         int accessCode = 100000 + secureRandom.nextInt(900000);
         log.debug("입장코드용 랜덤한 6자리 숫자를 생성합니다 : accessCode = {}", accessCode);
 
-        Course course = Course.of(request, accessCode, professor);
-        List<Schedule> schedules = request.getSchedules().stream()
-                .map(scheduleRequest ->
-                        Schedule.builder()
-                                .day(scheduleRequest.getDay())
-                                .startTime(TimeUtil.parseTime(scheduleRequest.getStartTime()))
-                                .endTime(TimeUtil.parseTime(scheduleRequest.getEndTime()))
-                                .course(course)
-                                .build())
-                .collect(Collectors.toList());
-        course.setSchedules(schedules);
-
+        Course course = Course.create(request, accessCode, professor);
         return courseRepository.save(course).getId();
     }
 

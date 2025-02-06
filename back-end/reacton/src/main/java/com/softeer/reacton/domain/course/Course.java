@@ -67,8 +67,8 @@ public class Course {
         this.professor = professor;
     }
 
-    public static Course of(CourseCreateRequest request, int accessCode, Professor professor) {
-        return Course.builder()
+    public static Course create(CourseCreateRequest request, int accessCode, Professor professor) {
+        Course course = Course.builder()
                 .name(request.getName())
                 .courseCode(request.getCourseCode())
                 .capacity(request.getCapacity())
@@ -77,6 +77,9 @@ public class Course {
                 .accessCode(accessCode)
                 .professor(professor)
                 .build();
+
+        course.schedules = createScheduleList(request, course);
+        return course;
     }
 
     public void update(CourseCreateRequest request) {
