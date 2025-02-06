@@ -21,10 +21,6 @@ public class ProfessorService {
     private static final long MAX_IMAGE_FILE_SIZE = 64 * 1024;
 
     public String signUp(String name, MultipartFile profileImageFile, String oauthId, String email, Boolean isSignedUp) {
-        if (profileImageFile != null && !profileImageFile.isEmpty()) {
-            validateProfileImage(profileImageFile);
-        }
-
         if (isSignedUp) {
             throw new BaseException(ProfessorErrorCode.ALREADY_REGISTERED_USER);
         }
@@ -35,7 +31,8 @@ public class ProfessorService {
 
         // TODO: 현재 파일을 DB에 저장하지만, 추후 클라우드 스토리지(S3 등)에 업로드하도록 변경 예정
         byte[] imageBytes = null;
-        if (profileImageFile != null) {
+        if (profileImageFile != null && !profileImageFile.isEmpty()) {
+            validateProfileImage(profileImageFile);
             try {
                 imageBytes = profileImageFile.getBytes();
             } catch (IOException e) {
