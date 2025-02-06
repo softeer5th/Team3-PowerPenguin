@@ -1,7 +1,7 @@
 package com.softeer.reacton.global.exception.Handler;
 
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.DTO.ExceptionResponse;
+import com.softeer.reacton.global.dto.ExceptionResponse;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;

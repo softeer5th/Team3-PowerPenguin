@@ -1,4 +1,4 @@
-package com.softeer.reacton.global.DTO;
+package com.softeer.reacton.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.softeer.reacton.global.exception.code.ErrorCode;
