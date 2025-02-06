@@ -5,20 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class FailResponse {
+public class ExceptionResponse {
     private final boolean success;
     private final String errorCode;
     private final String message;
 
     @Builder
-    public FailResponse(String message, String errorCode) {
+    public ExceptionResponse(String message, String errorCode) {
         this.success = false;
         this.errorCode = errorCode;
         this.message = message;
     }
 
-    public static FailResponse of(ErrorCode errorCode) {
-        return FailResponse.builder()
+    public static ExceptionResponse of(ErrorCode errorCode) {
+        return ExceptionResponse.builder()
                 .errorCode(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();

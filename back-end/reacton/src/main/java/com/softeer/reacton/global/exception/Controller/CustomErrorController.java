@@ -1,7 +1,7 @@
 package com.softeer.reacton.global.exception.Controller;
 
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
-import com.softeer.reacton.global.DTO.FailResponse;
+import com.softeer.reacton.global.DTO.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ public class CustomErrorController implements ErrorController {
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
-    public ResponseEntity<FailResponse> handleError(HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         Integer statusCode = Optional.ofNullable(status)
@@ -42,12 +42,12 @@ public class CustomErrorController implements ErrorController {
             log.warn(GlobalErrorCode.INVALID_PATH.getMessage());
             return ResponseEntity
                     .status(GlobalErrorCode.INVALID_PATH.getStatus())
-                    .body(FailResponse.of(GlobalErrorCode.INVALID_PATH));
+                    .body(ExceptionResponse.of(GlobalErrorCode.INVALID_PATH));
         }
 
         log.error(GlobalErrorCode.SERVER_ERROR.getMessage());
         return ResponseEntity
                 .status(GlobalErrorCode.SERVER_ERROR.getStatus())
-                .body(FailResponse.of(GlobalErrorCode.SERVER_ERROR));
+                .body(ExceptionResponse.of(GlobalErrorCode.SERVER_ERROR));
     }
 }
