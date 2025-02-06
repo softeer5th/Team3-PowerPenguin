@@ -1,6 +1,7 @@
 package com.softeer.reacton.domain.professor;
 
 import com.softeer.reacton.global.config.CookieConfig;
+import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Log4j2
 @RestController
 @RequestMapping("/professors")
@@ -26,6 +29,28 @@ public class ProfessorController {
 
     private final ProfessorService professorService;
     private final CookieConfig cookieConfig;
+
+    @GetMapping("/")
+    @Operation(
+            summary = "교수 프로필 정보 조회",
+            description = "교수의 이름과 이메일 정보를 가져옵니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 조회했습니다."),
+                    @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> getProfileInfo(HttpServletRequest request) {
+        log.debug("사용자의 이름, 이메일 주소를 요청합니다.");
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        Map<String, String> response = professorService.getProfileInfo(oauthId);
+
+        log.info("사용자의 이름, 이메일 주소를 가져오는 데 성공했습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
+    }
 
     @PostMapping("/signup")
     @Operation(
