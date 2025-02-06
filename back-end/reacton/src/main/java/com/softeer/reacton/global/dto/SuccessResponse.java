@@ -1,4 +1,4 @@
-package com.softeer.reacton.global.DTO;
+package com.softeer.reacton.global.dto;
 
 import lombok.Getter;
 
