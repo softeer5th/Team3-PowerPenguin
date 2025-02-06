@@ -8,6 +8,7 @@ import com.softeer.reacton.global.exception.code.OAuthErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import com.softeer.reacton.global.oauth.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
@@ -30,6 +32,8 @@ public class OAuthService {
     private final WebClient webClient;
 
     public String getOauthLoginUrl(String providerName) {
+        log.debug("OAuth 로그인 URL을 생성합니다.");
+
         OAuthProvider provider = oauthConfig.getProvider(providerName);
         StringBuilder urlBuilder = new StringBuilder(provider.getLoginUrl());
 
@@ -42,6 +46,8 @@ public class OAuthService {
     }
 
     public OAuthLoginResult processOauthLogin(String providerName, String code) {
+        log.debug("OAuth 로그인을 진행합니다.");
+      
         if( code== null || code.isEmpty() ) {
             throw new BaseException(GlobalErrorCode.MISSING_PARAMETER);
         }
@@ -55,8 +61,12 @@ public class OAuthService {
 
         existingUser.ifPresent(professor -> {
             if (!professor.getEmail().equals(userProfile.getEmail())) {
+                log.debug("사용자 이메일 주소를 변경합니다. : oldEmail = {}, newEmail = {}", professor.getEmail(), userProfile.getEmail());
+
                 professor.updateEmail(userProfile.getEmail());
                 professorRepository.save(professor);
+
+                log.debug("사용자 이메일 주소를 변경했습니다.");
             }
         });
 
@@ -65,10 +75,14 @@ public class OAuthService {
                 ? jwtTokenUtil.createAuthAccessToken(userProfile.getOauthId(), userProfile.getEmail())
                 : jwtTokenUtil.createSignUpToken(userProfile.getOauthId(), userProfile.getEmail());
 
+        log.info("OAuth 로그인이 완료되었습니다.");
+
         return new OAuthLoginResult(accessToken, isSignedUp);
     }
 
     private OAuthTokenResponse getAuthAccessTokenByOauth(String code, OAuthProvider provider) {
+        log.debug("OAuth access 토큰을 요청합니다.");
+
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("code", code);
         formData.add("client_id", provider.getClientId());
@@ -85,11 +99,14 @@ public class OAuthService {
                     .bodyToMono(OAuthTokenResponse.class)
                     .block();
         } catch (WebClientResponseException e) {
+            log.error("OAuth access 토큰을 요청하는 과정에서 발생한 에러입니다. : {}", e.getMessage());
             throw new BaseException(GlobalErrorCode.SERVER_ERROR);
         }
     }
 
     private UserProfile getUserProfile(String providerName, OAuthProvider provider, OAuthTokenResponse tokenResponse) {
+        log.debug("OAuth 사용자 정보를 가져옵니다.");
+
         if ("google".equals(providerName)) {
             return webClient.get()
                     .uri(provider.getUserInfoUri())
@@ -99,6 +116,7 @@ public class OAuthService {
                     .block();
         }
 
+        log.warn("OAuth 사용자 정보를 가져오는 과정에서 발생한 에러입니다. : OAuth provider '{}' not found", providerName);
         throw new BaseException(OAuthErrorCode.UNSUPPORTED_OAUTH_PROVIDER);
     }
 }
