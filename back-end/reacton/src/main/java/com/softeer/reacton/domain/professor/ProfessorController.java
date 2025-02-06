@@ -36,7 +36,8 @@ public class ProfessorController {
             description = "교수의 이름과 이메일 정보를 가져옵니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공적으로 조회했습니다."),
-                    @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.")
+                    @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
     public ResponseEntity<SuccessResponse<Map<String, String>>> getProfileInfo(HttpServletRequest request) {
@@ -57,7 +58,9 @@ public class ProfessorController {
             summary = "교수 프로필 이미지 조회",
             description = "교수의 프로필 이미지 정보를 가져옵니다.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공적으로 조회했습니다.")
+                    @ApiResponse(responseCode = "200", description = "성공적으로 조회했습니다."),
+                    @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
     public ResponseEntity<SuccessResponse<Map<String, String>>> getProfileImage(HttpServletRequest request) {
