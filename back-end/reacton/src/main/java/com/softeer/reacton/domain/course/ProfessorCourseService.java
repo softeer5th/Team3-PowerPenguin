@@ -20,6 +20,7 @@ public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
 
+    @Transactional
     public long createCourse(String oauthId, CourseCreateRequest request) {
         log.debug("수업을 생성합니다.");
 
