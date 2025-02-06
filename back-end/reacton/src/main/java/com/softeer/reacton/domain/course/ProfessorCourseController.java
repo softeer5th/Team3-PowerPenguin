@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,5 +41,24 @@ public class ProfessorCourseController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(SuccessResponse.of("수업이 생성되었습니다.", response));
+    }
+
+    @PutMapping("/{courseId}")
+    @Operation(
+            summary = "수업 수정 요청",
+            description = "수업 데이터를 기존 데이터에 업데이트하고 courseId를 반환합니다.",
+            responses = {@ApiResponse(responseCode = "200", description = "수업이 수정되었습니다.")}
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> updateCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId, @RequestBody CourseCreateRequest courseCreateRequest) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        professorCourseService.updateCourse(oauthId, courseId, courseCreateRequest);
+        log.info("수업을 수정하고 DB에 저장했습니다. : courseId = {}", courseId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("courseId", String.valueOf(courseId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("수업이 수정되었습니다.", response));
     }
 }

@@ -4,9 +4,11 @@ import com.softeer.reacton.domain.course.dto.CourseCreateRequest;
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.global.util.TimeUtil;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -44,13 +46,14 @@ public class Course {
     @Column(length = 512)
     private String fileUrl; // 강의 자료 URL
 
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor; // 교수 정보 (외래 키)
 
     @Setter
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Schedule> schedules;
+    private List<Schedule> schedules = new ArrayList<>();
 
     @Builder
     private Course(String name, String courseCode, int capacity, String university, CourseType type, int accessCode, Professor professor) {
@@ -75,4 +78,27 @@ public class Course {
                 .professor(professor)
                 .build();
     }
+
+    public void update(CourseCreateRequest request) {
+        this.name = request.getName();
+        this.courseCode = request.getCourseCode();
+        this.capacity = request.getCapacity();
+        this.university = request.getUniversity();
+        this.type = request.getType();
+
+        this.schedules.clear();
+        this.schedules.addAll(createScheduleList(request, this));
+    }
+
+    private static List<Schedule> createScheduleList(CourseCreateRequest request, Course course) {
+        return request.getSchedules().stream()
+                .map(scheduleRequest -> Schedule.builder()
+                        .day(scheduleRequest.getDay())
+                        .startTime(TimeUtil.parseTime(scheduleRequest.getStartTime()))
+                        .endTime(TimeUtil.parseTime(scheduleRequest.getEndTime()))
+                        .course(course)
+                        .build())
+                .toList();
+    }
 }
+

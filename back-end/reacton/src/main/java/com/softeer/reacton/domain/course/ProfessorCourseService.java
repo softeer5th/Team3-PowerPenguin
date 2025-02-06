@@ -3,17 +3,15 @@ package com.softeer.reacton.domain.course;
 import com.softeer.reacton.domain.course.dto.CourseCreateRequest;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
-import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
-import com.softeer.reacton.global.util.TimeUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,5 +43,24 @@ public class ProfessorCourseService {
         course.setSchedules(schedules);
 
         return courseRepository.save(course).getId();
+    }
+
+    @Transactional
+    public void updateCourse(String oauthId, long courseId, CourseCreateRequest request) {
+        log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
+
+        Professor professor = professorRepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
+
+        if (!course.getProfessor().equals(professor)) {
+            throw new BaseException(CourseErrorCode.UNAUTHORIZED_PROFESSOR);
+        }
+
+        course.update(request);
+
+        log.info("수업 업데이트 완료: courseId = {}", courseId);
     }
 }
