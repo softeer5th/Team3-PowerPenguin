@@ -23,6 +23,10 @@ public class ProfessorCourseService {
     @Transactional
     public long createCourse(String oauthId, CourseRequest request) {
         log.debug("수업을 생성합니다.");
+        if (request == null) {
+            log.warn("수업 생성 요청 데이터가 null입니다. : 'request' is null.");
+            throw new BaseException(CourseErrorCode.COURSE_REQUEST_IS_NULL);
+        }
 
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
@@ -41,6 +45,11 @@ public class ProfessorCourseService {
     @Transactional
     public void updateCourse(String oauthId, long courseId, CourseRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
+
+        if (request == null) {
+            log.warn("수업 수정 요청 데이터가 null입니다. : 'request' is null.");
+            throw new BaseException(CourseErrorCode.COURSE_REQUEST_IS_NULL);
+        }
 
         Course course = findCourseByProfessor(oauthId, courseId);
 
