@@ -82,7 +82,7 @@ public class ProfessorController {
             summary = "사용자 이름 변경",
             description = "사용자의 이름을 변경합니다.",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "성공적으로 변경되었습니다."),
+                    @ApiResponse(responseCode = "200", description = "성공적으로 변경되었습니다."),
                     @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
@@ -94,13 +94,14 @@ public class ProfessorController {
         log.debug("사용자의 이름 수정을 요청합니다.");
 
         String oauthId = (String) request.getAttribute("oauthId");
-        professorService.updateName(oauthId, requestDto.getName());
+        String newName = requestDto.getName();
+        Map<String, String> response = professorService.updateName(oauthId, newName);
 
         log.info("사용자의 이름을 성공적으로 변경했습니다.");
 
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("이름을 성공적으로 변경했습니다.", response));
     }
 
     @PostMapping("/signup")

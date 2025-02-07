@@ -92,7 +92,7 @@ public class ProfessorService {
         return Map.of("imageUrl", Arrays.toString(professor.getProfileImage()));
     }
 
-    public void updateName(String oauthId, String newName) {
+    public Map<String, String> updateName(String oauthId, String newName) {
         log.debug("사용자의 이름을 수정합니다. : newName = {}", newName);
 
         int updatedRows = professorRepository.updateName(oauthId, newName);
@@ -102,6 +102,8 @@ public class ProfessorService {
         }
 
         log.debug("이름 수정이 완료되었습니다.");
+
+        return Map.of("name", newName);
     }
 
     private void validateProfileImage(MultipartFile file) {
