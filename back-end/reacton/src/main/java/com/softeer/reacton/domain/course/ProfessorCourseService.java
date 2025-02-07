@@ -70,6 +70,26 @@ public class ProfessorCourseService {
         log.info("수업이 삭제되었습니다. : courseId = {}", courseId);
     }
 
+    @Transactional
+    public void startCourse(String oauthId, long courseId) {
+        log.debug("수업을 시작 상태로 변경합니다. courseId = {}", courseId);
+
+        Course course = findCourseByProfessor(oauthId, courseId);
+        course.activate();
+
+        log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
+    }
+
+    @Transactional
+    public void closeCourse(String oauthId, long courseId) {
+        log.debug("수업을 종료 상태로 변경합니다. courseId = {}", courseId);
+
+        Course course = findCourseByProfessor(oauthId, courseId);
+        course.deactivate();
+
+        log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
+    }
+
     private Course findCourseByProfessor(String oauthId, long courseId) {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
@@ -83,4 +103,5 @@ public class ProfessorCourseService {
 
         return course;
     }
+
 }
