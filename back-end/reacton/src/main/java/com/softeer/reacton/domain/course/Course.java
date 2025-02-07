@@ -4,13 +4,17 @@ import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.util.TimeUtil;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "course")
 @Entity
@@ -40,8 +44,6 @@ public class Course {
     @Column(nullable = false, unique = true)
     private int accessCode;
 
-    @Setter
-    @Getter
     @Column(nullable = false)
     private boolean isActive;
 
@@ -104,6 +106,22 @@ public class Course {
                         .course(course)
                         .build())
                 .toList();
+    }
+
+    public void activate() {
+        if (this.isActive) {
+            log.warn("이미 시작 상태인 수업입니다. : isActive = true");
+            throw new BaseException(CourseErrorCode.COURSE_ALREADY_ACTIVE);
+        }
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        if (!this.isActive) {
+            log.warn("이미 종료 상태인 수업입니다. : isActive = false");
+            throw new BaseException(CourseErrorCode.COURSE_ALREADY_INACTIVE);
+        }
+        this.isActive = false;
     }
 }
 

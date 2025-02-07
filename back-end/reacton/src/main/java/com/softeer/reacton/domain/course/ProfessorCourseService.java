@@ -75,11 +75,7 @@ public class ProfessorCourseService {
         log.debug("수업을 시작 상태로 변경합니다. courseId = {}", courseId);
 
         Course course = findCourseByProfessor(oauthId, courseId);
-        if (course.isActive()) {
-            log.warn("이미 시작 상태인 수업입니다. : isActive = true");
-            throw new BaseException(CourseErrorCode.COURSE_ALREADY_ACTIVE);
-        }
-        course.setActive(true);
+        course.activate();
 
         log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
     }
@@ -89,11 +85,7 @@ public class ProfessorCourseService {
         log.debug("수업을 종료 상태로 변경합니다. courseId = {}", courseId);
 
         Course course = findCourseByProfessor(oauthId, courseId);
-        if (!course.isActive()) {
-            log.warn("이미 종료 상태인 수업입니다. : isActive = false");
-            throw new BaseException(CourseErrorCode.COURSE_ALREADY_INACTIVE);
-        }
-        course.setActive(false);
+        course.deactivate();
 
         log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
     }
