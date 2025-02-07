@@ -73,6 +73,9 @@ public class ProfessorCourseService {
     @Transactional
     public void startCourse(String oauthId, long courseId) {
         Course course = findCourseByProfessor(oauthId, courseId);
+        if (course.isActive()) {
+            throw new BaseException(CourseErrorCode.COURSE_ALREADY_ACTIVE);
+        }
         course.setActive(true);
     }
 
@@ -80,6 +83,9 @@ public class ProfessorCourseService {
     public void closeCourse(String oauthId, long courseId) {
 
         Course course = findCourseByProfessor(oauthId, courseId);
+        if (!course.isActive()) {
+            throw new BaseException(CourseErrorCode.COURSE_ALREADY_INACTIVE);
+        }
         course.setActive(false);
 
     }

@@ -41,6 +41,7 @@ public class Course {
     private int accessCode;
 
     @Setter
+    @Getter
     @Column(nullable = false)
     private boolean isActive;
 
