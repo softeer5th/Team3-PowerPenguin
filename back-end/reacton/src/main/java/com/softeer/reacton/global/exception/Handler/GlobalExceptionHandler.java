@@ -1,7 +1,7 @@
 package com.softeer.reacton.global.exception.Handler;
 
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.DTO.ExceptionResponse;
+import com.softeer.reacton.global.dto.ExceptionResponse;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
         log.warn(GlobalErrorCode.VALIDATION_FAILURE.getMessage());
         return ResponseEntity
                 .status(GlobalErrorCode.VALIDATION_FAILURE.getStatus())
-                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE));
+                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE, e.getBindingResult().getFieldErrors().get(0).getDefaultMessage()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
