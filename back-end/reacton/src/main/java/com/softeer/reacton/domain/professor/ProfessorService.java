@@ -36,16 +36,7 @@ public class ProfessorService {
         }
 
         // TODO: 현재 파일을 DB에 저장하지만, 추후 클라우드 스토리지(S3 등)에 업로드하도록 변경 예정
-        byte[] imageBytes = null;
-        if (profileImageFile != null && !profileImageFile.isEmpty()) {
-            validateProfileImage(profileImageFile);
-            try {
-                imageBytes = profileImageFile.getBytes();
-            } catch (IOException e) {
-                log.debug("회원가입 처리 과정에서 발생한 에러입니다. : {}", e.getMessage());
-                throw new BaseException(ProfessorErrorCode.IMAGE_PROCESSING_FAILURE);
-            }
-        }
+        byte[] imageBytes = getImageBytes(profileImageFile);
 
         Professor professor = Professor.builder()
                 .oauthId(oauthId)
@@ -106,6 +97,23 @@ public class ProfessorService {
         return Map.of("name", newName);
     }
 
+    public Map<String, String> updateImage(String oauthId, MultipartFile profileImageFile) {
+        log.debug("사용자의 프로필 이미지를 수정합니다.");
+
+        // TODO: 현재 파일을 DB에 저장하지만, 추후 클라우드 스토리지(S3 등)에 업로드하도록 변경 예정
+        byte[] newImageBytes = getImageBytes(profileImageFile);
+
+        int updatedRows = professorRepository.updateImage(oauthId, newImageBytes);
+        if (updatedRows == 0) {
+            log.debug("사용자 정보를 가져오는 과정에서 발생한 에러입니다. : User does not exist.");
+            throw new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
+        }
+
+        log.debug("프로필 이미지 수정이 완료되었습니다.");
+
+        return Map.of("imageUrl", Arrays.toString(newImageBytes));
+    }
+
     private void validateProfileImage(MultipartFile file) {
         if (file.getSize() > MAX_IMAGE_FILE_SIZE) {
             throw new BaseException(FileErrorCode.FILE_SIZE_EXCEEDED);
@@ -128,4 +136,18 @@ public class ProfessorService {
         return filename.substring(lastDotIndex + 1);
     }
 
+    private byte[] getImageBytes(MultipartFile profileImageFile) {
+        byte[] imageBytes = null;
+        if (profileImageFile != null && !profileImageFile.isEmpty()) {
+            validateProfileImage(profileImageFile);
+            try {
+                imageBytes = profileImageFile.getBytes();
+            } catch (IOException e) {
+                log.debug("회원가입 처리 과정에서 발생한 에러입니다. : {}", e.getMessage());
+                throw new BaseException(ProfessorErrorCode.IMAGE_PROCESSING_FAILURE);
+            }
+        }
+
+        return imageBytes;
+    }
 }

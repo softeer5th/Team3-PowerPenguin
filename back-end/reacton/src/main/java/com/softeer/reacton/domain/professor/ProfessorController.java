@@ -104,6 +104,32 @@ public class ProfessorController {
                 .body(SuccessResponse.of("이름을 성공적으로 변경했습니다.", response));
     }
 
+
+    @PatchMapping("/img")
+    @Operation(
+            summary = "사용자 프로필 이미지 변경",
+            description = "사용자의 프로필 이미지를 변경합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "성공적으로 변경되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> updateImage(
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile,
+            HttpServletRequest request) {
+        log.debug("사용자의 프로필 이미지 수정을 요청합니다.");
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        Map<String, String> response = professorService.updateImage(oauthId, profileImageFile);
+
+        log.info("사용자의 프로필 이미지를 성공적으로 변경했습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("프로필 이미지를 성공적으로 변경했습니다.", response));
+    }
+
     @PostMapping("/signup")
     @Operation(
             summary = "사용자 등록",

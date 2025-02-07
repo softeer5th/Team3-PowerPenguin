@@ -15,4 +15,9 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
     @Transactional
     @Query("UPDATE Professor p SET p.name = :newName WHERE p.oauthId = :oauthId")
     int updateName(@Param("oauthId") String oauthId, @Param("newName") String newName);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Professor p SET p.profileImage = :newImage WHERE p.oauthId = :oauthId")
+    int updateImage(@Param("oauthId") String oauthId, @Param("newImage") byte[] newImage);
 }
