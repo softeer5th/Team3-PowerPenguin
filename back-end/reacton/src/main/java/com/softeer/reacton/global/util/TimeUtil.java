@@ -32,4 +32,14 @@ public class TimeUtil {
         }
         return time.format(FORMATTER);
     }
+
+    public static boolean isEndTimeAfterStartTime(String startTime, String endTime) {
+        try {
+            LocalTime start = LocalTime.parse(startTime, FORMATTER);
+            LocalTime end = LocalTime.parse(endTime, FORMATTER);
+            return end.isAfter(start);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
