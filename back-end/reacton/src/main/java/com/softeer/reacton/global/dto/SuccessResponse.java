@@ -1,11 +1,13 @@
 package com.softeer.reacton.global.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
 
 @Getter
+@JsonPropertyOrder({"success", "message", "data"})
 public class SuccessResponse<T> {
     private final boolean success;
     private final String message;
