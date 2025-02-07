@@ -37,7 +37,7 @@ public class Course {
     @Column(nullable = false, length = 20)
     private CourseType type; // 수업 종류 (전공, 교양, 기타)
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, unique = true)
     private int accessCode;
 
     @Column(nullable = false)
