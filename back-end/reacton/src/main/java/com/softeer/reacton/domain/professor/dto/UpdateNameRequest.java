@@ -1,6 +1,5 @@
 package com.softeer.reacton.domain.professor.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
