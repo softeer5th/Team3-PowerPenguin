@@ -72,15 +72,20 @@ public class ProfessorCourseService {
 
     @Transactional
     public void startCourse(String oauthId, long courseId) {
+        log.debug("수업을 시작 상태로 변경합니다. courseId = {}", courseId);
+
         Course course = findCourseByProfessor(oauthId, courseId);
         if (course.isActive()) {
             throw new BaseException(CourseErrorCode.COURSE_ALREADY_ACTIVE);
         }
         course.setActive(true);
+
+        log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
     }
 
     @Transactional
     public void closeCourse(String oauthId, long courseId) {
+        log.debug("수업을 종료 상태로 변경합니다. courseId = {}", courseId);
 
         Course course = findCourseByProfessor(oauthId, courseId);
         if (!course.isActive()) {
@@ -88,6 +93,7 @@ public class ProfessorCourseService {
         }
         course.setActive(false);
 
+        log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
     }
 
     private Course findCourseByProfessor(String oauthId, long courseId) {
