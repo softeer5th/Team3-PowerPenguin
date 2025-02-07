@@ -76,6 +76,14 @@ public class ProfessorCourseService {
         course.setActive(true);
     }
 
+    @Transactional
+    public void closeCourse(String oauthId, long courseId) {
+
+        Course course = findCourseByProfessor(oauthId, courseId);
+        course.setActive(false);
+
+    }
+
     private Course findCourseByProfessor(String oauthId, long courseId) {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
@@ -89,4 +97,5 @@ public class ProfessorCourseService {
 
         return course;
     }
+
 }

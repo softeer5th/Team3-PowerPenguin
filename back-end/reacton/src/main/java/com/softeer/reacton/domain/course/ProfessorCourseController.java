@@ -80,7 +80,7 @@ public class ProfessorCourseController {
     @PatchMapping("/{courseId}/start")
     @Operation(
             summary = "수업 시작 상태로 변경",
-            description =  "courseId에 해당하는 수업을 시작 상태로 변경합니다.",
+            description = "courseId에 해당하는 수업을 시작 상태로 변경합니다.",
             responses = {@ApiResponse(responseCode = "204", description = "수업이 시작 상태로 변경되었습니다.")}
     )
     public ResponseEntity<Void> startCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId) {
@@ -89,4 +89,18 @@ public class ProfessorCourseController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{courseId}/close")
+    @Operation(
+            summary = "수업 종료 상태로 변경",
+            description = "courseId에 해당하는 수업을 종료 상태로 변경합니다.",
+            responses = {@ApiResponse(responseCode = "204", description = "수업이 종료 상태로 변경되었습니다.")}
+    )
+    public ResponseEntity<Void> closeCourse(HttpServletRequest request, @PathVariable(value = "courseId") long courseId) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        professorCourseService.closeCourse(oauthId, courseId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
