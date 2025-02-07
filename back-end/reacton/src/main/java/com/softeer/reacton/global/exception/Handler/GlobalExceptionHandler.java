@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
         log.warn(GlobalErrorCode.VALIDATION_FAILURE.getMessage());
         return ResponseEntity
                 .status(GlobalErrorCode.VALIDATION_FAILURE.getStatus())
-                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE));
+                .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE, e.getBindingResult().getFieldErrors().get(0).getDefaultMessage()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
