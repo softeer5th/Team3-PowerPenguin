@@ -70,6 +70,12 @@ public class ProfessorCourseService {
         log.info("수업이 삭제되었습니다. : courseId = {}", courseId);
     }
 
+    @Transactional
+    public void startCourse(String oauthId, long courseId) {
+        Course course = findCourseByProfessor(oauthId, courseId);
+        course.setActive(true);
+    }
+
     private Course findCourseByProfessor(String oauthId, long courseId) {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));

@@ -40,6 +40,7 @@ public class Course {
     @Column(nullable = false, unique = true)
     private int accessCode;
 
+    @Setter
     @Column(nullable = false)
     private boolean isActive;
 
