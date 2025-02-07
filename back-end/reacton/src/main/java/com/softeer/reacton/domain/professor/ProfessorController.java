@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -88,9 +89,8 @@ public class ProfessorController {
             }
     )
     public ResponseEntity<SuccessResponse<Map<String, String>>> updateName(
-            @RequestBody UpdateNameRequest requestDto,
+            @Valid @RequestBody UpdateNameRequest requestDto,
             HttpServletRequest request) {
-
         log.debug("사용자의 이름 수정을 요청합니다.");
 
         String oauthId = (String) request.getAttribute("oauthId");
