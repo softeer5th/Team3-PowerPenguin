@@ -92,6 +92,17 @@ public class ProfessorService {
         return Map.of("imageUrl", Arrays.toString(professor.getProfileImage()));
     }
 
+    public void updateName(String oauthId, String newName) {
+        log.debug("사용자의 이름을 수정합니다. : newName = {}", newName);
+
+        int updatedRows = professorRepository.updateName(oauthId, newName);
+        if (updatedRows == 0) {
+            log.debug("사용자 정보를 가져오는 과정에서 발생한 에러입니다. : User does not exist.");
+            throw new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
+        }
+
+        log.debug("이름 수정이 완료되었습니다.");
+    }
 
     private void validateProfileImage(MultipartFile file) {
         if (file.getSize() > MAX_IMAGE_FILE_SIZE) {

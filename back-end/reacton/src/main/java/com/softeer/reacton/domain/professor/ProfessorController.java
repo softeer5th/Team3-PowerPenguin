@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.professor;
 
+import com.softeer.reacton.domain.professor.dto.UpdateNameRequest;
 import com.softeer.reacton.global.config.CookieConfig;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,6 +78,30 @@ public class ProfessorController {
     }
 
     @PatchMapping("/name")
+    @Operation(
+            summary = "사용자 이름 변경",
+            description = "사용자의 이름을 변경합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "성공적으로 변경되었습니다."),
+                    @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> updateName(
+            @RequestBody UpdateNameRequest requestDto,
+            HttpServletRequest request) {
+
+        log.debug("사용자의 이름 수정을 요청합니다.");
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        professorService.updateName(oauthId, requestDto.getName());
+
+        log.info("사용자의 이름을 성공적으로 변경했습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 
     @PostMapping("/signup")
     @Operation(
