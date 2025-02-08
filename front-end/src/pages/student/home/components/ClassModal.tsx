@@ -4,8 +4,7 @@ import ClockSvg from '../../../../assets/icons/clock.svg?react';
 import PeopleSvg from '../../../../assets/icons/people.svg?react';
 import ClassChip from './ClassChip';
 
-type ClassModalProps = {
-  closeModal: () => void;
+export type ClassModalProps = {
   university: string;
   courseTitle: string;
   coursePeople: string;
@@ -17,21 +16,14 @@ type ClassModalProps = {
 };
 
 const ClassModal = ({
+  classInfo,
   closeModal,
-  university,
-  courseTitle,
-  coursePeople,
-  courseDay,
-  startTime,
-  courseNumber,
-  endTime,
-  courseSort,
-}: ClassModalProps) => {
-  const handleEnterButton = () => {
-    closeModal();
-    // 입장하기 버튼
-  };
-
+  onCheckClick,
+}: {
+  classInfo: ClassModalProps;
+  closeModal: () => void;
+  onCheckClick: () => void;
+}) => {
   return (
     <div className={S.modalContainer} onClick={(e) => e.stopPropagation()}>
       <div className={S.modalTitle}>강의 정보를 확인해주세요</div>
@@ -39,19 +31,19 @@ const ClassModal = ({
         <CloseSvg width="100%" height="100%" />
       </button>
       <div className={S.contentContainer}>
-        <ClassChip text={courseSort} />
-        <div className={S.university}>{university}</div>
+        <ClassChip text={classInfo.courseSort} />
+        <div className={S.university}>{classInfo.university}</div>
         <div
           className={S.courseTitle}
-        >{`${courseTitle} (${courseNumber})`}</div>
+        >{`${classInfo.courseTitle} (${classInfo.courseNumber})`}</div>
         <div className={S.courseDescBox}>
           <span className={S.courseTime}>
             <ClockSvg className={S.descSvg} />
-            {`${courseDay} ${startTime}-${endTime}`}
+            {`${classInfo.courseDay} ${classInfo.startTime}-${classInfo.endTime}`}
           </span>
           <span className={S.coursePeople}>
             <PeopleSvg className={S.descSvg} />
-            {coursePeople}
+            {classInfo.coursePeople}
           </span>
         </div>
       </div>
@@ -59,7 +51,7 @@ const ClassModal = ({
         <button onClick={closeModal} className={S.backButton}>
           뒤로가기
         </button>
-        <button onClick={handleEnterButton} className={S.enterButton}>
+        <button onClick={onCheckClick} className={S.enterButton}>
           입장하기
         </button>
       </div>
