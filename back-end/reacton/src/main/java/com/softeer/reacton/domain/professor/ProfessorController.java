@@ -67,4 +67,27 @@ public class ProfessorController {
                 .build();
     }
 
+    @PostMapping("/logout")
+    @Operation(
+            summary = "사용자 로그아웃",
+            description = "사용자 로그아웃을 수행합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "성공적으로 로그아웃되었습니다."),
+            }
+    )
+    public ResponseEntity<Void> logout() {
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
+                .httpOnly(true)
+                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
+    }
+
 }
