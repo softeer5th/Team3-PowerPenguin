@@ -12,7 +12,6 @@ const StudentHome = () => {
   const [modalType, setModalType] = useState<
     'classModal' | 'notFound' | 'notStart' | null
   >(null);
-  // 서버 모달 타입
   const [classInfo, setClassInfo] = useState({});
 
   const { openModal, closeModal, Modal } = useModal();

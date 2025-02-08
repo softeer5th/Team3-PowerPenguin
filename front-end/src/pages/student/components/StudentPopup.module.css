@@ -31,8 +31,8 @@
   border-radius: 23px;
   background: linear-gradient(
     180deg,
-    var(--error-red_200, rgba(255, 236, 236, 0.2)) 0%,
-    var(--error-red_500, rgba(255, 58, 58, 0.2)) 100%
+    var(--error-red-200, rgba(255, 236, 236, 0.2)) 0%,
+    var(--error-red-500, rgba(255, 58, 58, 0.2)) 100%
   );
   margin-bottom: 12px;
 }
@@ -54,7 +54,7 @@
 }
 
 /*스플릿 뷰 */
-@media all and (min-width: 469px) and (max-width: 960px) {
+@media all and (min-width: 469px) {
   .popupContainer {
     max-width: 540px;
     padding: 36px 28px;
