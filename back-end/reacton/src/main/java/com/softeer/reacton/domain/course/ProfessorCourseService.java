@@ -31,8 +31,10 @@ public class ProfessorCourseService {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        SecureRandom secureRandom = new SecureRandom();
-        int accessCode = 100000 + secureRandom.nextInt(900000);
+        int accessCode;
+        do {
+            accessCode = generateUniqueAccessCode();
+        } while (courseRepository.existsByAccessCode(accessCode));
         log.debug("입장코드용 랜덤한 6자리 숫자를 생성합니다 : accessCode = {}", accessCode);
 
         Course course = Course.create(request, accessCode, professor);
@@ -102,6 +104,11 @@ public class ProfessorCourseService {
         }
 
         return course;
+    }
+
+    private int generateUniqueAccessCode() {
+        SecureRandom secureRandom = new SecureRandom();
+        return 100000 + secureRandom.nextInt(900000);
     }
 
 }
