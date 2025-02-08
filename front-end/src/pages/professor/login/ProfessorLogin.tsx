@@ -1,7 +1,7 @@
 import GoogleLoginButton from './components/GoogleLoginButton';
 import S from './ProfessorLogin.module.css';
 import Logo from '../../../assets/icons/logo.svg?react';
-import LoginImage from './assets/professor-login.svg?react';
+import LoginImage from './assets/professor-login.png';
 import Private from './components/Private20250121';
 import useModal from '../../../hooks/useModal';
 
@@ -13,7 +13,7 @@ const ProfessorLogin = () => {
       <div className={S.container}>
         <div className={S.info}>
           <div className={S.logo}>
-            <Logo width="100%" height="auto" />
+            <Logo width="100%" height="100%" />
           </div>
           <h1 className={S.mainDescription}>
             함께 만드는 활기찬 강의, <br />
@@ -28,7 +28,9 @@ const ProfessorLogin = () => {
         </div>
         <div className={S.divider}>
           <div className={S.loginArea}>
-            <LoginImage className={S.image} />
+            <div className={S.image}>
+              <img src={LoginImage} alt="login" />
+            </div>
             <h1 className={S.loginText}>간편하게 시작해 보세요</h1>
             <div className={S.buttonContainer}>
               <GoogleLoginButton />
