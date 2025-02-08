@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/professors")
 @Tag(name = "Professor API", description = "교수 사용자 관련 API")
 @RequiredArgsConstructor
+@Validated
 public class ProfessorController {
 
     private final ProfessorService professorService;
@@ -35,7 +38,7 @@ public class ProfessorController {
             }
     )
     public ResponseEntity<Void> signUp(
-            @RequestParam("name") String name,
+            @RequestParam("name") @Pattern(regexp = "^[가-힣a-zA-Z]{1,20}$", message = "이름은 한글 또는 영문만 1~20자 입력 가능합니다.") String name,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile,
             HttpServletRequest request) {
         log.debug("회원가입 요청을 호출합니다. : name = {}, profileImageFile = {}", name, profileImageFile != null ? "yes" : "no");

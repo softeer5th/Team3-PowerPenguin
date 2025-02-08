@@ -23,7 +23,7 @@
 
 .logo {
   width: 174px;
-  aspect-ratio: 1162 / 182;
+  height: 27px;
 }
 
 .mainDescription {
@@ -60,6 +60,13 @@
   width: 300px;
   height: 300px;
   border-radius: 100%;
+  overflow: hidden;
+}
+
+.image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .loginText {

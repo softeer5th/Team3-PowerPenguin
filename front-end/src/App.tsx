@@ -5,7 +5,7 @@ import ProfessorHomeLayout from './pages/professor/home/layout';
 import ProfessorHome from './pages/professor/home';
 import ProfessorSearch from './pages/professor/home/search';
 import ProfessorLogin from './pages/professor/login/ProfessorLogin';
-import ProfessorRegister from './pages/professor/register';
+import ProfessorRegister from './pages/professor/register/ProfessorRegister';
 import ProfessorProfile from './pages/professor/profile';
 import ProfessorCourse from './pages/professor/course';
 import ProfessorClassRoom from './pages/professor/course/classroom';

@@ -1,7 +1,7 @@
 package com.softeer.reacton.global.exception.Controller;
 
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
-import com.softeer.reacton.global.DTO.ExceptionResponse;
+import com.softeer.reacton.global.dto.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
