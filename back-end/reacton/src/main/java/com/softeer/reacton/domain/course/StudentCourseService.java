@@ -1,5 +1,7 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.course.dto.CourseScheduleResponse;
+import com.softeer.reacton.domain.course.dto.CourseSummaryResponse;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ public class StudentCourseService {
 
     private final CourseRepository courseRepository;
 
-    public Map<String, Object> getCourseByAccessCode(int accessCode) {
+    public CourseSummaryResponse getCourseByAccessCode(int accessCode) {
         log.debug("입장코드와 일치하는 수업 정보를 조회합니다. : accessCode = {}", accessCode);
 
         Map<String, Object> courseInfo = new HashMap<>();
@@ -35,19 +37,21 @@ public class StudentCourseService {
             throw new BaseException(CourseErrorCode.COURSE_NOT_OPENED);
         }
 
-        courseInfo.put("name", course.getName());
-        courseInfo.put("courseCode", course.getCourseCode());
-        courseInfo.put("capacity", course.getCapacity());
-        courseInfo.put("university", course.getUniversity());
-        courseInfo.put("type", course.getType());
-        List<Map<String, String>> schedules = course.getSchedules().stream()
-                .map(schedule -> Map.of(
-                        "day", schedule.getDay(),
-                        "startTime", schedule.getStartTime().toString(),
-                        "endTime", schedule.getEndTime().toString()))
+        List<CourseScheduleResponse> schedules = course.getSchedules().stream()
+                .map(schedule -> new CourseScheduleResponse(
+                        schedule.getDay(),
+                        schedule.getStartTime().toString(),
+                        schedule.getEndTime().toString()
+                ))
                 .toList();
-        courseInfo.put("schedules", schedules);
 
-        return courseInfo;
+        return new CourseSummaryResponse(
+                course.getName(),
+                course.getCourseCode(),
+                course.getCapacity(),
+                course.getUniversity(),
+                course.getType().toString(),
+                schedules
+        );
     }
 }

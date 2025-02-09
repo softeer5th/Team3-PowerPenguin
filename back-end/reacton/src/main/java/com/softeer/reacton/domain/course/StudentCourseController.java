@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.course.dto.CourseSummaryResponse;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @Log4j2
 @RestController
@@ -35,12 +34,12 @@ public class StudentCourseController {
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
-    public ResponseEntity<SuccessResponse<Map<String, ?>>> getCourseByAccessCode(
+    public ResponseEntity<SuccessResponse<CourseSummaryResponse>> getCourseByAccessCode(
             @PathVariable("accessCode") int accessCode
     ) {
         log.debug("입장 코드와 일치하는 수업 조회를 요청합니다. : accessCode = {}", accessCode);
 
-        Map<String, Object> response = studentCourseService.getCourseByAccessCode(accessCode);
+        CourseSummaryResponse response = studentCourseService.getCourseByAccessCode(accessCode);
 
         log.info("사용자의 이름, 이메일 주소를 가져오는 데 성공했습니다.");
 
