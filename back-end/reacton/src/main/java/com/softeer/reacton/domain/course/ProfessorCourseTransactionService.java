@@ -15,7 +15,7 @@ public class ProfessorCourseTransactionService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public long saveCourseWithNewTransaction(CourseRequest request, Professor professor, String accessCode) {
+    public long saveCourse(CourseRequest request, Professor professor, String accessCode) {
         Course course = Course.create(request, accessCode, professor);
         return courseRepository.save(course).getId();
     }

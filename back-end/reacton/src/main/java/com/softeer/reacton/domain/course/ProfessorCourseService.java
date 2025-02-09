@@ -35,7 +35,7 @@ public class ProfessorCourseService {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        return generateAndSaveCourseWithRetries(request, professor);
+        return saveCourseWithRetry(request, professor);
     }
 
     @Transactional
@@ -100,13 +100,13 @@ public class ProfessorCourseService {
         return course;
     }
 
-    private long generateAndSaveCourseWithRetries(CourseRequest request, Professor professor) {
+    private long saveCourseWithRetry(CourseRequest request, Professor professor) {
         for (int i = 0; i < MAX_RETRIES; i++) {
             String accessCode = generateUniqueAccessCode();
             log.debug("입장 코드 생성 시도 {}회 - {}", i + 1, accessCode);
 
             try {
-                return professorCourseTransactionService.saveCourseWithNewTransaction(request, professor, accessCode);
+                return professorCourseTransactionService.saveCourse(request, professor, accessCode);
             } catch (DataIntegrityViolationException e) {
                 log.warn("입장 코드 중복으로 인해 저장 실패 - 재시도 {}회: {}", i + 1, accessCode);
             }
