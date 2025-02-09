@@ -102,6 +102,17 @@ public class ProfessorController {
         String oauthId = (String) request.getAttribute("oauthId");
         professorService.delete(oauthId);
 
-        return ResponseEntity.noContent().build();
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
+                .httpOnly(true)
+                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
     }
 }
