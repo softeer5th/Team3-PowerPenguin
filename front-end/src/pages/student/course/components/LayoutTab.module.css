@@ -14,3 +14,17 @@
 .active {
   color: var(--gray-600);
 }
+
+/*스플릿 뷰 */
+@media all and (min-width: 469px) {
+  .TabContainer {
+    font: var(--web-button4-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .TabContainer {
+    font: var(--web-button4-bold);
+  }
+}
