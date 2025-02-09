@@ -11,7 +11,8 @@ public enum CourseErrorCode implements ErrorCode {
     UNAUTHORIZED_PROFESSOR(HttpStatus.FORBIDDEN, "이 강의를 수정할 권한이 없습니다."),
     COURSE_REQUEST_IS_NULL(HttpStatus.BAD_REQUEST, "수업 요청 정보가 입력되지 않았습니다."),
     COURSE_ALREADY_ACTIVE(HttpStatus.BAD_REQUEST, "이미 시작 상태인 수업입니다."),
-    COURSE_ALREADY_INACTIVE(HttpStatus.BAD_REQUEST, "이미 종료 상태인 수업입니다.");
+    COURSE_ALREADY_INACTIVE(HttpStatus.BAD_REQUEST, "이미 종료 상태인 수업입니다."),
+    COURSE_NOT_OPENED(HttpStatus.CONFLICT, "수업이 아직 열리지 않은 상태입니다.");
 
     private final HttpStatus status;
     private final String message;
