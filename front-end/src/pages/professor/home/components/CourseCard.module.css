@@ -1,18 +1,24 @@
-/* Common card base */
 .card {
   background-color: white;
   display: flex;
   position: relative;
 }
 
-/* Common meatBall styles */
+.meatBallWrapper {
+  position: relative;
+}
+
 .meatBall {
+  position: absolute;
   width: 35px;
   height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
+}
+
+.meatBall.active {
   background-color: var(--gray-300);
 }
 
@@ -22,7 +28,45 @@
   color: var(--gray-600);
 }
 
-/* SMALL CARD */
+.popup {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 254px;
+  height: 127px;
+  transform: translate(calc(100% - 50px), 75px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: var(--medium);
+  box-shadow: 0px 0px 20px 0px var(--gray-400);
+  padding: 4px 11px;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.popupButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--web-body2-bold);
+  color: var(--gray-700);
+  cursor: pointer;
+  border-bottom: 1px solid var(--gray-300);
+  padding: 20px 0;
+}
+
+.popupButton:last-child {
+  border-bottom: none;
+}
+
+.popupButtonDelete {
+  color: var(--error-red-500);
+}
+
 .small {
   composes: card;
   width: 608px;
@@ -60,7 +104,7 @@
 }
 
 .small .soon {
-  border: 2px solid var(--error-red-500);
+  outline: 2px solid var(--error-red-500);
   color: var(--error-red-500);
 }
 
@@ -98,12 +142,10 @@
 }
 
 .small .meatBall {
-  margin-left: 11px;
-  margin-right: 18px;
-  flex-shrink: 0;
+  top: 32px;
+  right: 24px;
 }
 
-/* MEDIUM CARD */
 .medium {
   composes: card;
   width: 438px;
@@ -115,9 +157,14 @@
 }
 
 .medium .meatBall {
-  position: absolute;
   top: 32px;
   right: 24px;
+}
+
+.medium .popup {
+  top: 0;
+  right: 0;
+  transform: translate(calc(100% - 50px), 75px);
 }
 
 .medium .content {
@@ -216,7 +263,6 @@
   color: var(--gray-700);
 }
 
-/* LARGE CARD */
 .large {
   composes: card;
   width: 579px;
@@ -229,9 +275,14 @@
 }
 
 .large .meatBall {
-  position: absolute;
   top: 41px;
   right: 26px;
+}
+
+.large .popup {
+  top: 0;
+  right: 0;
+  transform: translate(calc(100% - 52px), 84px);
 }
 
 .large .content {

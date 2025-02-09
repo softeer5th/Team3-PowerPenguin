@@ -1,3 +1,4 @@
+import { useEffect, useState, useCallback } from 'react';
 import S from './CourseCard.module.css';
 import { CourseMeta } from '../../../../core/model';
 import CategoryChip from '../../../../components/chip/CategoryChip';
@@ -11,57 +12,38 @@ import TextButton from '../../../../components/button/text/TextButton';
 type CourseCardProps = {
   course: CourseMeta;
   size: 'small' | 'medium' | 'large';
+  onDeleteCourse: (courseId: number) => void;
+  onEditCourse: (courseId: number) => void;
+  onStartCourse: (courseId: number) => void;
+  onDetailCourse: (courseId: number) => void;
+  onFileCourse: (courseId: number) => void;
 };
 
-function getDayString(day: number) {
-  switch (day) {
-    case 0:
-      return '일';
-    case 1:
-      return '월';
-    case 2:
-      return '화';
-    case 3:
-      return '수';
-    case 4:
-      return '목';
-    case 5:
-      return '금';
-    case 6:
-      return '토';
-  }
-}
+const dayMap = ['일', '월', '화', '수', '목', '금', '토'];
+const getDayString = (day: number) => dayMap[day];
 
-function getTimeLeft(time: string) {
-  const now = new Date();
+const createTargetDate = (time: string): Date => {
   const [targetHour, targetMinute] = time.split(':');
   const target = new Date();
-  target.setHours(Number(targetHour));
-  target.setMinutes(Number(targetMinute));
-  target.setSeconds(0);
-  target.setMilliseconds(0);
+  target.setHours(Number(targetHour), Number(targetMinute), 0, 0);
+  return target;
+};
 
-  const diff = target.getTime() - now.getTime();
-  const hour = Math.floor(diff / 3600000);
-  const minute = Math.floor((diff % 3600000) / 60000);
-  const second = Math.floor((diff % 60000) / 1000);
+const isSoon = (time: string) =>
+  createTargetDate(time).getTime() - Date.now() < 3600000;
 
-  return `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second.toString().padStart(2, '0')}`;
-}
+type TimeType = {
+  hour: number;
+  minute: number;
+  second: number;
+};
 
-function isSoon(time: string) {
-  const now = new Date();
-  const [targetHour, targetMinute] = time.split(':');
-  const target = new Date();
-  target.setHours(Number(targetHour));
-  target.setMinutes(Number(targetMinute));
-  target.setSeconds(0);
-  target.setMilliseconds(0);
+const formatTime = ({ hour, minute, second }: TimeType) =>
+  `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
+    .toString()
+    .padStart(2, '0')}`;
 
-  return target.getTime() - now.getTime() < 3600000;
-}
-
-function getCourseColor(category: string) {
+const getCourseColor = (category: string) => {
   switch (category) {
     case '전공':
       return 'purple';
@@ -70,207 +52,295 @@ function getCourseColor(category: string) {
     default:
       return 'gray';
   }
-}
+};
 
-const CourseCard = ({ course, size = 'medium' }: CourseCardProps) => {
+const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
+  scheduleList.map((schedule, index) => (
+    <span key={schedule.day}>
+      {schedule.day} {schedule.start} - {schedule.end}
+      {index < scheduleList.length - 1 && ', '}
+    </span>
+  ));
+
+type MeatBallMenuProps = {
+  popup: boolean;
+  onToggle: () => void;
+  onDelete: () => void;
+  onEdit: () => void;
+};
+
+const MeatBallMenu = ({
+  popup,
+  onToggle,
+  onDelete,
+  onEdit,
+}: MeatBallMenuProps) => (
+  <div className={S.meatBallWrapper}>
+    <button
+      className={`${S.meatBall} ${popup ? S.active : ''}`}
+      onClick={onToggle}
+    >
+      <EtcIcon className={S.meatBallIcon} />
+    </button>
+    {popup && (
+      <div className={S.popup}>
+        <button
+          className={`${S.popupButton} ${S.popupButtonDelete}`}
+          onClick={onDelete}
+        >
+          <span>이 수업 삭제하기</span>
+        </button>
+        <button className={S.popupButton} onClick={onEdit}>
+          <span>이 수업 편집하기</span>
+        </button>
+      </div>
+    )}
+  </div>
+);
+
+const renderButtonContainer = (
+  width: string,
+  height: string,
+  onStart: () => void,
+  onDetail: () => void,
+  onFile: () => void
+) => (
+  <div className={S.buttonContainer}>
+    <TextButton
+      width={width}
+      height={height}
+      text="수업 시작"
+      color="blue"
+      size="web3"
+      onClick={onStart}
+      isActive
+    />
+    <button className={S.subButton} onClick={onDetail}>
+      <BarChartIcon className={S.subButtonIcon} />
+    </button>
+    <button className={S.subButton} onClick={onFile}>
+      <ClipIcon className={S.subButtonIcon} />
+    </button>
+  </div>
+);
+
+/**
+ * Custom hook to compute the countdown timer for today’s schedule.
+ */
+const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
+  const [leftTime, setLeftTime] = useState<TimeType>({
+    hour: 0,
+    minute: 0,
+    second: 0,
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const currentSchedule = scheduleList.find(
+        (schedule) => schedule.day === getDayString(now.getDay())
+      );
+      if (currentSchedule) {
+        const target = createTargetDate(currentSchedule.start);
+        const diff = target.getTime() - now.getTime();
+        setLeftTime({
+          hour: Math.floor(diff / 3600000),
+          minute: Math.floor((diff % 3600000) / 60000),
+          second: Math.floor((diff % 60000) / 1000),
+        });
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [scheduleList]);
+
+  return leftTime;
+};
+
+const CourseCard = ({
+  course,
+  size,
+  onDeleteCourse,
+  onEditCourse,
+  onStartCourse,
+  onDetailCourse,
+  onFileCourse,
+}: CourseCardProps) => {
+  const [popup, setPopup] = useState(false);
+  const leftTime = useCountdown(course.schedule);
+  const today = new Date();
   const todaySchedule = course.schedule.find(
-    (schedule) => schedule.day === getDayString(new Date().getDay())
+    (schedule) => schedule.day === getDayString(today.getDay())
   );
 
-  function handleClickCourseStart() {
-    console.log('수업 시작');
-  }
+  const handleTogglePopup = useCallback(() => {
+    setPopup((prev) => !prev);
+  }, []);
 
-  function handleClickCourseDetail() {
-    console.log('수업 상세');
-  }
+  const leftTimeString = formatTime(leftTime);
 
-  function handleClickCourseFile() {
-    console.log('수업 자료');
-  }
+  const renderSmall = () => (
+    <div className={S.small}>
+      <div className={S.content}>
+        <div className={S.info}>
+          <span
+            className={`${S.time} ${
+              todaySchedule && isSoon(todaySchedule.start) ? S.soon : ''
+            }`}
+          >
+            {todaySchedule
+              ? isSoon(todaySchedule.start)
+                ? '곧 시작'
+                : todaySchedule.start
+              : '없음'}
+          </span>
+          <span className={S.type}>
+            <CategoryChip
+              color={getCourseColor(course.classType)}
+              text={course.classType}
+              isActive
+            />
+          </span>
+          <div className={S.text}>
+            <h3 className={S.title}>
+              {course.name} ({course.code})
+            </h3>
+            <span className={S.capacity}>{course.capacity}</span>
+          </div>
+        </div>
+      </div>
+      <MeatBallMenu
+        popup={popup}
+        onToggle={handleTogglePopup}
+        onDelete={() => onDeleteCourse(course.id)}
+        onEdit={() => onEditCourse(course.id)}
+      />
+    </div>
+  );
+
+  const renderMedium = () => (
+    <div className={S.medium}>
+      <MeatBallMenu
+        popup={popup}
+        onToggle={handleTogglePopup}
+        onDelete={() => onDeleteCourse(course.id)}
+        onEdit={() => onEditCourse(course.id)}
+      />
+      <div className={S.content}>
+        <div className={S.info}>
+          <div className={S.type}>
+            <CategoryChip
+              color={getCourseColor(course.classType)}
+              text={course.classType}
+              isActive
+            />
+          </div>
+          <div className={S.text}>
+            <div>
+              <h4 className={S.university}>{course.university}</h4>
+              <h3 className={S.title}>
+                {course.name} ({course.code})
+              </h3>
+            </div>
+            <div className={S.meta}>
+              <div className={S.metaItem}>
+                <ClockIcon className={S.metaIcon} />
+                <span className={S.metaText}>
+                  {renderSchedule(course.schedule)}
+                </span>
+              </div>
+              <div className={S.metaItem}>
+                <PeopleIcon className={S.metaIcon} />
+                <span className={S.metaText}>{course.capacity}</span>
+              </div>
+            </div>
+          </div>
+          {renderButtonContainer(
+            '239px',
+            '56px',
+            () => onStartCourse(course.id),
+            () => onDetailCourse(course.id),
+            () => onFileCourse(course.id)
+          )}
+        </div>
+      </div>
+      <div className={S.footer}>
+        <span className={S.footerText}>
+          입장코드 <strong>{course.accessCode}</strong>
+        </span>
+      </div>
+    </div>
+  );
+
+  const renderLarge = () => (
+    <div className={S.large}>
+      <MeatBallMenu
+        popup={popup}
+        onToggle={handleTogglePopup}
+        onDelete={() => onDeleteCourse(course.id)}
+        onEdit={() => onEditCourse(course.id)}
+      />
+      <div className={S.content}>
+        <div className={S.info}>
+          <div className={S.header}>
+            <div className={S.type}>
+              <CategoryChip
+                color={getCourseColor(course.classType)}
+                text={course.classType}
+                isActive
+              />
+            </div>
+            <div className={S.time}>
+              {todaySchedule && isSoon(todaySchedule.start)
+                ? `${leftTimeString} 후 시작`
+                : '00 : 00 : 00 후 시작'}
+            </div>
+          </div>
+          <div className={S.text}>
+            <div>
+              <h4 className={S.university}>{course.university}</h4>
+              <h3 className={S.title}>
+                {course.name} ({course.code})
+              </h3>
+            </div>
+            <div className={S.meta}>
+              <div className={S.metaItem}>
+                <ClockIcon className={S.metaIcon} />
+                <span className={S.metaText}>
+                  {renderSchedule(course.schedule)}
+                </span>
+              </div>
+              <div className={S.metaItem}>
+                <PeopleIcon className={S.metaIcon} />
+                <span className={S.metaText}>{course.capacity}</span>
+              </div>
+            </div>
+          </div>
+          {renderButtonContainer(
+            '345px',
+            '61px',
+            () => onStartCourse(course.id),
+            () => onDetailCourse(course.id),
+            () => onFileCourse(course.id)
+          )}
+        </div>
+      </div>
+      <div className={S.footer}>
+        <span className={S.footerText}>
+          입장코드 <strong>{course.accessCode}</strong>
+        </span>
+      </div>
+    </div>
+  );
 
   switch (size) {
     case 'small':
-      return (
-        <div className={S.small}>
-          <div className={S.content}>
-            <div className={S.info}>
-              <span
-                className={`${S.time} ${
-                  todaySchedule && isSoon(todaySchedule.start) ? S.soon : ''
-                }`}
-              >
-                {todaySchedule
-                  ? isSoon(todaySchedule.start)
-                    ? '곧 시작'
-                    : todaySchedule.start
-                  : '없음'}
-              </span>
-              <span className={S.type}>
-                <CategoryChip
-                  color={getCourseColor(course.classType)}
-                  text={course.classType}
-                  isActive
-                />
-              </span>
-              <div className={S.text}>
-                <h3 className={S.title}>
-                  {course.name + course.name} ({course.code})
-                </h3>
-                <span className={S.capacity}>{course.capacity}</span>
-              </div>
-            </div>
-            <button className={S.meatBall}>
-              <EtcIcon className={S.meatBallIcon} />
-            </button>
-          </div>
-        </div>
-      );
+      return renderSmall();
     case 'medium':
-      return (
-        <div className={S.medium}>
-          <button className={S.meatBall}>
-            <EtcIcon className={S.meatBallIcon} />
-          </button>
-          <div className={S.content}>
-            <div className={S.info}>
-              <div className={S.type}>
-                <CategoryChip
-                  color={getCourseColor(course.classType)}
-                  text={course.classType}
-                  isActive
-                />
-              </div>
-              <div className={S.text}>
-                <div>
-                  <h4 className={S.university}>{course.university}</h4>
-                  <h3 className={S.title}>
-                    {course.name} ({course.code})
-                  </h3>
-                </div>
-                <div className={S.meta}>
-                  <div className={S.metaItem}>
-                    <ClockIcon className={S.metaIcon} />
-                    <span className={S.metaText}>
-                      {course.schedule.map((schedule, index) => (
-                        <span key={schedule.day}>
-                          {schedule.day} {schedule.start} - {schedule.end}
-                          {index < course.schedule.length - 1 && ', '}
-                        </span>
-                      ))}
-                    </span>
-                  </div>
-                  <div className={S.metaItem}>
-                    <PeopleIcon className={S.metaIcon} />
-                    <span className={S.metaText}>{course.capacity}</span>
-                  </div>
-                </div>
-              </div>
-              <div className={S.buttonContainer}>
-                <TextButton
-                  width="239px"
-                  height="56px"
-                  text="수업 시작"
-                  color="blue"
-                  size="web3"
-                  onClick={handleClickCourseStart}
-                  isActive
-                />
-                <button
-                  className={S.subButton}
-                  onClick={handleClickCourseDetail}
-                >
-                  <BarChartIcon className={S.subButtonIcon} />
-                </button>
-                <button className={S.subButton} onClick={handleClickCourseFile}>
-                  <ClipIcon className={S.subButtonIcon} />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className={S.footer}>
-            <span className={S.footerText}>
-              입장코드 <strong>{course.accessCode}</strong>
-            </span>
-          </div>
-        </div>
-      );
+      return renderMedium();
     case 'large':
-      return (
-        <div className={S.large}>
-          <button className={S.meatBall}>
-            <EtcIcon className={S.meatBallIcon} />
-          </button>
-          <div className={S.content}>
-            <div className={S.info}>
-              <div className={S.header}>
-                <div className={S.type}>
-                  <CategoryChip
-                    color={getCourseColor(course.classType)}
-                    text={course.classType}
-                    isActive
-                  />
-                </div>
-                <div className={S.time}>
-                  {todaySchedule && isSoon(todaySchedule.start)
-                    ? `${getTimeLeft(todaySchedule.start)} 후 시작`
-                    : '00 : 00 : 00 후 시작'}
-                </div>
-              </div>
-              <div className={S.text}>
-                <div>
-                  <h4 className={S.university}>{course.university}</h4>
-                  <h3 className={S.title}>
-                    {course.name} ({course.code})
-                  </h3>
-                </div>
-                <div className={S.meta}>
-                  <div className={S.metaItem}>
-                    <ClockIcon className={S.metaIcon} />
-                    <span className={S.metaText}>
-                      {course.schedule.map((schedule, index) => (
-                        <span key={schedule.day}>
-                          {schedule.day} {schedule.start} - {schedule.end}
-                          {index < course.schedule.length - 1 && ', '}
-                        </span>
-                      ))}
-                    </span>
-                  </div>
-                  <div className={S.metaItem}>
-                    <PeopleIcon className={S.metaIcon} />
-                    <span className={S.metaText}>{course.capacity}</span>
-                  </div>
-                </div>
-              </div>
-              <div className={S.buttonContainer}>
-                <TextButton
-                  width="345px"
-                  height="61px"
-                  text="수업 시작"
-                  color="blue"
-                  size="web3"
-                  onClick={handleClickCourseStart}
-                  isActive
-                />
-                <button
-                  className={S.subButton}
-                  onClick={handleClickCourseDetail}
-                >
-                  <BarChartIcon className={S.subButtonIcon} />
-                </button>
-                <button className={S.subButton} onClick={handleClickCourseFile}>
-                  <ClipIcon className={S.subButtonIcon} />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className={S.footer}>
-            <span className={S.footerText}>
-              입장코드 <strong>{course.accessCode}</strong>
-            </span>
-          </div>
-        </div>
-      );
+      return renderLarge();
+    default:
+      return null;
   }
 };
 
