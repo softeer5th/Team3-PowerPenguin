@@ -100,7 +100,7 @@ public class ProfessorCourseService {
         return course;
     }
 
-    public long generateAndSaveCourseWithRetries(CourseRequest request, Professor professor) {
+    private long generateAndSaveCourseWithRetries(CourseRequest request, Professor professor) {
         for (int i = 0; i < MAX_RETRIES; i++) {
             String accessCode = generateUniqueAccessCode();
             log.debug("입장 코드 생성 시도 {}회 - {}", i + 1, accessCode);
