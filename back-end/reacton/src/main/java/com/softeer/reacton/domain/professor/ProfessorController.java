@@ -90,4 +90,18 @@ public class ProfessorController {
                 .build();
     }
 
+    @DeleteMapping
+    @Operation(
+            summary = "사용자 탈퇴",
+            description = "사용자 탈퇴를 수행합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "성공적으로 탈퇴되었습니다."),
+            }
+    )
+    public ResponseEntity<Void> delete(HttpServletRequest request) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        professorService.delete(oauthId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
