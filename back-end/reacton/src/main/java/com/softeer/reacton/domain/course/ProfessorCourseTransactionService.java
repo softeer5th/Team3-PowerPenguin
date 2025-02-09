@@ -5,7 +5,6 @@ import com.softeer.reacton.domain.professor.Professor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -15,7 +14,7 @@ public class ProfessorCourseTransactionService {
 
     private final CourseRepository courseRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public long saveCourseWithNewTransaction(CourseRequest request, Professor professor, String accessCode) {
         Course course = Course.create(request, accessCode, professor);
         return courseRepository.save(course).getId();
