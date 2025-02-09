@@ -36,7 +36,7 @@ const StudentCourse = () => {
   }, [selectedTab]);
 
   return (
-    <div className={S.couseLayout}>
+    <div className={S.courseLayout}>
       <header className={S.headerContainer}>
         <Logo className={S.logo} />
         <div className={S.TabsContainer}>
