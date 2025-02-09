@@ -109,6 +109,9 @@ public class ProfessorCourseService {
     private int generateUniqueAccessCode() {
         SecureRandom secureRandom = new SecureRandom();
         return 100000 + secureRandom.nextInt(900000);
+    private String generateUniqueAccessCode() {
+        int accessCode = secureRandom.nextInt(1000000); // 000000~999999
+        return String.format("%06d", accessCode);
     }
 
 }
