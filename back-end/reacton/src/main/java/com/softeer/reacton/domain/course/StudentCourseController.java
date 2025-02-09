@@ -36,7 +36,6 @@ public class StudentCourseController {
             }
     )
     public ResponseEntity<SuccessResponse<Map<String, ?>>> getCourseByAccessCode(
-            // TODO: accessCode가 String일 경우에 대한 예외 처리가 자동으로 되는지
             @PathVariable("accessCode") int accessCode
     ) {
         log.debug("입장 코드와 일치하는 수업 조회를 요청합니다. : accessCode = {}", accessCode);
