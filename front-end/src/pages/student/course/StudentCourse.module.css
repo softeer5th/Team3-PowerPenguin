@@ -57,7 +57,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #d6ebfb;
+  background-color: var(--gray-200);
 }
 
 /*스플릿 뷰 */
