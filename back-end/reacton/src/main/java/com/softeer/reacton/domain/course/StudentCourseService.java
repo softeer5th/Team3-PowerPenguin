@@ -2,12 +2,15 @@ package com.softeer.reacton.domain.course;
 
 import com.softeer.reacton.domain.course.dto.CourseScheduleResponse;
 import com.softeer.reacton.domain.course.dto.CourseSummaryResponse;
+import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.domain.schedule.enums.DayType;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,8 @@ public class StudentCourseService {
         }
 
         List<CourseScheduleResponse> schedules = course.getSchedules().stream()
+                .sorted(Comparator.comparing((Schedule schedule) -> DayType.getDayOrder(schedule.getDay()))
+                        .thenComparing(Schedule::getStartTime))
                 .map(schedule -> new CourseScheduleResponse(
                         schedule.getDay(),
                         schedule.getStartTime().toString(),
