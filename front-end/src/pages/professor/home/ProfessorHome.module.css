@@ -1,0 +1,59 @@
+.container {
+  width: 1920px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+.header {
+  width: 1920px;
+  height: 721px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 50px;
+  background: linear-gradient(
+    to top right,
+    #0024e04d 0%,
+    #eaf1fa 50%,
+    #88e2d680 100%
+  );
+  overflow: hidden;
+  position: relative;
+}
+
+.header::before,
+.header::after {
+  content: '';
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.header::before {
+  background-image: url('./assets/torus1.png');
+  background-position: left;
+  width: 100%;
+  height: 630px;
+  top: 110px;
+  left: -280px;
+  opacity: 0.25;
+}
+
+.header::after {
+  background-image: url('./assets/torus2.png');
+  background-position: right;
+  width: 100%;
+  height: 655px;
+  top: 48px;
+  right: -100px;
+  opacity: 0.45;
+}
+
+.content {
+  width: 1920px;
+  background-color: var(--gray-300);
+}
