@@ -20,8 +20,8 @@ public class SuccessResponse<T> {
         this.data = data;
     }
 
-    public static SuccessResponse<Map<String, String>> of(String message, Map<String, String> data) {
-        return SuccessResponse.<Map<String, String>>builder()
+    public static <T> SuccessResponse<T> of(String message, T data) {
+        return SuccessResponse.<T>builder()
                 .message(message)
                 .data(data)
                 .build();
