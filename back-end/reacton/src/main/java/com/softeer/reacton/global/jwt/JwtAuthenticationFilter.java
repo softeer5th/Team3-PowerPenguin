@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute("email", userInfo.get("email"));
             request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
 
-            log.debug("JWT 검증에 성공했습니다. : email: {}", userInfo.get("email"));
+            log.debug("JWT 검증에 성공했습니다. : email = {}", userInfo.get("email"));
 
             chain.doFilter(request, response);
         } catch (BaseException e) {
