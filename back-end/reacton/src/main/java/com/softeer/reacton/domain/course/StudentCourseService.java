@@ -27,7 +27,7 @@ public class StudentCourseService {
 
         Course course = existingCourse.orElseThrow(() -> {
             log.debug("수업 정보를 가져오는 과정에서 발생한 에러입니다. : Course does not exist.");
-            throw new BaseException(CourseErrorCode.COURSE_NOT_FOUND);
+            return new BaseException(CourseErrorCode.COURSE_NOT_FOUND);
         });
 
         if (!course.isActive()) {
