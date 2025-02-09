@@ -23,8 +23,6 @@ public class StudentCourseService {
     public CourseSummaryResponse getCourseByAccessCode(int accessCode) {
         log.debug("입장코드와 일치하는 수업 정보를 조회합니다. : accessCode = {}", accessCode);
 
-        Map<String, Object> courseInfo = new HashMap<>();
-
         Optional<Course> existingCourse = courseRepository.findByAccessCode(accessCode);
 
         Course course = existingCourse.orElseThrow(() -> {
