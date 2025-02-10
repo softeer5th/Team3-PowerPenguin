@@ -4,7 +4,7 @@ import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.dto.ExceptionResponse;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
 import jakarta.validation.ConstraintViolationException;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.MethodNotAllowedException;
 
-@Log4j2
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

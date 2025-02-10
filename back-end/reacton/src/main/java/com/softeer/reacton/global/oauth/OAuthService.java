@@ -8,7 +8,7 @@ import com.softeer.reacton.global.exception.code.OAuthErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import com.softeer.reacton.global.oauth.dto.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-@Log4j2
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuthService {

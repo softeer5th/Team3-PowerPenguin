@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "course")
 @Entity
