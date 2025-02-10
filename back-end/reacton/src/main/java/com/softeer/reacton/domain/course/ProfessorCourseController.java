@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.course.dto.CourseDetailResponse;
 import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +42,31 @@ public class ProfessorCourseController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(SuccessResponse.of("수업이 생성되었습니다.", response));
+    }
+
+    @GetMapping("/{courseId}")
+    @Operation(
+            summary = "수업 상세 조회 요청",
+            description = "courseId에 해당하는 수업의 상세 정보를 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회에 성공했습니다."),
+                    @ApiResponse(responseCode = "404", description = "정보를 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "409", description = "해당 수업에 접근할 권한이 없습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<CourseDetailResponse>> getCourseDetail(
+            HttpServletRequest request,
+            @PathVariable("courseId") Long courseId
+    ) {
+        log.debug("특정 수업에 대한 상세 정보를 요청합니다. : courseId = {}", courseId);
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        CourseDetailResponse response = professorCourseService.getCourseDetail(courseId, oauthId);
+
+        log.info("수업 상세 정보 조회를 완료했습니다.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
     }
 
     @PutMapping("/{courseId}")

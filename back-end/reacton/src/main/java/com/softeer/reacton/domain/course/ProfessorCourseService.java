@@ -1,8 +1,14 @@
 package com.softeer.reacton.domain.course;
 
-import com.softeer.reacton.domain.course.dto.CourseRequest;
+import com.softeer.reacton.domain.course.dto.*;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
+import com.softeer.reacton.domain.question.Question;
+import com.softeer.reacton.domain.question.QuestionRepository;
+import com.softeer.reacton.domain.request.Request;
+import com.softeer.reacton.domain.request.RequestRepository;
+import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
@@ -12,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,6 +27,9 @@ import java.security.SecureRandom;
 public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
+    private final QuestionRepository questionRepository;
+    private final RequestRepository requestRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
     public long createCourse(String oauthId, CourseRequest request) {
@@ -40,6 +51,19 @@ public class ProfessorCourseService {
         log.info("수업이 생성되었습니다. : courseId = {}", courseId);
 
         return courseId;
+    }
+
+    public CourseDetailResponse getCourseDetail(long courseId, String oauthId) {
+        log.debug("수업 상세 정보를 조회합니다.");
+
+        Course course = findCourseByProfessor(oauthId, courseId);
+
+        List<CourseScheduleResponse> schedules = getSchedulesByCourseId(courseId);
+        List<CourseQuestionResponse> questions = getQuestionsByCourseId(courseId);
+        List<CourseRequestResponse> requests = getRequestsByCourseId(courseId);
+
+        log.debug("수업 상세 정보를 가져오는 데 성공했습니다. : courseId = {}", courseId);
+        return CourseDetailResponse.of(course, schedules, questions, requests);
     }
 
     @Transactional
@@ -104,4 +128,38 @@ public class ProfessorCourseService {
         return course;
     }
 
+    private List<CourseScheduleResponse> getSchedulesByCourseId(long courseId) {
+        List<Schedule> schedules = scheduleRepository.findSchedulesByCourseId(courseId);
+
+        return schedules.stream()
+                .map(schedule -> new CourseScheduleResponse(
+                        schedule.getDay(),
+                        schedule.getStartTime().toString(),
+                        schedule.getEndTime().toString()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private List<CourseQuestionResponse> getQuestionsByCourseId(long courseId) {
+        List<Question> questions = questionRepository.findAllByIdOrderByCreatedAtAsc(courseId);
+
+        return questions.stream()
+                .map(question -> new CourseQuestionResponse(
+                        question.getId(),
+                        question.getCreatedAt(),
+                        question.getContent()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private List<CourseRequestResponse> getRequestsByCourseId(long courseId) {
+        List<Request> requests = requestRepository.findAllByIdOrderByCountDesc(courseId);
+
+        return requests.stream()
+                .map(request -> new CourseRequestResponse(
+                        request.getType(),
+                        request.getCount()
+                ))
+                .collect(Collectors.toList());
+    }
 }
