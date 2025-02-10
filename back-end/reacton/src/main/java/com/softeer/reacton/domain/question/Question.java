@@ -1,13 +1,14 @@
 package com.softeer.reacton.domain.question;
 
 import com.softeer.reacton.domain.course.Course;
-import com.softeer.reacton.domain.professor.Professor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "question")
 @Entity
