@@ -8,6 +8,14 @@ import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query("SELECT s FROM Schedule s WHERE s.course.id = :courseId " +
-            "ORDER BY FIELD(s.day, '월', '화', '수', '목', '금', '토', '일'), s.startTime ASC")
+            "ORDER BY CASE s.day " +
+            "WHEN '월' THEN 1 " +
+            "WHEN '화' THEN 2 " +
+            "WHEN '수' THEN 3 " +
+            "WHEN '목' THEN 4 " +
+            "WHEN '금' THEN 5 " +
+            "WHEN '토' THEN 6 " +
+            "WHEN '일' THEN 7 " +
+            "ELSE 8 END, s.startTime ASC")
     List<Schedule> findSchedulesByCourseId(@Param("courseId") Long courseId);
 }
