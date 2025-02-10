@@ -6,10 +6,11 @@ import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 
@@ -19,8 +20,11 @@ import java.security.SecureRandom;
 public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
+    private final ProfessorCourseTransactionService professorCourseTransactionService;
 
-    @Transactional
+    private static final int MAX_RETRIES = 10;
+    private final SecureRandom secureRandom = new SecureRandom();
+
     public long createCourse(String oauthId, CourseRequest request) {
         log.debug("수업을 생성합니다.");
         if (request == null) {
@@ -31,15 +35,7 @@ public class ProfessorCourseService {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        SecureRandom secureRandom = new SecureRandom();
-        int accessCode = 100000 + secureRandom.nextInt(900000);
-        log.debug("입장코드용 랜덤한 6자리 숫자를 생성합니다 : accessCode = {}", accessCode);
-
-        Course course = Course.create(request, accessCode, professor);
-        long courseId = courseRepository.save(course).getId();
-        log.info("수업이 생성되었습니다. : courseId = {}", courseId);
-
-        return courseId;
+        return saveCourseWithRetry(request, professor);
     }
 
     @Transactional
@@ -102,6 +98,26 @@ public class ProfessorCourseService {
         }
 
         return course;
+    }
+
+    private long saveCourseWithRetry(CourseRequest request, Professor professor) {
+        for (int i = 0; i < MAX_RETRIES; i++) {
+            int accessCode = generateUniqueAccessCode();
+            log.debug("입장 코드 생성 시도 {}회 - {}", i + 1, accessCode);
+
+            try {
+                return professorCourseTransactionService.saveCourse(request, professor, accessCode);
+            } catch (DataIntegrityViolationException e) {
+                log.warn("입장 코드 중복으로 인해 저장 실패 - 재시도 {}회: {}", i + 1, accessCode);
+            }
+        }
+
+        log.error("최대 시도 횟수({}) 초과로 인해 입장 코드 생성 실패", MAX_RETRIES);
+        throw new BaseException(CourseErrorCode.ACCESS_CODE_GENERATION_FAILED);
+    }
+
+    private int generateUniqueAccessCode() {
+        return 100000 + secureRandom.nextInt(1000000); // 100000~999999
     }
 
 }

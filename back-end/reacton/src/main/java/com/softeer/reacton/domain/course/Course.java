@@ -57,7 +57,7 @@ public class Course {
     private Professor professor; // 교수 정보 (외래 키)
 
     @Setter
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Schedule> schedules = new ArrayList<>();
 
     @Builder
