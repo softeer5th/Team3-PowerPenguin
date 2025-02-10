@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
-@Log4j2
+@Slf4j
 @RestController
 @RequestMapping("/professors")
 @Tag(name = "Professor API", description = "교수 사용자 관련 API")
