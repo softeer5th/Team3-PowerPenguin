@@ -81,55 +81,84 @@ const MeatBallMenu = ({
   onToggle,
   onDelete,
   onEdit,
-}: MeatBallMenuProps) => (
-  <div className={S.meatBallWrapper}>
-    <button
-      className={`${S.meatBall} ${popup ? S.active : ''}`}
-      onClick={onToggle}
-    >
-      <EtcIcon className={S.meatBallIcon} />
-    </button>
-    {popup && (
-      <div className={S.popup}>
-        <button
-          className={`${S.popupButton} ${S.popupButtonDelete}`}
-          onClick={onDelete}
-        >
-          <span>이 수업 삭제하기</span>
-        </button>
-        <button className={S.popupButton} onClick={onEdit}>
-          <span>이 수업 편집하기</span>
-        </button>
-      </div>
-    )}
-  </div>
-);
+}: MeatBallMenuProps) => {
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      onToggle();
+    }
+  };
 
-const renderButtonContainer = (
+  return (
+    <div className={S.meatBallWrapper} tabIndex={0} onBlur={handleBlur}>
+      <button
+        className={`${S.meatBall} ${popup ? S.active : ''}`}
+        onClick={onToggle}
+      >
+        <EtcIcon className={S.meatBallIcon} />
+      </button>
+      {popup && (
+        <div className={S.popup}>
+          <button
+            className={`${S.popupButton} ${S.popupButtonDelete}`}
+            onClick={() => {
+              onDelete();
+              onToggle();
+            }}
+          >
+            <span>이 수업 삭제하기</span>
+          </button>
+          <button
+            className={S.popupButton}
+            onClick={() => {
+              onEdit();
+              onToggle();
+            }}
+          >
+            <span>이 수업 편집하기</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const RenderButtonContainer = (
   width: string,
   height: string,
   onStart: () => void,
   onDetail: () => void,
   onFile: () => void
-) => (
-  <div className={S.buttonContainer}>
-    <TextButton
-      width={width}
-      height={height}
-      text="수업 시작"
-      color="blue"
-      size="web3"
-      onClick={onStart}
-      isActive
-    />
-    <button className={S.subButton} onClick={onDetail}>
-      <BarChartIcon className={S.subButtonIcon} />
-    </button>
-    <button className={S.subButton} onClick={onFile}>
-      <ClipIcon className={S.subButtonIcon} />
-    </button>
-  </div>
-);
+) => {
+  return (
+    <div className={S.buttonContainer}>
+      <TextButton
+        width={width}
+        height={height}
+        text="수업 시작"
+        color="blue"
+        size="web3"
+        onClick={onStart}
+        isActive
+      />
+      <button className={S.subButton} onClick={onDetail}>
+        <BarChartIcon className={S.subButtonIcon} />
+        <div className={S.subButtonPopup}>
+          <span>지난 수업 통계를 볼 수 있어요</span>
+        </div>
+      </button>
+      <button className={S.subButton} onClick={onFile}>
+        <ClipIcon className={S.subButtonIcon} />
+        <div className={S.subButtonPopup}>
+          <span>
+            미리 강의자료를 첨부하면,
+            <br />
+            수업 시작 후 자동으로 파일이 열려요
+          </span>
+        </div>
+      </button>
+    </div>
+  );
+};
 
 const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
   const computeLeftTime = useCallback(() => {
@@ -275,7 +304,7 @@ const CourseCard = ({
               </div>
             </div>
           </div>
-          {renderButtonContainer(
+          {RenderButtonContainer(
             '239px',
             '56px',
             () => onStartCourse(course.id),
@@ -336,7 +365,7 @@ const CourseCard = ({
               </div>
             </div>
           </div>
-          {renderButtonContainer(
+          {RenderButtonContainer(
             '345px',
             '61px',
             () => onStartCourse(course.id),

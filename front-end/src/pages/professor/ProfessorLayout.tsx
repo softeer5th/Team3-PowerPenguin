@@ -5,7 +5,7 @@ const ProfessorLayout = () => {
   useEffect(() => {
     document.title = 'Professor';
     document.body.style.zoom = `${window.outerWidth / 1920}`;
-    document.body.style.backgroundColor = 'black';
+    document.body.style.backgroundColor = 'var(--bg)';
   }, []);
 
   return (

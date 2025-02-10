@@ -45,6 +45,15 @@ const ProfessorHome = () => {
     });
   }, []);
 
+  const filteredCourses = courses.filter(
+    (course) =>
+      (courseDay === '수업 요일' ||
+        course.schedule.find(
+          (schedule) => schedule.day === courseDay.slice(0, 1)
+        )) &&
+      (courseType === '수업 종류' || courseType === course.classType)
+  );
+
   const handleDeleteCourse = (courseId: number) => {
     courseRepository.deleteCourse(courseId).then(() => {
       setCourses(courses.filter((course) => course.id !== courseId));
@@ -65,6 +74,10 @@ const ProfessorHome = () => {
 
   const handleFileCourse = (courseId: number) => {
     console.log('File course:', courseId);
+  };
+
+  const handleAddCourse = () => {
+    console.log('Add course');
   };
 
   return (
@@ -152,7 +165,7 @@ const ProfessorHome = () => {
       </div>
       <div className={S.content}>
         <div className={S.courseAdd}>
-          <CircleAddButton onButtonClick={() => console.log('Add course')} />
+          <CircleAddButton onButtonClick={handleAddCourse} />
         </div>
         <div className={S.courseList}>
           <div className={S.courseListHeader}>
@@ -171,10 +184,10 @@ const ProfessorHome = () => {
             </div>
           </div>
           <div className={S.courseListContainer}>
-            {courses.length > 0 ? (
+            {filteredCourses.length > 0 ? (
               <totalPagination.PaginationDiv>
                 {(() => {
-                  const groups = createCourseGroup(courses, 6);
+                  const groups = createCourseGroup(filteredCourses, 6);
                   return groups.map((group, idx) => (
                     <div key={idx} className={S.courseGrid}>
                       {group.map((course) => (
