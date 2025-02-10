@@ -1,6 +1,7 @@
 package com.softeer.reacton.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.softeer.reacton.domain.course.dto.CourseDetailResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,6 +23,13 @@ public class SuccessResponse<T> {
 
     public static SuccessResponse<Map<String, String>> of(String message, Map<String, String> data) {
         return SuccessResponse.<Map<String, String>>builder()
+                .message(message)
+                .data(data)
+                .build();
+    }
+
+    public static SuccessResponse<CourseDetailResponse> of(String message, CourseDetailResponse data) {
+        return SuccessResponse.<CourseDetailResponse>builder()
                 .message(message)
                 .data(data)
                 .build();
