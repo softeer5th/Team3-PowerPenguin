@@ -1,9 +1,13 @@
 package com.softeer.reacton.domain.professor;
 
+import com.softeer.reacton.domain.course.Course;
+import com.softeer.reacton.domain.course.CourseRepository;
+import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -16,8 +20,10 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ProfessorService {
-    private final ProfessorRepository professorRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final ProfessorRepository professorRepository;
+    private final CourseRepository courseRepository;
+    private final ScheduleRepository scheduleRepository;
 
     private static final Set<String> ALLOWED_IMAGE_FILE_EXTENSIONS = Set.of("png", "jpg", "jpeg", "heic");
     private static final long MAX_IMAGE_FILE_SIZE = 64 * 1024;
@@ -50,7 +56,21 @@ public class ProfessorService {
 
         return jwtTokenUtil.createAuthAccessToken(oauthId, email);
     }
+  
+    @Transactional
+    public void delete(String oauthId) {
+        Professor professor = professorRepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
+        courseRepository.findByProfessor(professor).forEach(course -> {
+            scheduleRepository.deleteByCourse((Course) course);
+        });
+        courseRepository.deleteByProfessor(professor);
+        professorRepository.delete(professor);
+
+        log.debug("회원 탈퇴 처리를 완료했습니다. : email = {}", professor.getEmail());
+    }
+  
     public Map<String, String> getProfileInfo(String oauthId) {
         log.debug("사용자의 이름, 이메일 주소를 가져옵니다.");
 

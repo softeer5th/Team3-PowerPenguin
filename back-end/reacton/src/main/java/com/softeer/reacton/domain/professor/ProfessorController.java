@@ -141,7 +141,7 @@ public class ProfessorController {
             }
     )
     public ResponseEntity<Void> signUp(
-            @RequestParam("name") @Pattern(regexp = "^[가-힣a-zA-Z]{1,20}$", message = "이름은 한글 또는 영문만 1~20자 입력 가능합니다.") String name,
+            @RequestPart("name") @Pattern(regexp = "^[가-힣a-zA-Z]{1,20}$", message = "이름은 한글 또는 영문만 1~20자 입력 가능합니다.") String name,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile,
             HttpServletRequest request) {
         log.debug("회원가입 요청을 호출합니다. : name = {}, profileImageFile = {}", name, profileImageFile != null ? "yes" : "no");
@@ -170,4 +170,52 @@ public class ProfessorController {
                 .build();
     }
 
+    @PostMapping("/logout")
+    @Operation(
+            summary = "사용자 로그아웃",
+            description = "사용자 로그아웃을 수행합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "성공적으로 로그아웃되었습니다."),
+            }
+    )
+    public ResponseEntity<Void> logout() {
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
+                .httpOnly(true)
+                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
+    }
+
+    @DeleteMapping
+    @Operation(
+            summary = "사용자 탈퇴",
+            description = "사용자 탈퇴를 수행합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "성공적으로 탈퇴되었습니다."),
+            }
+    )
+    public ResponseEntity<Void> delete(HttpServletRequest request) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        professorService.delete(oauthId);
+
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
+                .httpOnly(true)
+                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
+    }
 }
