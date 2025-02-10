@@ -19,11 +19,6 @@ const ProfessorHomeLayout = () => {
     setSearch('');
   };
 
-  const handleSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    setSearch('search');
-  };
-
   return (
     <>
       <div className={S.gnb}>
@@ -38,13 +33,23 @@ const ProfessorHomeLayout = () => {
               onChange={handleSearchInput}
             />
             {search ? (
-              <button className={S.searchButton} onClick={handleDeleteSearch}>
+              <button
+                className={S.searchButton}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDeleteSearch(e);
+                }}
+              >
                 <CloseIcon className={S.closeIcon} />
               </button>
             ) : (
-              <button className={S.searchButton} onClick={handleSearch}>
+              <div
+                className={S.searchButton}
+                onMouseDown={(e) => e.preventDefault()}
+              >
                 <SearchIcon className={S.searchIcon} />
-              </button>
+              </div>
             )}
           </div>
         </div>

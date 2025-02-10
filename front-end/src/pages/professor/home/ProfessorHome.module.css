@@ -14,7 +14,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 50px;
   background: linear-gradient(
     to top right,
     #0024e04d 0%,
@@ -36,7 +35,7 @@
 .header::before {
   background-image: url('./assets/torus1.png');
   background-position: left;
-  width: 100%;
+  width: 651px;
   height: 630px;
   top: 110px;
   left: -280px;
@@ -46,14 +45,218 @@
 .header::after {
   background-image: url('./assets/torus2.png');
   background-position: right;
-  width: 100%;
+  width: 655px;
   height: 655px;
   top: 48px;
   right: -100px;
   opacity: 0.45;
 }
 
+.headerContainer {
+  width: 1371px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.todayCourse {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 116px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.todayCourse .title {
+  font: var(--web-header3-bold);
+  color: var(--gray-700);
+}
+
+.todayCourse .title > span {
+  color: var(--blue-400);
+}
+
+.todayCourseList {
+  width: 676px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 34px;
+  border-radius: var(--large);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.todayCourseList > .title {
+  font: var(--web-title3-bold);
+  color: var(--gray-700);
+  margin-bottom: 18px;
+}
+
+.courseRow {
+  display: flex;
+  width: 608px;
+  height: 325px;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.todayCourseController {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  gap: 62px;
+}
+
+.noTodayCourse {
+  width: 1371px;
+  height: 495px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: var(--large);
+  gap: 52px;
+}
+
+.rocket {
+  width: 133px;
+  height: 133px;
+  background: linear-gradient(180deg, #e6eaff 0%, #b0bcfe 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rocketIcon {
+  width: 81px;
+  height: 81px;
+}
+
+.noTodayCourseText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.noTodayCourse .title {
+  font: var(--web-title1-bold);
+  color: var(--gray-900);
+}
+
+.noTodayCourse .title > span {
+  color: var(--blue-400);
+}
+
+.noTodayCourse .description {
+  font: var(--web-body1-medium);
+  color: var(--gray-500);
+}
+
 .content {
   width: 1920px;
-  background-color: var(--gray-300);
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.courseAdd {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  float: right;
+  top: 82px;
+  right: 74px;
+}
+
+.courseList {
+  width: auto;
+  height: auto;
+  margin: 0 274px;
+  margin-top: 80px;
+  margin-bottom: 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.courseListHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.courseListHeader .title {
+  font: var(--web-header3-bold);
+  color: var(--gray-900);
+}
+
+.courseListContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+}
+
+.courseGrid {
+  width: 1371px;
+  height: 914px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  column-gap: 28px;
+  row-gap: 92px;
+}
+
+.courseListInner {
+  width: 1371px;
+  height: 441px;
+  border-radius: var(--large);
+  background-color: var(--gray-100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.noCourseText {
+  font: var(--web-title2-medium);
+  color: var(--gray-500);
+}
+
+.courseListController {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 59px;
+}
+
+.page {
+  font: var(--web-body3-medium);
+  color: var(--gray-500);
+}
+
+.page > span {
+  font: var(--web-body3-bold);
+  color: var(--gray-600);
+}
+
+.dropdownContainer {
+  position: relative;
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+  height: 53px;
+  overflow: visible;
 }

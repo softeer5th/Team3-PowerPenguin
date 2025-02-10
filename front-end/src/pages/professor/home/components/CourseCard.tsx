@@ -29,8 +29,10 @@ const createTargetDate = (time: string): Date => {
   return target;
 };
 
-const isSoon = (time: string) =>
-  createTargetDate(time).getTime() - Date.now() < 3600000;
+const isSoon = (time: string) => {
+  const leftTime = createTargetDate(time).getTime() - Date.now();
+  return leftTime > 0 && leftTime < 3600000;
+};
 
 type TimeType = {
   hour: number;
@@ -38,10 +40,15 @@ type TimeType = {
   second: number;
 };
 
-const formatTime = ({ hour, minute, second }: TimeType) =>
-  `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
+const formatTime = ({ hour, minute, second }: TimeType) => {
+  if (hour < 0) return '00 : 00 : 00';
+  if (minute < 0) return '00 : 00 : 00';
+  if (second < 0) return '00 : 00 : 00';
+
+  return `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
     .toString()
     .padStart(2, '0')}`;
+};
 
 const getCourseColor = (category: string) => {
   switch (category) {
@@ -124,15 +131,29 @@ const renderButtonContainer = (
   </div>
 );
 
-/**
- * Custom hook to compute the countdown timer for today’s schedule.
- */
 const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
-  const [leftTime, setLeftTime] = useState<TimeType>({
-    hour: 0,
-    minute: 0,
-    second: 0,
-  });
+  const computeLeftTime = useCallback(() => {
+    const now = new Date();
+    const currentSchedule = scheduleList.find(
+      (schedule) => schedule.day === getDayString(now.getDay())
+    );
+    if (currentSchedule) {
+      const target = createTargetDate(currentSchedule.start);
+      const diff = target.getTime() - now.getTime();
+      return {
+        hour: Math.floor(diff / 3600000),
+        minute: Math.floor((diff % 3600000) / 60000),
+        second: Math.floor((diff % 60000) / 1000),
+      };
+    }
+    return {
+      hour: 0,
+      minute: 0,
+      second: 0,
+    };
+  }, [scheduleList]);
+
+  const [leftTime, setLeftTime] = useState<TimeType>(computeLeftTime());
 
   useEffect(() => {
     const interval = setInterval(() => {
