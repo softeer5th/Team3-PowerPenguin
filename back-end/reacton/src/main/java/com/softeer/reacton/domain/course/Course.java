@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "course")
 @Entity
@@ -50,7 +51,6 @@ public class Course {
     @Column(length = 512)
     private String fileUrl; // 강의 자료 URL
 
-    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor; // 교수 정보 (외래 키)
