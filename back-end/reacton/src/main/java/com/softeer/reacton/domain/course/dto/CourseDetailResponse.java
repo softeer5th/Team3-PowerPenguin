@@ -2,7 +2,6 @@ package com.softeer.reacton.domain.course.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.softeer.reacton.domain.course.Course;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
