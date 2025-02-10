@@ -3,6 +3,8 @@ package com.softeer.reacton.domain.course;
 import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
+import com.softeer.reacton.domain.question.Question;
+import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
@@ -58,6 +60,16 @@ public class Course {
     @Setter
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Schedule> schedules = new ArrayList<>();
+
+    @Setter
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("createdAt ASC")
+    private List<Question> questions = new ArrayList<>();
+
+    @Setter
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("count DESC")
+    private List<Request> requests = new ArrayList<>();
 
     @Builder
     private Course(String name, String courseCode, int capacity, String university, CourseType type, int accessCode, Professor professor) {

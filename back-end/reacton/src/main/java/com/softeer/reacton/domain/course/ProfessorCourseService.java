@@ -4,9 +4,7 @@ import com.softeer.reacton.domain.course.dto.*;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.domain.question.Question;
-import com.softeer.reacton.domain.question.QuestionRepository;
 import com.softeer.reacton.domain.request.Request;
-import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
@@ -27,8 +25,6 @@ import java.util.stream.Collectors;
 public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
-    private final QuestionRepository questionRepository;
-    private final RequestRepository requestRepository;
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
@@ -59,8 +55,8 @@ public class ProfessorCourseService {
         Course course = findCourseByProfessor(oauthId, courseId);
 
         List<CourseScheduleResponse> schedules = getSchedulesByCourseId(courseId);
-        List<CourseQuestionResponse> questions = getQuestionsByCourseId(courseId);
-        List<CourseRequestResponse> requests = getRequestsByCourseId(courseId);
+        List<CourseQuestionResponse> questions = getQuestionsByCourse(course);
+        List<CourseRequestResponse> requests = getRequestsByCourse(course);
 
         log.debug("수업 상세 정보를 가져오는 데 성공했습니다. : courseId = {}", courseId);
         return CourseDetailResponse.of(course, schedules, questions, requests);
@@ -129,6 +125,7 @@ public class ProfessorCourseService {
     }
 
     private List<CourseScheduleResponse> getSchedulesByCourseId(long courseId) {
+        log.debug("Test");
         List<Schedule> schedules = scheduleRepository.findSchedulesByCourseId(courseId);
 
         return schedules.stream()
@@ -140,8 +137,8 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private List<CourseQuestionResponse> getQuestionsByCourseId(long courseId) {
-        List<Question> questions = questionRepository.findAllByIdOrderByCreatedAtAsc(courseId);
+    private List<CourseQuestionResponse> getQuestionsByCourse(Course course) {
+        List<Question> questions = course.getQuestions();
 
         return questions.stream()
                 .map(question -> new CourseQuestionResponse(
@@ -152,8 +149,8 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private List<CourseRequestResponse> getRequestsByCourseId(long courseId) {
-        List<Request> requests = requestRepository.findAllByIdOrderByCountDesc(courseId);
+    private List<CourseRequestResponse> getRequestsByCourse(Course course) {
+        List<Request> requests = course.getRequests();
 
         return requests.stream()
                 .map(request -> new CourseRequestResponse(
