@@ -41,7 +41,7 @@ public class StudentCourseController {
 
         CourseSummaryResponse response = studentCourseService.getCourseByAccessCode(accessCode);
 
-        log.info("사용자의 이름, 이메일 주소를 가져오는 데 성공했습니다.");
+        log.info("입장 코드와 일치하는 수업을 성공적으로 조회했습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.OK)
