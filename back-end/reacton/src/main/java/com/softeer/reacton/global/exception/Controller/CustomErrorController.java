@@ -24,7 +24,7 @@ public class CustomErrorController implements ErrorController {
     @RequestMapping("/error")
     @Operation(
             summary = "에러 처리",
-            description = "Dispatcher Sublet에 의해 넘겨진 에러에 대한 처리를 수행합니다.",
+            description = "DispatcherServlet에 의해 넘겨진 에러에 대한 처리를 수행합니다.",
             responses = {
                     @ApiResponse(responseCode = "404", description = "유효하지 않은 경로입니다."),
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")

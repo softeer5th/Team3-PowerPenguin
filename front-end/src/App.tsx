@@ -9,8 +9,8 @@ import ProfessorRegister from './pages/professor/register/ProfessorRegister';
 import ProfessorProfile from './pages/professor/profile';
 import ProfessorCourse from './pages/professor/course';
 import ProfessorClassRoom from './pages/professor/course/classroom';
-import StudentHome from './pages/student/home';
-import StudentCourse from './pages/student/course';
+import StudentHome from './pages/student/home/StudentHome';
+import StudentCourse from './pages/student/course/StudentCourse';
 import ProfessorLayout from './pages/professor/ProfessorLayout';
 
 function App() {

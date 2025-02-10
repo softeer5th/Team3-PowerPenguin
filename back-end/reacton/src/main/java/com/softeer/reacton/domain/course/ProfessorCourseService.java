@@ -102,7 +102,7 @@ public class ProfessorCourseService {
 
     private long saveCourseWithRetry(CourseRequest request, Professor professor) {
         for (int i = 0; i < MAX_RETRIES; i++) {
-            String accessCode = generateUniqueAccessCode();
+            int accessCode = generateUniqueAccessCode();
             log.debug("입장 코드 생성 시도 {}회 - {}", i + 1, accessCode);
 
             try {
@@ -116,9 +116,8 @@ public class ProfessorCourseService {
         throw new BaseException(CourseErrorCode.ACCESS_CODE_GENERATION_FAILED);
     }
 
-    private String generateUniqueAccessCode() {
-        int accessCode = secureRandom.nextInt(1000000); // 000000~999999
-        return String.format("%06d", accessCode);
+    private int generateUniqueAccessCode() {
+        return 100000 + secureRandom.nextInt(1000000); // 100000~999999
     }
 
 }
