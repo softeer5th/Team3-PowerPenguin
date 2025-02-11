@@ -10,6 +10,7 @@ import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
+import com.softeer.reacton.global.util.TimeUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +63,17 @@ public class ProfessorCourseService {
         return CourseDetailResponse.of(course, schedules, questions, requests);
     }
 
+    public CourseAllResponse getAllCourses(String oauthId) {
+        log.debug("전체 수업 목록을 조회합니다.");
+
+        Professor professor = getProfessorByOauthId(oauthId);
+
+        List<CourseSummaryResponse> todayCourses = getTodayCoursesByOauthId(professor);
+        List<CourseSummaryResponse> allCourses = getAllCoursesByOauthId(professor);
+
+        return CourseAllResponse.of(todayCourses, allCourses);
+    }
+
     @Transactional
     public void updateCourse(String oauthId, long courseId, CourseRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
@@ -110,12 +122,19 @@ public class ProfessorCourseService {
         log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
     }
 
-    private Course findCourseByProfessor(String oauthId, long courseId) {
-        Professor professor = professorRepository.findByOauthId(oauthId)
+    private Professor getProfessorByOauthId(String oauthId) {
+        return professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
+    }
 
-        Course course = courseRepository.findById(courseId)
+    private Course getCourseByCourseId(long courseId) {
+        return courseRepository.findById(courseId)
                 .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
+    }
+
+    private Course findCourseByProfessor(String oauthId, long courseId) {
+        Professor professor = getProfessorByOauthId(oauthId);
+        Course course = getCourseByCourseId(courseId);
 
         if (!course.getProfessor().getId().equals(professor.getId())) {
             throw new BaseException(CourseErrorCode.UNAUTHORIZED_PROFESSOR);
@@ -125,7 +144,6 @@ public class ProfessorCourseService {
     }
 
     private List<CourseScheduleResponse> getSchedulesByCourseId(long courseId) {
-        log.debug("Test");
         List<Schedule> schedules = scheduleRepository.findSchedulesByCourseId(courseId);
 
         return schedules.stream()
@@ -156,6 +174,29 @@ public class ProfessorCourseService {
                 .map(request -> new CourseRequestResponse(
                         request.getType(),
                         request.getCount()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private List<CourseSummaryResponse> getTodayCoursesByOauthId(Professor professor) {
+        String todayDay = TimeUtil.getTodayDay();
+        List<Course> todayCourses = courseRepository.findCoursesByDayAndProfessor(todayDay, professor);
+
+        return todayCourses.stream()
+                .map(course -> CourseSummaryResponse.of(
+                        course,
+                        getSchedulesByCourseId(course.getId()) // 기존 메서드 활용
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private List<CourseSummaryResponse> getAllCoursesByOauthId(Professor professor) {
+        List<Course> allCourses = courseRepository.findCoursesByProfessor(professor);
+
+        return allCourses.stream()
+                .map(course -> CourseSummaryResponse.of(
+                        course,
+                        getSchedulesByCourseId(course.getId()) // 기존 메서드 활용
                 ))
                 .collect(Collectors.toList());
     }

@@ -2,6 +2,7 @@ package com.softeer.reacton.domain.course;
 
 import com.softeer.reacton.domain.course.dto.CourseDetailResponse;
 import com.softeer.reacton.domain.course.dto.CourseRequest;
+import com.softeer.reacton.domain.course.dto.CourseAllResponse;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -64,6 +65,29 @@ public class ProfessorCourseController {
         CourseDetailResponse response = professorCourseService.getCourseDetail(courseId, oauthId);
 
         log.info("수업 상세 정보 조회를 완료했습니다.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
+    }
+
+    @GetMapping("/home")
+    @Operation(
+            summary = "전체 수업 목록 조회",
+            description = "사용자의 전체 수업 정보를 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회에 성공했습니다."),
+                    @ApiResponse(responseCode = "404", description = "정보를 찾을 수 없습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<CourseAllResponse>> getCourseDetail(
+            HttpServletRequest request
+    ) {
+        log.debug("사용자의 전체 수업 목록을 요청합니다.");
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        CourseAllResponse response = professorCourseService.getAllCourses(oauthId);
+
+        log.info("전체 수업 정보 조회를 완료했습니다.");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
