@@ -1,0 +1,49 @@
+.courseListContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+}
+
+.courseGrid {
+  width: 1371px;
+  height: 914px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  column-gap: 28px;
+  row-gap: 92px;
+}
+
+.courseListInner {
+  width: 1371px;
+  height: 441px;
+  border-radius: var(--large);
+  background-color: var(--gray-100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.courseListController {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 59px;
+}
+
+.noCourseText {
+  font: var(--web-title2-medium);
+  color: var(--gray-500);
+}
+
+.page {
+  font: var(--web-body3-medium);
+  color: var(--gray-500);
+}
+
+.page > span {
+  font: var(--web-body3-bold);
+  color: var(--gray-600);
+}

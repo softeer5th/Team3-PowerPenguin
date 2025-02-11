@@ -1,3 +1,5 @@
+import { CourseMeta } from '../core/model';
+
 const imageType = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
 export const validateImage = (file: File): boolean => {
@@ -72,3 +74,21 @@ export const formatTime = ({ hour, minute, second }: TimeType) => {
     .toString()
     .padStart(2, '0')}`;
 };
+
+export function todayString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = days[now.getDay()];
+  return `${year}.${month}.${day} (${dayOfWeek})`;
+}
+
+export function createCourseGroup(courses: CourseMeta[], size: number) {
+  const groups: CourseMeta[][] = [];
+  for (let i = 0; i < courses.length; i += size) {
+    groups.push(courses.slice(i, i + size));
+  }
+  return groups;
+}

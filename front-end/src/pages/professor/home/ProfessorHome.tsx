@@ -3,53 +3,27 @@ import { courseRepository } from '../../../di';
 import { ReactNode, useEffect, useState } from 'react';
 import CourseCard from './components/CourseCard';
 import { CourseMeta } from '../../../core/model';
-import usePagination from '../../../hooks/usePagination';
 import RocketIcon from '../../../assets/icons/rocket.svg?react';
 import CircleAddButton from '../../../components/button/icon/CircleAddButton';
-import FilterDropDown from './components/FilterDropDown';
-import PaginationButton from '../../../components/button/icon/PaginationButton';
 import CourseModal from './modal/CourseModal';
 import AlertModal from '../../../components/modal/AlertModal';
 import FileUploadPopupModal from '../../../components/modal/FileUploadPopupModal';
 import useModal from '../../../hooks/useModal';
+import TodayCourses from './components/TodayCourses';
+import TotalCourses from './components/TotalCourses';
+import FilterDropDown from './components/FilterDropDown';
 
 const CourseDay = ['월', '화', '수', '목', '금', '토', '일'];
 const CourseType = ['전공', '교양', '기타'];
-
-function todayString() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const days = ['일', '월', '화', '수', '목', '금', '토'];
-  const dayOfWeek = days[now.getDay()];
-  return `${year}.${month}.${day} (${dayOfWeek})`;
-}
-
-function createCourseGroup(courses: CourseMeta[], size: number) {
-  const groups: CourseMeta[][] = [];
-  for (let i = 0; i < courses.length; i += size) {
-    groups.push(courses.slice(i, i + size));
-  }
-  return groups;
-}
 
 const ProfessorHome = () => {
   const [todayCourses, setTodayCourses] = useState<CourseMeta[]>([]);
   const [courses, setCourses] = useState<CourseMeta[]>([]);
   const [courseDay, setCourseDay] = useState<string>('수업 요일');
   const [courseType, setCourseType] = useState<string>('수업 종류');
-  const [modal, setModal] = useState<ReactNode | null>(null);
-  const todayPagination = usePagination();
-  const totalPagination = usePagination();
-  const { openModal, closeModal, Modal } = useModal();
 
-  useEffect(() => {
-    courseRepository.getHomeCourses().then((courses) => {
-      setCourses(courses.totalCourse);
-      setTodayCourses(courses.todayCourse);
-    });
-  }, []);
+  const [modal, setModal] = useState<ReactNode | null>(null);
+  const { openModal, closeModal, Modal } = useModal();
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -59,6 +33,13 @@ const ProfessorHome = () => {
         )) &&
       (courseType === '수업 종류' || courseType === course.classType)
   );
+
+  useEffect(() => {
+    courseRepository.getHomeCourses().then((courses) => {
+      setCourses(courses.totalCourse);
+      setTodayCourses(courses.todayCourse);
+    });
+  }, []);
 
   const handleDeleteCourse = (courseId: number) => {
     setModal(
@@ -218,51 +199,14 @@ const ProfessorHome = () => {
                     onDeleteCourse={handleDeleteCourse}
                   />
                 </div>
-                <div className={S.todayCourseList}>
-                  <h2 className={S.title}>{todayString()}</h2>
-                  <todayPagination.PaginationDiv
-                    containerStyle={{ width: '608px' }}
-                  >
-                    {(() => {
-                      const restCourses = todayCourses.slice(1);
-                      const groups = createCourseGroup(restCourses, 3);
-                      return groups.map((group, idx) => (
-                        <div key={idx} className={S.courseRow}>
-                          {group.map((course) => (
-                            <CourseCard
-                              key={course.id}
-                              course={course}
-                              size="small"
-                              onDetailCourse={handleDetailCourse}
-                              onFileCourse={handleFileCourse}
-                              onStartCourse={handleStartCourse}
-                              onEditCourse={handleEditCourse}
-                              onDeleteCourse={handleDeleteCourse}
-                            />
-                          ))}
-                        </div>
-                      ));
-                    })()}
-                  </todayPagination.PaginationDiv>
-                  <div className={S.todayCourseController}>
-                    <PaginationButton
-                      onButtonClick={todayPagination.prevPage}
-                      type="prev"
-                      isActive={todayPagination.page > 0}
-                    />
-                    <div className={S.page}>
-                      <span>{todayPagination.page + 1}</span> /{' '}
-                      {Math.max(todayPagination.totalPages, 1)}
-                    </div>
-                    <PaginationButton
-                      onButtonClick={todayPagination.nextPage}
-                      type="next"
-                      isActive={
-                        todayPagination.page < todayPagination.totalPages - 1
-                      }
-                    />
-                  </div>
-                </div>
+                <TodayCourses
+                  todayCourses={todayCourses}
+                  handleDetailCourse={handleDetailCourse}
+                  handleFileCourse={handleFileCourse}
+                  handleStartCourse={handleStartCourse}
+                  handleEditCourse={handleEditCourse}
+                  handleDeleteCourse={handleDeleteCourse}
+                />
               </div>
             ) : (
               <div className={S.noTodayCourse}>
@@ -301,55 +245,14 @@ const ProfessorHome = () => {
                 />
               </div>
             </div>
-            <div className={S.courseListContainer}>
-              {filteredCourses.length > 0 ? (
-                <totalPagination.PaginationDiv>
-                  {(() => {
-                    const groups = createCourseGroup(filteredCourses, 6);
-                    return groups.map((group, idx) => (
-                      <div key={idx} className={S.courseGrid}>
-                        {group.map((course) => (
-                          <CourseCard
-                            key={course.id}
-                            course={course}
-                            size="medium"
-                            onDetailCourse={handleDetailCourse}
-                            onFileCourse={handleFileCourse}
-                            onStartCourse={handleStartCourse}
-                            onEditCourse={handleEditCourse}
-                            onDeleteCourse={handleDeleteCourse}
-                          />
-                        ))}
-                      </div>
-                    ));
-                  })()}
-                </totalPagination.PaginationDiv>
-              ) : (
-                <div className={S.courseListInner}>
-                  <span className={S.noCourseText}>
-                    아직 아무 수업도 없어요
-                  </span>
-                </div>
-              )}
-              <div className={S.courseListController}>
-                <PaginationButton
-                  onButtonClick={totalPagination.prevPage}
-                  type="prev"
-                  isActive={totalPagination.page > 0}
-                />
-                <div className={S.page}>
-                  <span>{totalPagination.page + 1}</span> /{' '}
-                  {Math.max(totalPagination.totalPages, 1)}
-                </div>
-                <PaginationButton
-                  onButtonClick={totalPagination.nextPage}
-                  type="next"
-                  isActive={
-                    totalPagination.page < totalPagination.totalPages - 1
-                  }
-                />
-              </div>
-            </div>
+            <TotalCourses
+              filteredCourses={filteredCourses}
+              handleDetailCourse={handleDetailCourse}
+              handleFileCourse={handleFileCourse}
+              handleStartCourse={handleStartCourse}
+              handleEditCourse={handleEditCourse}
+              handleDeleteCourse={handleDeleteCourse}
+            />
           </div>
         </div>
       </div>
