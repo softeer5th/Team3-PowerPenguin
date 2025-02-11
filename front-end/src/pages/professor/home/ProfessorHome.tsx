@@ -9,6 +9,8 @@ import CircleAddButton from '../../../components/button/icon/CircleAddButton';
 import FilterDropDown from './components/FilterDropDown';
 import PaginationButton from '../../../components/button/icon/PaginationButton';
 import CourseModal from './modal/CourseModal';
+import AlertModal from '../../../components/modal/AlertModal';
+import FileUploadPopupModal from '../../../components/modal/FileUploadPopupModal';
 import useModal from '../../../hooks/useModal';
 
 const CourseDay = ['월', '화', '수', '목', '금', '토', '일'];
@@ -59,13 +61,41 @@ const ProfessorHome = () => {
   );
 
   const handleDeleteCourse = (courseId: number) => {
-    courseRepository.deleteCourse(courseId).then(() => {
-      setCourses(courses.filter((course) => course.id !== courseId));
-    });
+    setModal(
+      <AlertModal
+        type="caution"
+        message="강의를 삭제하시겠습니까?"
+        description="삭제된 강의는 복구가 불가능합니다. 정말 삭제하시겠습니까?"
+        buttonText="삭제"
+        onClickCloseButton={() => {
+          setModal(null);
+          closeModal();
+        }}
+        onClickModalButton={() => {
+          console.log('Delete course:', courseId);
+          setModal(null);
+          closeModal();
+        }}
+      />
+    );
+    openModal();
   };
 
   const handleEditCourse = (courseId: number) => {
     console.log('Edit course:', courseId);
+    setModal(
+      <CourseModal
+        course={courses.find((course) => course.id === courseId)}
+        onClose={() => {
+          setModal(null);
+          closeModal();
+        }}
+        onSubmit={(course) => {
+          console.log('Submit course:', course);
+        }}
+      />
+    );
+    openModal();
   };
 
   const handleStartCourse = (courseId: number) => {
@@ -78,11 +108,24 @@ const ProfessorHome = () => {
 
   const handleFileCourse = (courseId: number) => {
     console.log('File course:', courseId);
+    setModal(
+      <FileUploadPopupModal
+        onClickCloseButton={() => {
+          setModal(null);
+          closeModal();
+        }}
+        onClickSaveButton={(file) => {
+          console.log('Save file:', file);
+          setModal(null);
+          closeModal();
+        }}
+      />
+    );
+    openModal();
   };
 
   const handleAddCourse = () => {
     console.log('Add course');
-    openModal();
     setModal(
       <CourseModal
         onClose={() => {
@@ -94,6 +137,7 @@ const ProfessorHome = () => {
         }}
       />
     );
+    openModal();
   };
 
   return (
