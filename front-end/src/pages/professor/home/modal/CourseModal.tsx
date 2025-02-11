@@ -30,6 +30,20 @@ type CourseForm = {
 };
 
 const days = ['월', '화', '수', '목', '금', '토', '일'] as const;
+const courseTypes = [
+  {
+    color: 'green',
+    text: '교양',
+  },
+  {
+    color: 'purple',
+    text: '전공',
+  },
+  {
+    color: 'gray',
+    text: '기타',
+  },
+];
 
 const checkForm = (courseForm: CourseForm) => {
   if (courseForm.name === '') {
@@ -186,45 +200,22 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
             <span>강의 유형</span>
           </div>
           <div className={S.categoryContainer}>
-            <button
-              className={S.categoryChip}
-              onClick={(e) => {
-                e.preventDefault();
-                handleInputChange('classType', '교양');
-              }}
-            >
-              <CategoryChip
-                color="green"
-                text="교양"
-                isActive={courseForm.classType === '교양'}
-              />
-            </button>
-            <button
-              className={S.categoryChip}
-              onClick={(e) => {
-                e.preventDefault();
-                handleInputChange('classType', '전공');
-              }}
-            >
-              <CategoryChip
-                color="purple"
-                text="전공"
-                isActive={courseForm.classType === '전공'}
-              />
-            </button>
-            <button
-              className={S.categoryChip}
-              onClick={(e) => {
-                e.preventDefault();
-                handleInputChange('classType', '기타');
-              }}
-            >
-              <CategoryChip
-                color="gray"
-                text="기타"
-                isActive={courseForm.classType === '기타'}
-              />
-            </button>
+            {courseTypes.map((type) => (
+              <button
+                key={type.text}
+                className={S.categoryChip}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleInputChange('classType', type.text);
+                }}
+              >
+                <CategoryChip
+                  color={type.color as 'green' | 'purple' | 'gray'}
+                  text={type.text}
+                  isActive={courseForm.classType === type.text}
+                />
+              </button>
+            ))}
           </div>
         </div>
         <div className={S.inputContainer}>
