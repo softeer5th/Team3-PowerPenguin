@@ -16,36 +16,40 @@ import {
   RequestSound,
 } from '../../../../core/model';
 
-const CARD_TYPES = ['hard', 'fast', 'question', 'size', 'sound'] as const;
 export type CardType = 'hard' | 'fast' | 'question' | 'size' | 'sound';
 
-const CARD_CONTENT = {
-  hard: {
-    icon: <WishSvg className={S.icon} />,
+const CARD_CONTENT = [
+  {
+    type: 'hard',
+    icon: WishSvg,
     title: RequestHard.title,
     description: RequestHard.description,
   },
-  fast: {
-    icon: <WindSvg className={S.icon} />,
+  {
+    type: 'fast',
+    icon: WindSvg,
     title: RequestFast.title,
     description: RequestFast.description,
   },
-  question: {
-    icon: <BulbSvg className={S.icon} />,
+  {
+    type: 'question',
+    icon: BulbSvg,
     title: RequestQuestion.title,
     description: RequestQuestion.description,
   },
-  size: {
-    icon: <MagnifierSvg className={S.icon} />,
+  {
+    type: 'size',
+    icon: MagnifierSvg,
     title: RequestSize.title,
     description: RequestSize.description,
   },
-  sound: {
-    icon: <EarSvg className={S.icon} />,
+  {
+    type: 'sound',
+    icon: EarSvg,
     title: RequestSound.title,
     description: RequestSound.description,
   },
-};
+] as const;
 
 const StudentRequest = ({ courseId }: { courseId: string }) => {
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
@@ -70,13 +74,13 @@ const StudentRequest = ({ courseId }: { courseId: string }) => {
         수업 중 말하기 힘들 때 이모지로 알릴 수 있어요
       </div>
       <div className={S.cardContainer}>
-        {CARD_TYPES.map((type) => (
+        {CARD_CONTENT.map((item) => (
           <RequestCard
-            key={type}
-            onCardClick={() => handleCardClick(type)}
-            title={CARD_CONTENT[type].title}
-            description={CARD_CONTENT[type].description}
-            icon={CARD_CONTENT[type].icon}
+            key={item.type}
+            onCardClick={() => handleCardClick(item.type)}
+            title={item.title}
+            description={item.description}
+            Icon={item.icon}
           />
         ))}
       </div>

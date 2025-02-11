@@ -4,14 +4,14 @@ import { useState } from 'react';
 
 type RequestCardProps = {
   onCardClick: () => Promise<boolean>;
-  icon: JSX.Element;
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
 };
 
 const RequestCard = ({
   onCardClick,
-  icon,
+  Icon,
   title,
   description,
 }: RequestCardProps) => {
@@ -36,7 +36,9 @@ const RequestCard = ({
       onClick={handleButtonClick}
       disabled={!!isSelected || isBlocked}
     >
-      <div className={S.iconBg}>{icon}</div>
+      <div className={S.iconBg}>
+        <Icon className={S.icon} />
+      </div>
       <div className={S.cardContentContainer}>
         <div className={S.cardTitle}>{title}</div>
         <div className={S.cardDesc}>{description}</div>
