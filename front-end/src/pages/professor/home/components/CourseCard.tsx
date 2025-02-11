@@ -69,6 +69,7 @@ const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
 
 type MeatBallMenuProps = {
   popup: boolean;
+  onBlur: () => void;
   onToggle: () => void;
   onDelete: () => void;
   onEdit: () => void;
@@ -76,18 +77,13 @@ type MeatBallMenuProps = {
 
 const MeatBallMenu = ({
   popup,
+  onBlur,
   onToggle,
   onDelete,
   onEdit,
 }: MeatBallMenuProps) => {
-  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      onToggle();
-    }
-  };
-
   return (
-    <div className={S.meatBallWrapper} tabIndex={0} onBlur={handleBlur}>
+    <div className={S.meatBallWrapper} tabIndex={0} onBlur={onBlur}>
       <button
         className={`${S.meatBall} ${popup ? S.active : ''}`}
         onClick={onToggle}
@@ -220,6 +216,10 @@ const CourseCard = ({
     (schedule) => schedule.day === getDayString(today.getDay())
   );
 
+  const handleBlur = useCallback(() => {
+    setPopup(false);
+  }, []);
+
   const handleTogglePopup = useCallback(() => {
     setPopup((prev) => !prev);
   }, []);
@@ -258,6 +258,7 @@ const CourseCard = ({
       </div>
       <MeatBallMenu
         popup={popup}
+        onBlur={handleBlur}
         onToggle={handleTogglePopup}
         onDelete={() => onDeleteCourse(course.id)}
         onEdit={() => onEditCourse(course.id)}
@@ -269,6 +270,7 @@ const CourseCard = ({
     <div className={S.medium}>
       <MeatBallMenu
         popup={popup}
+        onBlur={handleBlur}
         onToggle={handleTogglePopup}
         onDelete={() => onDeleteCourse(course.id)}
         onEdit={() => onEditCourse(course.id)}
@@ -323,6 +325,7 @@ const CourseCard = ({
     <div className={S.large}>
       <MeatBallMenu
         popup={popup}
+        onBlur={handleBlur}
         onToggle={handleTogglePopup}
         onDelete={() => onDeleteCourse(course.id)}
         onEdit={() => onEditCourse(course.id)}
