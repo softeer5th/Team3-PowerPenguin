@@ -50,7 +50,7 @@ const StudentReact = ({ courseId }: { courseId: string }) => {
       </div>
       {successPopup && (
         <SuccessPopup
-          text="라이브 피드백 전송 성공"
+          text="라이브 이모지 전송 성공"
           onClose={() => setSuccessPopup(false)}
         />
       )}
