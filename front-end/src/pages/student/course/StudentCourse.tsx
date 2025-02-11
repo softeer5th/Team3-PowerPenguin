@@ -2,6 +2,8 @@ import S from './StudentCourse.module.css';
 import Logo from '../../../assets/icons/logo.svg?react';
 import LayoutTab from './components/LayoutTab';
 import { useEffect, useRef, useState } from 'react';
+import StudentRequest from './request/StudentRequest';
+import { useParams } from 'react-router';
 
 const TAB_OPTIONS = [
   { key: 'request', label: '요청하기' },
@@ -10,6 +12,7 @@ const TAB_OPTIONS = [
 ];
 
 const StudentCourse = () => {
+  const { courseId } = useParams();
   const [selectedTab, setSelectedTab] = useState(TAB_OPTIONS[0].key);
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
@@ -65,7 +68,9 @@ const StudentCourse = () => {
             transform: `translateX(-${selectedIndex * 33.33}%)`,
           }}
         >
-          <div className={S.tabLayout}>요청하기 화면</div>
+          <div className={S.tabLayout}>
+            <StudentRequest courseId={courseId ?? ''} />
+          </div>
           <div className={S.tabLayout}>반응하기 화면</div>
           <div className={S.tabLayout}>질문하기 화면</div>
         </div>
