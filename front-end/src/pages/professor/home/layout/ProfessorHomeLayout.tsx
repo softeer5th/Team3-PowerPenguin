@@ -37,17 +37,13 @@ const ProfessorHomeLayout = () => {
                 className={S.searchButton}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => {
-                  e.preventDefault();
                   handleDeleteSearch(e);
                 }}
               >
                 <CloseIcon className={S.closeIcon} />
               </button>
             ) : (
-              <div
-                className={S.searchButton}
-                onMouseDown={(e) => e.preventDefault()}
-              >
+              <div className={S.searchButton}>
                 <SearchIcon className={S.searchIcon} />
               </div>
             )}
