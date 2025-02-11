@@ -3,12 +3,13 @@ import DownVector from '../../assets/icons/down-vector.svg?react';
 import { useState } from 'react';
 
 type DropDownProps = {
+  width: string;
   title: string;
   options: string[];
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setTitle: (value: string) => void;
 };
 
-const DropDown = ({ title, options, setTitle }: DropDownProps) => {
+const DropDown = ({ width, title, options, setTitle }: DropDownProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (option: string) => {
@@ -17,32 +18,40 @@ const DropDown = ({ title, options, setTitle }: DropDownProps) => {
   };
 
   return (
-    <>
+    <div
+      className={`${S.dropDown} ${isOpen ? S.dropDownActive : ''}`}
+      tabIndex={0}
+      onBlur={() => setIsOpen(false)}
+      style={{ width: width }}
+    >
       <div
-        className={`${S.dropDownContainer} ${isOpen ? S.dropDownActive : ''}`}
+        className={S.dropDownWrapper}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
-        <div
-          className={S.titleContainer}
-          onClick={() => setIsOpen((prev) => !prev)}
-        >
-          <div className={S.dropDownTitle}>{title}</div>
-          <DownVector />
+        <div className={S.dropDownContainer}>
+          <div className={S.titleContainer}>
+            <span className={S.dropDownTitle}>{isOpen ? '   ' : title}</span>
+            <DownVector className={S.dropDownIcon} />
+          </div>
+          {isOpen && (
+            <ul className={S.labelContainer}>
+              {options.map((option) => (
+                <li
+                  key={option}
+                  className={S.label}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOptionClick(option);
+                  }}
+                >
+                  {option}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        {isOpen && (
-          <ul className={S.labelContainer}>
-            {options.map((option) => (
-              <li
-                key={option}
-                className={S.label}
-                onClick={() => handleOptionClick(option)}
-              >
-                {option}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
-    </>
+    </div>
   );
 };
 

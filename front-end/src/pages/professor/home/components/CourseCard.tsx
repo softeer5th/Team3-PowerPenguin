@@ -8,6 +8,7 @@ import ClockIcon from '../../../../assets/icons/clock.svg?react';
 import EtcIcon from '../../../../assets/icons/etc.svg?react';
 import PeopleIcon from '../../../../assets/icons/people.svg?react';
 import TextButton from '../../../../components/button/text/TextButton';
+import { getDayString } from '../../../../utils/util';
 
 type CourseCardProps = {
   course: CourseMeta;
@@ -18,9 +19,6 @@ type CourseCardProps = {
   onDetailCourse: (courseId: number) => void;
   onFileCourse: (courseId: number) => void;
 };
-
-const dayMap = ['일', '월', '화', '수', '목', '금', '토'];
-const getDayString = (day: number) => dayMap[day];
 
 const createTargetDate = (time: string): Date => {
   const [targetHour, targetMinute] = time.split(':');

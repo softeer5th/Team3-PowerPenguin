@@ -30,3 +30,6 @@ export const validateName = (name: string): boolean => {
 
   return true;
 };
+
+const dayMap = ['일', '월', '화', '수', '목', '금', '토'];
+export const getDayString = (day: number) => dayMap[day];
