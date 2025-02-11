@@ -185,7 +185,7 @@ public class ProfessorCourseService {
         return todayCourses.stream()
                 .map(course -> CourseSummaryResponse.of(
                         course,
-                        getSchedulesByCourseId(course.getId()) // 기존 메서드 활용
+                        getSchedulesByCourseId(course.getId())
                 ))
                 .collect(Collectors.toList());
     }
@@ -196,7 +196,7 @@ public class ProfessorCourseService {
         return allCourses.stream()
                 .map(course -> CourseSummaryResponse.of(
                         course,
-                        getSchedulesByCourseId(course.getId()) // 기존 메서드 활용
+                        getSchedulesByCourseId(course.getId())
                 ))
                 .collect(Collectors.toList());
     }
