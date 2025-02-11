@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query("SELECT s FROM Schedule s JOIN FETCH s.course WHERE s.course.id = :courseId " +
+    @Query("SELECT s FROM Schedule s WHERE s.course.id = :courseId " +
             "ORDER BY CASE s.day " +
             "WHEN '월' THEN 1 " +
             "WHEN '화' THEN 2 " +
