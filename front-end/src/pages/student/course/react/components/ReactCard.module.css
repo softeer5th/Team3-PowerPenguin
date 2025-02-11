@@ -1,0 +1,94 @@
+.cardContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  padding: 21px;
+  border-radius: 48px;
+  border: 2px solid white;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.cardContainer:hover {
+  border: 1px solid var(--blue-400);
+  transform: scale(1.2);
+  rotate: 10deg;
+}
+
+@keyframes activeAnimation {
+  0% {
+    transform: scale(1);
+    background-color: initial;
+  }
+  50% {
+    transform: scale(1.07);
+    border: 1px solid var(--blue-400);
+    background-color: var(--blue-200);
+  }
+  100% {
+    transform: scale(1);
+    border: 1px solid var(--blue-400);
+    background-color: var(--blue-200);
+  }
+}
+
+.active {
+  animation: activeAnimation 0.4s ease-in-out forwards;
+}
+
+.blocked {
+  pointer-events: none;
+  animation: none;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
+}
+
+.countdownText {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 72px;
+  border: 6px solid var(--blue-200);
+  font: var(--mobile-title2-bold);
+  color: var(--blue-400);
+  background-color: rgba(230, 234, 255, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .cardContainer {
+    width: 144px;
+    height: 144px;
+    padding: 31px;
+    border-radius: 108px;
+  }
+  .countdownText {
+    border-radius: 108px;
+    font: var(--web-title1-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .cardContainer {
+    width: 144px;
+    height: 144px;
+    padding: 31px;
+    border-radius: 72px;
+  }
+  .countdownText {
+    border-radius: 108px;
+    font: var(--web-title1-bold);
+  }
+}
