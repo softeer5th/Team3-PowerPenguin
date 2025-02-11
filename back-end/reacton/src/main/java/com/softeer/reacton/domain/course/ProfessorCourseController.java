@@ -79,9 +79,7 @@ public class ProfessorCourseController {
                     @ApiResponse(responseCode = "404", description = "정보를 찾을 수 없습니다.")
             }
     )
-    public ResponseEntity<SuccessResponse<CourseAllResponse>> getCourseDetail(
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<SuccessResponse<CourseAllResponse>> getAllCourses(HttpServletRequest request) {
         log.debug("사용자의 전체 수업 목록을 요청합니다.");
 
         String oauthId = (String) request.getAttribute("oauthId");
