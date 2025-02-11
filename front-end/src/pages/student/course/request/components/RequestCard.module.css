@@ -84,7 +84,7 @@
 }
 
 /*스플릿 뷰 */
-@media all and (min-width: 469px) {
+@media all and (min-width: 600px) {
   .cardContainer {
     padding: 8px 12px;
   }
