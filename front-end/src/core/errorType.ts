@@ -17,3 +17,10 @@ export class ServerError extends Error {
     this.status = status;
   }
 }
+
+export class CourseError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'CourseError';
+  }
+}

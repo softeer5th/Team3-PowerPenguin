@@ -14,23 +14,13 @@ const PaginationButton = ({
   isActive,
 }: PaginationButtonProps) => {
   return (
-    <button className={`${S.buttonContainer}  `} onClick={onButtonClick}>
-      {type === 'prev' && (
-        <PrevIcon
-          width="7px"
-          height="14px"
-          fill="none"
-          color={`${isActive ? 'var(--gray-500)' : 'var(--gray-300)'}`}
-        />
-      )}
-      {type === 'next' && (
-        <NextIcon
-          width="7px"
-          height="14px"
-          fill="none"
-          color={`${isActive ? 'var(--gray-500)' : 'var(--gray-300)'}`}
-        />
-      )}
+    <button
+      className={`${S.buttonContainer}  `}
+      onClick={onButtonClick}
+      disabled={!isActive}
+    >
+      {type === 'prev' && <PrevIcon width="7px" height="14px" fill="none" />}
+      {type === 'next' && <NextIcon width="7px" height="14px" fill="none" />}
     </button>
   );
 };

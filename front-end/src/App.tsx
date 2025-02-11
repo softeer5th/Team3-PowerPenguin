@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import Home from './pages/home';
-import ProfessorHomeLayout from './pages/professor/home/layout';
-import ProfessorHome from './pages/professor/home';
+import ProfessorHomeLayout from './pages/professor/home/layout/ProfessorHomeLayout';
+import ProfessorHome from './pages/professor/home/ProfessorHome';
 import ProfessorSearch from './pages/professor/home/search';
 import ProfessorLogin from './pages/professor/login/ProfessorLogin';
 import ProfessorRegister from './pages/professor/register/ProfessorRegister';

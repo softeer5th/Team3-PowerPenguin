@@ -24,7 +24,7 @@ const FileUploadPopupModal = ({
   }
 
   return (
-    <div className={S.modal}>
+    <div className={S.modal} onClick={(e) => e.stopPropagation()}>
       <button className={S.closeButton} onClick={onClickCloseButton}>
         <CloseIcon
           width="1.1875rem"

@@ -22,7 +22,7 @@ function getIcon(type: PopupModalProps['type']) {
 
 const PopupModal = ({ type, title, description }: PopupModalProps) => {
   return (
-    <div className={S.modal}>
+    <div className={S.modal} onClick={(e) => e.stopPropagation()}>
       <div className={S.modalContent}>
         {getIcon(type)}
         <h2 className={S.modalTitle}>{title}</h2>
