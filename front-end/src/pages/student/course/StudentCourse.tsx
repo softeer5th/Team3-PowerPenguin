@@ -4,6 +4,7 @@ import LayoutTab from './components/LayoutTab';
 import { useEffect, useRef, useState } from 'react';
 import StudentRequest from './request/StudentRequest';
 import { useParams } from 'react-router';
+import StudentReact from './react/StudentReact';
 
 const TAB_OPTIONS = [
   { key: 'request', label: '요청하기' },
@@ -71,7 +72,9 @@ const StudentCourse = () => {
           <div className={S.tabLayout}>
             <StudentRequest courseId={courseId ?? ''} />
           </div>
-          <div className={S.tabLayout}>반응하기 화면</div>
+          <div className={S.tabLayout}>
+            <StudentReact courseId={courseId ?? ''} />
+          </div>
           <div className={S.tabLayout}>질문하기 화면</div>
         </div>
       </div>

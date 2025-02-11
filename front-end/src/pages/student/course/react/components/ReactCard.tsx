@@ -1,25 +1,18 @@
-import S from './RequestCard.module.css';
-import useBlockTimer from '../../../../../hooks/useBlockTimer';
 import { useState } from 'react';
+import S from './ReactCard.module.css';
+import useBlockTimer from '../../../../../hooks/useBlockTimer';
 
-type RequestCardProps = {
-  onCardClick: () => Promise<boolean>;
+type ReactCardProps = {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  title: string;
-  description: string;
+  onCardClick: () => Promise<boolean>;
 };
 
-const RequestCard = ({
-  onCardClick,
-  Icon,
-  title,
-  description,
-}: RequestCardProps) => {
+const ReactCard = ({ Icon, onCardClick }: ReactCardProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const { isBlocked, countdown } = useBlockTimer(
     isSelected,
     setIsSelected,
-    60000,
+    10000,
     2000
   );
 
@@ -33,19 +26,13 @@ const RequestCard = ({
   return (
     <button
       className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isBlocked ? S.blocked : ''} `}
-      onClick={handleButtonClick}
       disabled={!!isSelected || isBlocked}
+      onClick={handleButtonClick}
     >
-      <div className={S.iconBg}>
-        <Icon className={S.icon} />
-      </div>
-      <div className={S.cardContentContainer}>
-        <div className={S.cardTitle}>{title}</div>
-        <div className={S.cardDesc}>{description}</div>
-      </div>
+      <Icon className={S.icon}></Icon>
       {isBlocked && <div className={S.countdownText}>{countdown}</div>}
     </button>
   );
 };
 
-export default RequestCard;
+export default ReactCard;
