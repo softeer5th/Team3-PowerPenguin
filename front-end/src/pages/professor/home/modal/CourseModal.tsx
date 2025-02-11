@@ -43,7 +43,8 @@ const checkForm = (courseForm: CourseForm) => {
   }
   if (
     courseForm.university === '' ||
-    !courseForm.university.includes('대학교')
+    !courseForm.university.includes('대학교') ||
+    courseForm.university.length < 4
   ) {
     throw new CourseError('대학교를 입력해 주세요');
   }
@@ -130,8 +131,22 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className={S.courseModal}>
-      <button className={S.closeButton} onClick={() => onClose()}>
+    <form
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+      className={S.courseModal}
+    >
+      <button
+        className={S.closeButton}
+        onClick={(e) => {
+          e.preventDefault();
+          onClose();
+        }}
+      >
         <CloseIcon className={S.closeIcon} />
       </button>
       <h2 className={S.title}>
@@ -257,7 +272,6 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
         <TextButton
           color="blue"
           size="web4"
-          width="788px"
           height="80px"
           text={course ? '정보 수정하기' : '강의 만들기'}
           onClick={handleSubmit}
