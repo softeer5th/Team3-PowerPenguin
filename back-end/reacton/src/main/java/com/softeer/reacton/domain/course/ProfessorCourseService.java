@@ -17,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,7 +28,16 @@ import java.util.stream.Collectors;
 public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
-    private final ScheduleRepository scheduleRepository;
+
+    private static final Map<String, Integer> DAY_ORDER_MAP = Map.of(
+            "월", 1,
+            "화", 2,
+            "수", 3,
+            "목", 4,
+            "금", 5,
+            "토", 6,
+            "일", 7
+    );
 
     @Transactional
     public long createCourse(String oauthId, CourseRequest request) {
@@ -55,7 +66,7 @@ public class ProfessorCourseService {
 
         Course course = findCourseByProfessor(oauthId, courseId);
 
-        List<CourseScheduleResponse> schedules = getSchedulesByCourseId(courseId);
+        List<CourseScheduleResponse> schedules = getSchedulesByCourse(course);
         List<CourseQuestionResponse> questions = getQuestionsByCourse(course);
         List<CourseRequestResponse> requests = getRequestsByCourse(course);
 
@@ -67,11 +78,11 @@ public class ProfessorCourseService {
         log.debug("전체 수업 목록을 조회합니다.");
 
         Professor professor = getProfessorByOauthId(oauthId);
+        List<Course> allCourses = courseRepository.findCoursesWithSchedulesByProfessor(professor);
+        List<CourseSummaryResponse> todayCourses = getTodayCoursesResponse(allCourses);
+        List<CourseSummaryResponse> allCoursesResponse = getAllCoursesResponse(allCourses);
 
-        List<CourseSummaryResponse> todayCourses = getTodayCoursesByOauthId(professor);
-        List<CourseSummaryResponse> allCourses = getAllCoursesByOauthId(professor);
-
-        return CourseAllResponse.of(todayCourses, allCourses);
+        return CourseAllResponse.of(todayCourses, allCoursesResponse);
     }
 
     @Transactional
@@ -143,15 +154,13 @@ public class ProfessorCourseService {
         return course;
     }
 
-    private List<CourseScheduleResponse> getSchedulesByCourseId(long courseId) {
-        List<Schedule> schedules = scheduleRepository.findSchedulesByCourseId(courseId);
-
-        return schedules.stream()
+    private List<CourseScheduleResponse> getSchedulesByCourse(Course course) {
+        return course.getSchedules().stream()
+                .sorted(Comparator.comparing(schedule -> getDayOrder(schedule.getDay())))
                 .map(schedule -> new CourseScheduleResponse(
                         schedule.getDay(),
                         schedule.getStartTime().toString(),
-                        schedule.getEndTime().toString()
-                ))
+                        schedule.getEndTime().toString()))
                 .collect(Collectors.toList());
     }
 
@@ -178,26 +187,30 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private List<CourseSummaryResponse> getTodayCoursesByOauthId(Professor professor) {
+    private List<CourseSummaryResponse> getTodayCoursesResponse(List<Course> allCourses) {
         String todayDay = TimeUtil.getTodayDay();
-        List<Course> todayCourses = courseRepository.findCoursesByDayAndProfessor(todayDay, professor);
-
-        return todayCourses.stream()
-                .map(course -> CourseSummaryResponse.of(
-                        course,
-                        getSchedulesByCourseId(course.getId())
-                ))
+        return allCourses.stream()
+                .filter(course -> course.getSchedules().stream()
+                        .anyMatch(schedule -> schedule.getDay().equals(todayDay)))
+                .sorted(Comparator.comparing(course ->
+                        course.getSchedules().stream()
+                                .filter(schedule -> schedule.getDay().equals(todayDay))
+                                .map(Schedule::getStartTime)
+                                .min(Comparator.naturalOrder())
+                                .orElseThrow()))
+                .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
                 .collect(Collectors.toList());
     }
 
-    private List<CourseSummaryResponse> getAllCoursesByOauthId(Professor professor) {
-        List<Course> allCourses = courseRepository.findCoursesByProfessor(professor);
-
+    private List<CourseSummaryResponse> getAllCoursesResponse(List<Course> allCourses) {
         return allCourses.stream()
-                .map(course -> CourseSummaryResponse.of(
-                        course,
-                        getSchedulesByCourseId(course.getId())
-                ))
+                .sorted(Comparator.comparing(Course::getCreatedAt).reversed())
+                .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
                 .collect(Collectors.toList());
+    }
+
+    private int getDayOrder(String day) {
+        return DAY_ORDER_MAP.getOrDefault(day, 8);
     }
 }
+

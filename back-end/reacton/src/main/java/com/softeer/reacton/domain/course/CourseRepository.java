@@ -10,14 +10,7 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("SELECT DISTINCT c FROM Course c " +
-            "LEFT JOIN FETCH c.schedules s " +
-            "WHERE s.day = :day AND c.professor = :professor " +
-            "ORDER BY s.startTime ASC")
-    List<Course> findCoursesByDayAndProfessor(@Param("day") String day, @Param("professor") Professor professor);
-
-    @Query("SELECT DISTINCT c FROM Course c " +
-            "LEFT JOIN FETCH c.schedules s " +
-            "WHERE c.professor = :professor " +
-            "ORDER BY c.createdAt DESC")
-    List<Course> findCoursesByProfessor(@Param("professor") Professor professor);
+            "LEFT JOIN FETCH c.schedules " +
+            "WHERE c.professor = :professor")
+    List<Course> findCoursesWithSchedulesByProfessor(@Param("professor") Professor professor);
 }
