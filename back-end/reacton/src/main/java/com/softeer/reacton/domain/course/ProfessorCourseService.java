@@ -6,7 +6,6 @@ import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.domain.question.Question;
 import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.schedule.Schedule;
-import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
