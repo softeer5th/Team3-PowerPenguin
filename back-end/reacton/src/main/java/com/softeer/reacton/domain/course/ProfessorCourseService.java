@@ -6,6 +6,7 @@ import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.domain.question.Question;
 import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
@@ -19,7 +20,6 @@ import java.security.SecureRandom;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,16 +28,7 @@ import java.util.stream.Collectors;
 public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
-
-    private static final Map<String, Integer> DAY_ORDER_MAP = Map.of(
-            "월", 1,
-            "화", 2,
-            "수", 3,
-            "목", 4,
-            "금", 5,
-            "토", 6,
-            "일", 7
-    );
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
     public long createCourse(String oauthId, CourseRequest request) {
@@ -66,9 +57,9 @@ public class ProfessorCourseService {
 
         Course course = findCourseByProfessor(oauthId, courseId);
 
-        List<CourseScheduleResponse> schedules = getSchedulesByCourse(course);
-        List<CourseQuestionResponse> questions = getQuestionsByCourse(course);
-        List<CourseRequestResponse> requests = getRequestsByCourse(course);
+        List<CourseScheduleResponse> schedules = getSchedulesByCourseInOrder(course);
+        List<CourseQuestionResponse> questions = getQuestionsByCourseInOrder(course);
+        List<CourseRequestResponse> requests = getRequestsByCourseInOrder(course);
 
         log.debug("수업 상세 정보를 가져오는 데 성공했습니다. : courseId = {}", courseId);
         return CourseDetailResponse.of(course, schedules, questions, requests);
@@ -156,7 +147,6 @@ public class ProfessorCourseService {
 
     private List<CourseScheduleResponse> getSchedulesByCourse(Course course) {
         return course.getSchedules().stream()
-                .sorted(Comparator.comparing(schedule -> getDayOrder(schedule.getDay())))
                 .map(schedule -> new CourseScheduleResponse(
                         schedule.getDay(),
                         schedule.getStartTime().toString(),
@@ -164,7 +154,18 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private List<CourseQuestionResponse> getQuestionsByCourse(Course course) {
+    private List<CourseScheduleResponse> getSchedulesByCourseInOrder(Course course) {
+        List<Schedule> schedules = scheduleRepository.getSchedulesByCourse(course);
+
+        return schedules.stream()
+                .map(schedule -> new CourseScheduleResponse(
+                        schedule.getDay(),
+                        schedule.getStartTime().toString(),
+                        schedule.getEndTime().toString()))
+                .collect(Collectors.toList());
+    }
+
+    private List<CourseQuestionResponse> getQuestionsByCourseInOrder(Course course) {
         List<Question> questions = course.getQuestions();
 
         return questions.stream()
@@ -176,7 +177,7 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private List<CourseRequestResponse> getRequestsByCourse(Course course) {
+    private List<CourseRequestResponse> getRequestsByCourseInOrder(Course course) {
         List<Request> requests = course.getRequests();
 
         return requests.stream()
@@ -189,17 +190,20 @@ public class ProfessorCourseService {
 
     private List<CourseSummaryResponse> getTodayCoursesResponse(List<Course> allCourses) {
         String todayDay = TimeUtil.getTodayDay();
+        LocalTime now = LocalTime.now();
 
         return allCourses.stream()
                 .filter(course -> hasScheduleInDay(course, todayDay))
-                .sorted(Comparator.comparing(course -> getEarliestStartTime(course, todayDay)))
-                .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
+                .sorted(Comparator
+                        .comparing((Course course) -> isStartTimeAfterNow(course, todayDay, now))
+                        .reversed()
+                        .thenComparing(course -> getEarliestStartTime(course, todayDay)))
+                .map(course -> CourseSummaryResponse.of(course, getSchedulesForToday(course, todayDay)))
                 .collect(Collectors.toList());
     }
 
     private List<CourseSummaryResponse> getAllCoursesResponse(List<Course> allCourses) {
         return allCourses.stream()
-                .sorted(Comparator.comparing(Course::getCreatedAt).reversed())
                 .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
                 .collect(Collectors.toList());
     }
@@ -217,8 +221,21 @@ public class ProfessorCourseService {
                 .orElse(LocalTime.MAX);
     }
 
-    private int getDayOrder(String day) {
-        return DAY_ORDER_MAP.getOrDefault(day, 8);
+    private boolean isStartTimeAfterNow(Course course, String day, LocalTime now) {
+        return course.getSchedules().stream()
+                .filter(schedule -> schedule.getDay().equals(day))
+                .map(Schedule::getStartTime)
+                .anyMatch(startTime -> startTime.isAfter(now));
+    }
+
+    private List<CourseScheduleResponse> getSchedulesForToday(Course course, String todayDay) {
+        return course.getSchedules().stream()
+                .filter(schedule -> schedule.getDay().equals(todayDay))
+                .map(schedule -> new CourseScheduleResponse(
+                        schedule.getDay(),
+                        schedule.getStartTime().toString(),
+                        schedule.getEndTime().toString()))
+                .collect(Collectors.toList());
     }
 }
 
