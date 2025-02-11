@@ -1,14 +1,20 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import S from './CourseCard.module.css';
 import { CourseMeta } from '../../../../core/model';
 import CategoryChip from '../../../../components/chip/CategoryChip';
 import BarChartIcon from '../../../../assets/icons/barchart.svg?react';
 import ClipIcon from '../../../../assets/icons/clip.svg?react';
 import ClockIcon from '../../../../assets/icons/clock.svg?react';
-import EtcIcon from '../../../../assets/icons/etc.svg?react';
 import PeopleIcon from '../../../../assets/icons/people.svg?react';
 import TextButton from '../../../../components/button/text/TextButton';
-import { getDayString } from '../../../../utils/util';
+import {
+  getDayString,
+  formatTime,
+  isSoon,
+  getCourseColor,
+} from '../../../../utils/util';
+import MeatBallMenu from './MeatBallMenu';
+import useCountdown from '../../../../hooks/useCountDown';
 
 type CourseCardProps = {
   course: CourseMeta;
@@ -20,45 +26,6 @@ type CourseCardProps = {
   onFileCourse: (courseId: number) => void;
 };
 
-const createTargetDate = (time: string): Date => {
-  const [targetHour, targetMinute] = time.split(':');
-  const target = new Date();
-  target.setHours(Number(targetHour), Number(targetMinute), 0, 0);
-  return target;
-};
-
-const isSoon = (time: string) => {
-  const leftTime = createTargetDate(time).getTime() - Date.now();
-  return leftTime > 0 && leftTime < 3600000;
-};
-
-type TimeType = {
-  hour: number;
-  minute: number;
-  second: number;
-};
-
-const formatTime = ({ hour, minute, second }: TimeType) => {
-  if (hour < 0) return '00 : 00 : 00';
-  if (minute < 0) return '00 : 00 : 00';
-  if (second < 0) return '00 : 00 : 00';
-
-  return `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
-    .toString()
-    .padStart(2, '0')}`;
-};
-
-const getCourseColor = (category: string) => {
-  switch (category) {
-    case '전공':
-      return 'purple';
-    case '교양':
-      return 'green';
-    default:
-      return 'gray';
-  }
-};
-
 const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
   scheduleList.map((schedule, index) => (
     <span key={schedule.day}>
@@ -66,55 +33,6 @@ const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
       {index < scheduleList.length - 1 && ', '}
     </span>
   ));
-
-type MeatBallMenuProps = {
-  popup: boolean;
-  onBlur: () => void;
-  onToggle: () => void;
-  onDelete: () => void;
-  onEdit: () => void;
-};
-
-const MeatBallMenu = ({
-  popup,
-  onBlur,
-  onToggle,
-  onDelete,
-  onEdit,
-}: MeatBallMenuProps) => {
-  return (
-    <div className={S.meatBallWrapper} tabIndex={0} onBlur={onBlur}>
-      <button
-        className={`${S.meatBall} ${popup ? S.active : ''}`}
-        onClick={onToggle}
-      >
-        <EtcIcon className={S.meatBallIcon} />
-      </button>
-      {popup && (
-        <div className={S.popup}>
-          <button
-            className={`${S.popupButton} ${S.popupButtonDelete}`}
-            onClick={() => {
-              onDelete();
-              onToggle();
-            }}
-          >
-            <span>이 수업 삭제하기</span>
-          </button>
-          <button
-            className={S.popupButton}
-            onClick={() => {
-              onEdit();
-              onToggle();
-            }}
-          >
-            <span>이 수업 편집하기</span>
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const RenderButtonContainer = (
   width: string,
@@ -152,52 +70,6 @@ const RenderButtonContainer = (
       </button>
     </div>
   );
-};
-
-const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
-  const computeLeftTime = useCallback(() => {
-    const now = new Date();
-    const currentSchedule = scheduleList.find(
-      (schedule) => schedule.day === getDayString(now.getDay())
-    );
-    if (currentSchedule) {
-      const target = createTargetDate(currentSchedule.start);
-      const diff = target.getTime() - now.getTime();
-      return {
-        hour: Math.floor(diff / 3600000),
-        minute: Math.floor((diff % 3600000) / 60000),
-        second: Math.floor((diff % 60000) / 1000),
-      };
-    }
-    return {
-      hour: 0,
-      minute: 0,
-      second: 0,
-    };
-  }, [scheduleList]);
-
-  const [leftTime, setLeftTime] = useState<TimeType>(computeLeftTime());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const currentSchedule = scheduleList.find(
-        (schedule) => schedule.day === getDayString(now.getDay())
-      );
-      if (currentSchedule) {
-        const target = createTargetDate(currentSchedule.start);
-        const diff = target.getTime() - now.getTime();
-        setLeftTime({
-          hour: Math.floor(diff / 3600000),
-          minute: Math.floor((diff % 3600000) / 60000),
-          second: Math.floor((diff % 60000) / 1000),
-        });
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [scheduleList]);
-
-  return leftTime;
 };
 
 const CourseCard = ({
@@ -258,6 +130,7 @@ const CourseCard = ({
       </div>
       <MeatBallMenu
         popup={popup}
+        size="small"
         onBlur={handleBlur}
         onToggle={handleTogglePopup}
         onDelete={() => onDeleteCourse(course.id)}
@@ -270,6 +143,7 @@ const CourseCard = ({
     <div className={S.medium}>
       <MeatBallMenu
         popup={popup}
+        size="medium"
         onBlur={handleBlur}
         onToggle={handleTogglePopup}
         onDelete={() => onDeleteCourse(course.id)}
@@ -325,6 +199,7 @@ const CourseCard = ({
     <div className={S.large}>
       <MeatBallMenu
         popup={popup}
+        size="large"
         onBlur={handleBlur}
         onToggle={handleTogglePopup}
         onDelete={() => onDeleteCourse(course.id)}

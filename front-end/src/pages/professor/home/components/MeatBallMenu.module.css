@@ -1,0 +1,96 @@
+.meatBallWrapper {
+  position: relative;
+}
+
+.meatBall {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.meatBall.active {
+  background-color: var(--gray-300);
+}
+
+.meatBallIcon {
+  width: 17px;
+  height: 17px;
+  color: var(--gray-600);
+}
+
+.popup {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 254px;
+  height: 127px;
+  transform: translate(calc(100% - 50px), 75px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: var(--medium);
+  box-shadow: 0px 0px 20px 0px var(--gray-400);
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.popupButton {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--web-body2-bold);
+  color: var(--gray-700);
+  cursor: pointer;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.popupButton > span {
+  margin: auto;
+}
+
+.popupButton:hover {
+  background-color: var(--gray-100);
+}
+
+.popupButton:last-child {
+  border-bottom: none;
+}
+
+.popupButtonDelete {
+  color: var(--error-red-500);
+}
+
+.small .meatBall {
+  top: 32px;
+  right: 24px;
+}
+
+.medium .meatBall {
+  top: 32px;
+  right: 24px;
+}
+
+.medium .popup {
+  top: 0;
+  right: 0;
+  transform: translate(calc(100% - 50px), 75px);
+}
+
+.large .meatBall {
+  top: 41px;
+  right: 26px;
+}
+
+.large .popup {
+  top: 0;
+  right: 0;
+  transform: translate(calc(100% - 52px), 84px);
+}

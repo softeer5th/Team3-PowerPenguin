@@ -33,3 +33,42 @@ export const validateName = (name: string): boolean => {
 
 const dayMap = ['일', '월', '화', '수', '목', '금', '토'];
 export const getDayString = (day: number) => dayMap[day];
+
+export const getCourseColor = (category: string) => {
+  switch (category) {
+    case '전공':
+      return 'purple';
+    case '교양':
+      return 'green';
+    default:
+      return 'gray';
+  }
+};
+
+export const createTargetDate = (time: string): Date => {
+  const [targetHour, targetMinute] = time.split(':');
+  const target = new Date();
+  target.setHours(Number(targetHour), Number(targetMinute), 0, 0);
+  return target;
+};
+
+export const isSoon = (time: string) => {
+  const leftTime = createTargetDate(time).getTime() - Date.now();
+  return leftTime > 0 && leftTime < 3600000;
+};
+
+export type TimeType = {
+  hour: number;
+  minute: number;
+  second: number;
+};
+
+export const formatTime = ({ hour, minute, second }: TimeType) => {
+  if (hour < 0) return '00 : 00 : 00';
+  if (minute < 0) return '00 : 00 : 00';
+  if (second < 0) return '00 : 00 : 00';
+
+  return `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
+    .toString()
+    .padStart(2, '0')}`;
+};
