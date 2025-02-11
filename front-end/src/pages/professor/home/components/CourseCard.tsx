@@ -302,14 +302,14 @@ const CourseCard = ({
               </div>
             </div>
           </div>
-          {RenderButtonContainer(
-            '239px',
-            '56px',
-            () => onStartCourse(course.id),
-            () => onDetailCourse(course.id),
-            () => onFileCourse(course.id)
-          )}
         </div>
+        {RenderButtonContainer(
+          '239px',
+          '56px',
+          () => onStartCourse(course.id),
+          () => onDetailCourse(course.id),
+          () => onFileCourse(course.id)
+        )}
       </div>
       <div className={S.footer}>
         <span className={S.footerText}>
@@ -363,14 +363,14 @@ const CourseCard = ({
               </div>
             </div>
           </div>
-          {RenderButtonContainer(
-            '345px',
-            '61px',
-            () => onStartCourse(course.id),
-            () => onDetailCourse(course.id),
-            () => onFileCourse(course.id)
-          )}
         </div>
+        {RenderButtonContainer(
+          '345px',
+          '61px',
+          () => onStartCourse(course.id),
+          () => onDetailCourse(course.id),
+          () => onFileCourse(course.id)
+        )}
       </div>
       <div className={S.footer}>
         <span className={S.footerText}>

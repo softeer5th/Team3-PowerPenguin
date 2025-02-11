@@ -2,6 +2,7 @@ import React from 'react';
 import S from './TextButton.module.css';
 
 type TextButtonProps = {
+  type?: 'button' | 'submit';
   color: 'blue' | 'red' | 'green' | 'black' | 'white' | 'inherit';
   size: 'web1' | 'web2' | 'web3' | 'web4' | 'mobile1' | 'mobile2';
   width?: string;
@@ -50,6 +51,7 @@ function getSizeClass(size: string): keyof typeof S {
 }
 
 const TextButton = ({
+  type = 'button',
   color,
   size,
   width,
@@ -63,6 +65,7 @@ const TextButton = ({
 
   return (
     <button
+      type={type}
       style={{ width: width, height: height }}
       className={`${S.textButton} ${colorClass} ${sizeClass}`}
       disabled={!isActive}

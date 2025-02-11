@@ -137,6 +137,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
       }}
       onSubmit={(e) => {
         e.preventDefault();
+        handleSubmit();
       }}
       className={S.courseModal}
     >
@@ -187,7 +188,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
           <div className={S.categoryContainer}>
             <button
               className={S.categoryChip}
-              onClick={() => handleInputChange('classType', '교양')}
+              onClick={(e) => {
+                e.preventDefault();
+                handleInputChange('classType', '교양');
+              }}
             >
               <CategoryChip
                 color="green"
@@ -197,7 +201,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
             </button>
             <button
               className={S.categoryChip}
-              onClick={() => handleInputChange('classType', '전공')}
+              onClick={(e) => {
+                e.preventDefault();
+                handleInputChange('classType', '전공');
+              }}
             >
               <CategoryChip
                 color="purple"
@@ -207,7 +214,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
             </button>
             <button
               className={S.categoryChip}
-              onClick={() => handleInputChange('classType', '기타')}
+              onClick={(e) => {
+                e.preventDefault();
+                handleInputChange('classType', '기타');
+              }}
             >
               <CategoryChip
                 color="gray"
@@ -270,11 +280,12 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
       </div>
       <div className={S.buttonContainer}>
         <TextButton
+          type="submit"
           color="blue"
           size="web4"
           height="80px"
           text={course ? '정보 수정하기' : '강의 만들기'}
-          onClick={handleSubmit}
+          onClick={() => {}}
           isActive={(() => {
             try {
               checkForm(courseForm);

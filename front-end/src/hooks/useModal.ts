@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 const useModal = () => {
@@ -8,10 +8,17 @@ const useModal = () => {
   const closeModal = () => setIsOpen(false);
 
   const Modal = ({ children }: { children: React.ReactNode }) => {
-    if (!isOpen) {
-      document.body.style.overflow = '';
-      return null;
-    }
+    useEffect(() => {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+
+      return () => {
+        document.body.style.overflow = 'auto';
+      };
+    }, []);
 
     const modal = React.createElement(
       'div',
@@ -34,8 +41,6 @@ const useModal = () => {
       },
       children
     );
-
-    document.body.style.overflow = 'hidden';
 
     return createPortal(modal, document.body);
   };

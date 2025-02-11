@@ -92,6 +92,8 @@ const ProfessorHome = () => {
         }}
         onSubmit={(course) => {
           console.log('Submit course:', course);
+          setModal(null);
+          closeModal();
         }}
       />
     );
@@ -108,6 +110,63 @@ const ProfessorHome = () => {
 
   const handleFileCourse = (courseId: number) => {
     console.log('File course:', courseId);
+
+    const course = courses.find((course) => course.id === courseId);
+    let handleFileSave;
+    if (course?.fileURL) {
+      handleFileSave = (file: File) => {
+        setModal(
+          <AlertModal
+            type="caution"
+            message="새 파일을 저장하시겠습니까?"
+            description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
+            buttonText="새 파일 저장"
+            onClickModalButton={() => {
+              setModal(
+                <AlertModal
+                  type="success"
+                  message="파일이 성공적으로 업로드되었습니다."
+                  buttonText="확인"
+                  onClickCloseButton={() => {
+                    setModal(null);
+                    closeModal();
+                  }}
+                  onClickModalButton={() => {
+                    setModal(null);
+                    closeModal();
+                    console.log('Save file:', file);
+                  }}
+                />
+              );
+            }}
+            onClickCloseButton={() => {
+              setModal(null);
+              closeModal();
+            }}
+          />
+        );
+      };
+    } else {
+      handleFileSave = (file: File) => {
+        setModal(
+          <AlertModal
+            type="success"
+            message="파일이 성공적으로 업로드되었습니다."
+            buttonText="확인"
+            onClickCloseButton={() => {
+              setModal(null);
+              closeModal();
+            }}
+            onClickModalButton={() => {
+              setModal(null);
+              closeModal();
+              console.log('Save file:', file);
+            }}
+          />
+        );
+      };
+    }
+
     setModal(
       <FileUploadPopupModal
         onClickCloseButton={() => {
@@ -115,9 +174,7 @@ const ProfessorHome = () => {
           closeModal();
         }}
         onClickSaveButton={(file) => {
-          console.log('Save file:', file);
-          setModal(null);
-          closeModal();
+          handleFileSave(file);
         }}
       />
     );
