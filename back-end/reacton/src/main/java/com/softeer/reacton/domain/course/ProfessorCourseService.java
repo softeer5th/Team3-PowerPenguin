@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -188,15 +189,10 @@ public class ProfessorCourseService {
 
     private List<CourseSummaryResponse> getTodayCoursesResponse(List<Course> allCourses) {
         String todayDay = TimeUtil.getTodayDay();
+
         return allCourses.stream()
-                .filter(course -> course.getSchedules().stream()
-                        .anyMatch(schedule -> schedule.getDay().equals(todayDay)))
-                .sorted(Comparator.comparing(course ->
-                        course.getSchedules().stream()
-                                .filter(schedule -> schedule.getDay().equals(todayDay))
-                                .map(Schedule::getStartTime)
-                                .min(Comparator.naturalOrder())
-                                .orElseThrow()))
+                .filter(course -> hasScheduleInDay(course, todayDay))
+                .sorted(Comparator.comparing(course -> getEarliestStartTime(course, todayDay)))
                 .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
                 .collect(Collectors.toList());
     }
@@ -206,6 +202,19 @@ public class ProfessorCourseService {
                 .sorted(Comparator.comparing(Course::getCreatedAt).reversed())
                 .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
                 .collect(Collectors.toList());
+    }
+
+    private boolean hasScheduleInDay(Course course, String day) {
+        return course.getSchedules().stream()
+                .anyMatch(schedule -> schedule.getDay().equals(day));
+    }
+
+    private LocalTime getEarliestStartTime(Course course, String day) {
+        return course.getSchedules().stream()
+                .filter(schedule -> schedule.getDay().equals(day))
+                .map(Schedule::getStartTime)
+                .min(Comparator.naturalOrder())
+                .orElse(LocalTime.MAX);
     }
 
     private int getDayOrder(String day) {
