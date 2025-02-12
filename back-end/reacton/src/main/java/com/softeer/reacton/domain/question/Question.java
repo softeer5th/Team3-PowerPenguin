@@ -1,17 +1,17 @@
 package com.softeer.reacton.domain.question;
 
 import com.softeer.reacton.domain.course.Course;
-import com.softeer.reacton.domain.professor.Professor;
+import com.softeer.reacton.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "question")
 @Entity
-public class Question {
+public class Question extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +22,6 @@ public class Question {
 
     @Column(nullable = false, length = 20)
     private String status;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
