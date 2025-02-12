@@ -6,7 +6,7 @@ import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.question.Question;
 import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.schedule.Schedule;
-import com.softeer.reacton.global.Entity.BaseEntity;
+import com.softeer.reacton.global.entity.BaseEntity;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.util.TimeUtil;
