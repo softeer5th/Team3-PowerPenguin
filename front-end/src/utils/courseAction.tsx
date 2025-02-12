@@ -91,9 +91,8 @@ const courseActions = ({
     console.log('File course:', courseId);
 
     const course = courses.find((course) => course.id === courseId);
-    let handleFileSave;
-    if (course?.fileURL) {
-      handleFileSave = (file: File) => {
+    const handleFileSave = (file: File) => {
+      if (course?.fileURL) {
         setModal(
           <AlertModal
             type="caution"
@@ -108,12 +107,10 @@ const courseActions = ({
             }}
           />
         );
-      };
-    } else {
-      handleFileSave = (file: File) => {
+      } else {
         fileSuccessModal(file, setModal, offModal);
-      };
-    }
+      }
+    };
 
     setModal(
       <FileUploadPopupModal
