@@ -6,6 +6,7 @@ import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.question.Question;
 import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.global.Entity.BaseEntity;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.util.TimeUtil;
@@ -13,7 +14,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "course")
 @Entity
-public class Course {
+public class Course extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,14 +71,6 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @OrderBy("count DESC")
     private List<Request> requests = new ArrayList<>();
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 
     @Builder
     private Course(String name, String courseCode, int capacity, String university, CourseType type, int accessCode, Professor professor) {
