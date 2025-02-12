@@ -23,8 +23,8 @@
 }
 
 .open {
-  background-color: var(--blue-100);
-  color: var(--blue-500);
+  background-color: white;
+  color: var(--gray-500);
 }
 
 .filterDropDown {
@@ -64,5 +64,5 @@
 .filterDropDownOption:hover {
   width: 100%;
   height: 100%;
-  background-color: var(--blue-300);
+  color: var(--blue-400);
 }

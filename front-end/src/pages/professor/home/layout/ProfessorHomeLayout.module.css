@@ -85,12 +85,15 @@
 }
 
 .profile {
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 54px;
   border-radius: 50%;
   background-color: var(--gray-200);
+  overflow: hidden;
 }
 
 svg.profileImage {
