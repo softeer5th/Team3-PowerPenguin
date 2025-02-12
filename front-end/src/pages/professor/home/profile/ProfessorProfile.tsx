@@ -102,10 +102,21 @@ const ProfessorProfile = () => {
     const files = event.target.files;
     if (files) {
       if (validateImage(files[0])) {
+        if (profile.profileImage.startsWith('blob:')) {
+          URL.revokeObjectURL(profile.profileImage);
+        }
         setProfile({ ...profile, profileImage: URL.createObjectURL(files[0]) });
       }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (profile.profileImage.startsWith('blob:')) {
+        URL.revokeObjectURL(profile.profileImage);
+      }
+    };
+  }, [profile.profileImage]);
 
   const offModal = () => {
     setModal(null);
