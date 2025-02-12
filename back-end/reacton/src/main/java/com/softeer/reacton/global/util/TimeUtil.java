@@ -51,7 +51,7 @@ public class TimeUtil {
         return end.isAfter(start);
     }
 
-    public static String getTodayDay() {
+    public static String getCurrentDay() {
         DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
         return DAYMAPPER.get(dayOfWeek);
     }
