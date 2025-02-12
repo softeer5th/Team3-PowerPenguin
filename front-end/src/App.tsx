@@ -6,7 +6,7 @@ import ProfessorHome from './pages/professor/home/ProfessorHome';
 import ProfessorSearch from './pages/professor/home/search';
 import ProfessorLogin from './pages/professor/login/ProfessorLogin';
 import ProfessorRegister from './pages/professor/register/ProfessorRegister';
-import ProfessorProfile from './pages/professor/profile';
+import ProfessorProfile from './pages/professor/home/profile/ProfessorProfile';
 import ProfessorCourse from './pages/professor/course';
 import ProfessorClassRoom from './pages/professor/course/classroom';
 import StudentHome from './pages/student/home/StudentHome';
@@ -22,10 +22,10 @@ function App() {
           <Route element={<ProfessorHomeLayout />}>
             <Route index element={<ProfessorHome />} />
             <Route path="search" element={<ProfessorSearch />} />
+            <Route path="profile" element={<ProfessorProfile />} />
           </Route>
           <Route path="login" element={<ProfessorLogin />} />
           <Route path="register" element={<ProfessorRegister />} />
-          <Route path="profile" element={<ProfessorProfile />} />
           <Route path="course/:courseId">
             <Route index element={<ProfessorCourse />} />
             <Route path="classroom" element={<ProfessorClassRoom />} />
