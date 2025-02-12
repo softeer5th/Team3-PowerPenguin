@@ -55,7 +55,7 @@ public class ProfessorCourseService {
     public CourseDetailResponse getCourseDetail(long courseId, String oauthId) {
         log.debug("수업 상세 정보를 조회합니다.");
 
-        Course course = findCourseByProfessor(oauthId, courseId);
+        Course course = getCourseByProfessor(oauthId, courseId);
 
         List<CourseScheduleResponse> schedules = getSchedulesByCourseInOrder(course);
         List<CourseQuestionResponse> questions = getQuestionsByCourseInOrder(course);
@@ -85,7 +85,7 @@ public class ProfessorCourseService {
             throw new BaseException(CourseErrorCode.COURSE_REQUEST_IS_NULL);
         }
 
-        Course course = findCourseByProfessor(oauthId, courseId);
+        Course course = getCourseByProfessor(oauthId, courseId);
 
         course.update(request);
 
@@ -96,7 +96,7 @@ public class ProfessorCourseService {
     public void deleteCourse(String oauthId, long courseId) {
         log.debug("수업을 삭제합니다. : courseId = {}", courseId);
 
-        Course course = findCourseByProfessor(oauthId, courseId);
+        Course course = getCourseByProfessor(oauthId, courseId);
 
         courseRepository.delete(course);
         courseRepository.flush();
@@ -108,7 +108,7 @@ public class ProfessorCourseService {
     public void startCourse(String oauthId, long courseId) {
         log.debug("수업을 시작 상태로 변경합니다. courseId = {}", courseId);
 
-        Course course = findCourseByProfessor(oauthId, courseId);
+        Course course = getCourseByProfessor(oauthId, courseId);
         course.activate();
 
         log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
@@ -118,7 +118,7 @@ public class ProfessorCourseService {
     public void closeCourse(String oauthId, long courseId) {
         log.debug("수업을 종료 상태로 변경합니다. courseId = {}", courseId);
 
-        Course course = findCourseByProfessor(oauthId, courseId);
+        Course course = getCourseByProfessor(oauthId, courseId);
         course.deactivate();
 
         log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
@@ -134,7 +134,7 @@ public class ProfessorCourseService {
                 .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
     }
 
-    private Course findCourseByProfessor(String oauthId, long courseId) {
+    private Course getCourseByProfessor(String oauthId, long courseId) {
         Professor professor = getProfessorByOauthId(oauthId);
         Course course = getCourseByCourseId(courseId);
 
@@ -155,7 +155,7 @@ public class ProfessorCourseService {
     }
 
     private List<CourseScheduleResponse> getSchedulesByCourseInOrder(Course course) {
-        List<Schedule> schedules = scheduleRepository.getSchedulesByCourse(course);
+        List<Schedule> schedules = scheduleRepository.findSchedulesByCourse(course);
 
         return schedules.stream()
                 .map(schedule -> new CourseScheduleResponse(
