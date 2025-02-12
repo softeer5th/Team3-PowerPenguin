@@ -70,10 +70,10 @@ public class ProfessorCourseService {
 
         Professor professor = getProfessorByOauthId(oauthId);
         List<Course> allCourses = courseRepository.findCoursesWithSchedulesByProfessor(professor);
-        List<CourseSummaryResponse> todayCourses = getTodayCoursesResponse(allCourses);
+        List<CourseSummaryResponse> todayCoursesResponse = getTodayCoursesResponse(allCourses);
         List<CourseSummaryResponse> allCoursesResponse = getAllCoursesResponse(allCourses);
 
-        return CourseAllResponse.of(todayCourses, allCoursesResponse);
+        return CourseAllResponse.of(todayCoursesResponse, allCoursesResponse);
     }
 
     @Transactional
