@@ -34,19 +34,15 @@ const MeatBallMenu = ({
         <div className={S.popup}>
           <button
             className={`${S.popupButton} ${S.popupButtonDelete}`}
-            onClick={() => {
-              onDelete();
-              onToggle();
-            }}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={onDelete}
           >
             <span>이 수업 삭제하기</span>
           </button>
           <button
             className={S.popupButton}
-            onClick={() => {
-              onEdit();
-              onToggle();
-            }}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={onEdit}
           >
             <span>이 수업 편집하기</span>
           </button>
