@@ -19,4 +19,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "WHEN '일' THEN 7 " +
             "ELSE 8 END, s.startTime ASC")
     List<Schedule> getSchedulesByCourse(Course course);
+
+    void deleteByCourse(Course course);
 }

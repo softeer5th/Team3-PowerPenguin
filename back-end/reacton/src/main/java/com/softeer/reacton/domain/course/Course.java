@@ -63,12 +63,12 @@ public class Course {
     private List<Schedule> schedules = new ArrayList<>();
 
     @Setter
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @OrderBy("createdAt ASC")
     private List<Question> questions = new ArrayList<>();
 
     @Setter
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @OrderBy("count DESC")
     private List<Request> requests = new ArrayList<>();
 

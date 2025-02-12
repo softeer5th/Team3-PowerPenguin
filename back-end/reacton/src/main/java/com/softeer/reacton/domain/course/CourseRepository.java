@@ -23,4 +23,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "WHEN '일' THEN 7 " +
             "ELSE 8 END")
     List<Course> findCoursesWithSchedulesByProfessor(@Param("professor") Professor professor);
+
+    List<Object> findByProfessor(Professor professor);
+
+    void deleteByProfessor(Professor professor);
 }
