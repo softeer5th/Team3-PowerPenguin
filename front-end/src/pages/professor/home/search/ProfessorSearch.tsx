@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import S from './ProfessorSearch.module.css';
 import { CourseMeta } from '../../../../core/model';
 import { courseRepository } from '../../../../di';
@@ -14,8 +14,6 @@ const ProfessorSearch = () => {
   const [courseDay, setCourseDay] = useState<string>('수업 요일');
   const [courseType, setCourseType] = useState<string>('수업 종류');
   const [modal, setModal] = useState<React.ReactNode | null>(null);
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get('keyword');
   const { openModal, closeModal, Modal } = useModal();
   const {
     handleDeleteCourse,
@@ -24,6 +22,9 @@ const ProfessorSearch = () => {
     handleDetailCourse,
     handleFileCourse,
   } = useCourseActions({ courses, setModal, openModal, closeModal });
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword') || '';
+  const navigate = useNavigate();
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -33,6 +34,12 @@ const ProfessorSearch = () => {
         )) &&
       (courseType === '수업 종류' || courseType === course.classType)
   );
+
+  useEffect(() => {
+    if (keyword.trim() === '') {
+      navigate('/professor');
+    }
+  });
 
   useEffect(() => {
     try {
