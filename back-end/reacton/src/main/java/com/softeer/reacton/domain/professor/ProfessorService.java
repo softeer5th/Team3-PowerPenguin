@@ -60,17 +60,6 @@ public class ProfessorService {
 
         return jwtTokenUtil.createAuthAccessToken(oauthId, email);
     }
-  
-    @Transactional
-    public void delete(String oauthId) {
-        Professor professor = professorRepository.findByOauthId(oauthId)
-                .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
-
-        courseRepository.findByProfessor(professor).forEach(course -> {
-            scheduleRepository.deleteByCourse((Course) course);
-        });
-        courseRepository.deleteByProfessor(professor);
-        professorRepository.delete(professor);
 
     @Transactional
     public void delete(String oauthId) {

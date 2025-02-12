@@ -11,7 +11,6 @@ import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.util.TimeUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
