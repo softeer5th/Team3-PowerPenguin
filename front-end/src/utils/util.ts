@@ -92,3 +92,6 @@ export function createCourseGroup(courses: CourseMeta[], size: number) {
   }
   return groups;
 }
+
+export const CourseDay = ['월', '화', '수', '목', '금', '토', '일'];
+export const CourseType = ['전공', '교양', '기타'];
