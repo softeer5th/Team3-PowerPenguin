@@ -1,0 +1,273 @@
+import { useState, useCallback } from 'react';
+import S from './CourseCard.module.css';
+import { CourseMeta } from '../../../../core/model';
+import CategoryChip from '../../../../components/chip/CategoryChip';
+import BarChartIcon from '../../../../assets/icons/barchart.svg?react';
+import ClipIcon from '../../../../assets/icons/clip.svg?react';
+import ClockIcon from '../../../../assets/icons/clock.svg?react';
+import PeopleIcon from '../../../../assets/icons/people.svg?react';
+import TextButton from '../../../../components/button/text/TextButton';
+import {
+  getDayString,
+  formatTime,
+  isSoon,
+  getCourseColor,
+} from '../../../../utils/util';
+import MeatBallMenu from './MeatBallMenu';
+import useCountdown from '../../../../hooks/useCountDown';
+
+type CourseCardProps = {
+  course: CourseMeta;
+  size: 'small' | 'medium' | 'large';
+  onDeleteCourse: (courseId: number) => void;
+  onEditCourse: (courseId: number) => void;
+  onStartCourse: (courseId: number) => void;
+  onDetailCourse: (courseId: number) => void;
+  onFileCourse: (courseId: number) => void;
+};
+
+const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
+  scheduleList.map((schedule, index) => (
+    <span key={schedule.day}>
+      {schedule.day} {schedule.start} - {schedule.end}
+      {index < scheduleList.length - 1 && ', '}
+    </span>
+  ));
+
+const RenderButtonContainer = (
+  width: string,
+  height: string,
+  onStart: () => void,
+  onDetail: () => void,
+  onFile: () => void
+) => {
+  return (
+    <div className={S.buttonContainer}>
+      <TextButton
+        width={width}
+        height={height}
+        text="수업 시작"
+        color="blue"
+        size="web3"
+        onClick={onStart}
+        isActive
+      />
+      <button className={S.subButton} onClick={onDetail}>
+        <BarChartIcon className={S.subButtonIcon} />
+        <div className={S.subButtonPopup}>
+          <span>지난 수업 통계를 볼 수 있어요</span>
+        </div>
+      </button>
+      <button className={S.subButton} onClick={onFile}>
+        <ClipIcon className={S.subButtonIcon} />
+        <div className={S.subButtonPopup}>
+          <span>
+            미리 강의자료를 첨부하면,
+            <br />
+            수업 시작 후 자동으로 파일이 열려요
+          </span>
+        </div>
+      </button>
+    </div>
+  );
+};
+
+const CourseCard = ({
+  course,
+  size,
+  onDeleteCourse,
+  onEditCourse,
+  onStartCourse,
+  onDetailCourse,
+  onFileCourse,
+}: CourseCardProps) => {
+  const [popup, setPopup] = useState(false);
+  const leftTime = useCountdown(course.schedule);
+  const today = new Date();
+  const todaySchedule = course.schedule.find(
+    (schedule) => schedule.day === getDayString(today.getDay())
+  );
+
+  const handleBlur = useCallback(() => {
+    setPopup(false);
+  }, []);
+
+  const handleTogglePopup = useCallback(() => {
+    setPopup((prev) => !prev);
+  }, []);
+
+  const leftTimeString = formatTime(leftTime);
+
+  const renderSmall = () => (
+    <div className={S.small}>
+      <div className={S.content}>
+        <div className={S.info}>
+          <span
+            className={`${S.time} ${
+              todaySchedule && isSoon(todaySchedule.start) ? S.soon : ''
+            }`}
+          >
+            {todaySchedule
+              ? isSoon(todaySchedule.start)
+                ? '곧 시작'
+                : todaySchedule.start
+              : '없음'}
+          </span>
+          <span className={S.type}>
+            <CategoryChip
+              color={getCourseColor(course.classType)}
+              text={course.classType}
+              isActive
+            />
+          </span>
+          <div className={S.text}>
+            <h3 className={S.title}>
+              {course.name} ({course.code})
+            </h3>
+            <span className={S.capacity}>{course.capacity}</span>
+          </div>
+        </div>
+      </div>
+      <MeatBallMenu
+        popup={popup}
+        size="small"
+        onBlur={handleBlur}
+        onToggle={handleTogglePopup}
+        onDelete={() => onDeleteCourse(course.id)}
+        onEdit={() => onEditCourse(course.id)}
+      />
+    </div>
+  );
+
+  const renderMedium = () => (
+    <div className={S.medium}>
+      <MeatBallMenu
+        popup={popup}
+        size="medium"
+        onBlur={handleBlur}
+        onToggle={handleTogglePopup}
+        onDelete={() => onDeleteCourse(course.id)}
+        onEdit={() => onEditCourse(course.id)}
+      />
+      <div className={S.content}>
+        <div className={S.info}>
+          <div className={S.type}>
+            <CategoryChip
+              color={getCourseColor(course.classType)}
+              text={course.classType}
+              isActive
+            />
+          </div>
+          <div className={S.text}>
+            <div>
+              <h4 className={S.university}>{course.university}</h4>
+              <h3 className={S.title}>
+                {course.name} ({course.code})
+              </h3>
+            </div>
+            <div className={S.meta}>
+              <div className={S.metaItem}>
+                <ClockIcon className={S.metaIcon} />
+                <span className={S.metaText}>
+                  {renderSchedule(course.schedule)}
+                </span>
+              </div>
+              <div className={S.metaItem}>
+                <PeopleIcon className={S.metaIcon} />
+                <span className={S.metaText}>{course.capacity}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {RenderButtonContainer(
+          '239px',
+          '56px',
+          () => onStartCourse(course.id),
+          () => onDetailCourse(course.id),
+          () => onFileCourse(course.id)
+        )}
+      </div>
+      <div className={S.footer}>
+        <span className={S.footerText}>
+          입장코드 <strong>{course.accessCode}</strong>
+        </span>
+      </div>
+    </div>
+  );
+
+  const renderLarge = () => (
+    <div className={S.large}>
+      <MeatBallMenu
+        popup={popup}
+        size="large"
+        onBlur={handleBlur}
+        onToggle={handleTogglePopup}
+        onDelete={() => onDeleteCourse(course.id)}
+        onEdit={() => onEditCourse(course.id)}
+      />
+      <div className={S.content}>
+        <div className={S.info}>
+          <div className={S.header}>
+            <div className={S.type}>
+              <CategoryChip
+                color={getCourseColor(course.classType)}
+                text={course.classType}
+                isActive
+              />
+            </div>
+            <div className={S.time}>
+              {todaySchedule && isSoon(todaySchedule.start)
+                ? `${leftTimeString} 후 시작`
+                : '00 : 00 : 00 후 시작'}
+            </div>
+          </div>
+          <div className={S.text}>
+            <div>
+              <h4 className={S.university}>{course.university}</h4>
+              <h3 className={S.title}>
+                {course.name} ({course.code})
+              </h3>
+            </div>
+            <div className={S.meta}>
+              <div className={S.metaItem}>
+                <ClockIcon className={S.metaIcon} />
+                <span className={S.metaText}>
+                  {renderSchedule(course.schedule)}
+                </span>
+              </div>
+              <div className={S.metaItem}>
+                <PeopleIcon className={S.metaIcon} />
+                <span className={S.metaText}>{course.capacity}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {RenderButtonContainer(
+          '345px',
+          '61px',
+          () => onStartCourse(course.id),
+          () => onDetailCourse(course.id),
+          () => onFileCourse(course.id)
+        )}
+      </div>
+      <div className={S.footer}>
+        <span className={S.footerText}>
+          입장코드 <strong>{course.accessCode}</strong>
+        </span>
+      </div>
+    </div>
+  );
+
+  switch (size) {
+    case 'small':
+      return renderSmall();
+    case 'medium':
+      return renderMedium();
+    case 'large':
+      return renderLarge();
+    default:
+      return null;
+  }
+};
+
+export default CourseCard;

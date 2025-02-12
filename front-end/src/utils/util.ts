@@ -1,3 +1,5 @@
+import { CourseMeta } from '../core/model';
+
 const imageType = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
 export const validateImage = (file: File): boolean => {
@@ -30,3 +32,66 @@ export const validateName = (name: string): boolean => {
 
   return true;
 };
+
+const dayMap = ['일', '월', '화', '수', '목', '금', '토'];
+export const getDayString = (day: number) => dayMap[day];
+
+export const getCourseColor = (category: string) => {
+  switch (category) {
+    case '전공':
+      return 'purple';
+    case '교양':
+      return 'green';
+    default:
+      return 'gray';
+  }
+};
+
+export const createTargetDate = (time: string): Date => {
+  const [targetHour, targetMinute] = time.split(':');
+  const target = new Date();
+  target.setHours(Number(targetHour), Number(targetMinute), 0, 0);
+  return target;
+};
+
+export const isSoon = (time: string) => {
+  const leftTime = createTargetDate(time).getTime() - Date.now();
+  return leftTime > 0 && leftTime < 3600000;
+};
+
+export type TimeType = {
+  hour: number;
+  minute: number;
+  second: number;
+};
+
+export const formatTime = ({ hour, minute, second }: TimeType) => {
+  if (hour < 0) return '00 : 00 : 00';
+  if (minute < 0) return '00 : 00 : 00';
+  if (second < 0) return '00 : 00 : 00';
+
+  return `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
+    .toString()
+    .padStart(2, '0')}`;
+};
+
+export function todayString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = days[now.getDay()];
+  return `${year}.${month}.${day} (${dayOfWeek})`;
+}
+
+export function createCourseGroup(courses: CourseMeta[], size: number) {
+  const groups: CourseMeta[][] = [];
+  for (let i = 0; i < courses.length; i += size) {
+    groups.push(courses.slice(i, i + size));
+  }
+  return groups;
+}
+
+export const CourseDay = ['월', '화', '수', '목', '금', '토', '일'];
+export const CourseType = ['전공', '교양', '기타'];

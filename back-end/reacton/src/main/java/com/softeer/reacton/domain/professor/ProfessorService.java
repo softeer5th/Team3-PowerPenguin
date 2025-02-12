@@ -11,14 +11,14 @@ import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
 
-@Log4j2
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProfessorService {
@@ -60,6 +60,17 @@ public class ProfessorService {
 
         return jwtTokenUtil.createAuthAccessToken(oauthId, email);
     }
+  
+    @Transactional
+    public void delete(String oauthId) {
+        Professor professor = professorRepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
+
+        courseRepository.findByProfessor(professor).forEach(course -> {
+            scheduleRepository.deleteByCourse((Course) course);
+        });
+        courseRepository.deleteByProfessor(professor);
+        professorRepository.delete(professor);
 
     @Transactional
     public void delete(String oauthId) {

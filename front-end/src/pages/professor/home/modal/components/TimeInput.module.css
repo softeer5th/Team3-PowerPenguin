@@ -1,0 +1,22 @@
+.timeInputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 13px 20px;
+  border-radius: var(--small);
+  background-color: var(--gray-200);
+  outline: 1px solid var(--gray-300);
+  width: 149px;
+  height: 50px;
+}
+
+.timeInput {
+  width: 40px;
+  text-align: center;
+  font: var(--web-body2-medium);
+  color: var(--gray-500);
+}
+
+.timeDivider {
+  margin: 0 auto;
+}

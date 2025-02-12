@@ -1,0 +1,71 @@
+.pageLayout {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  padding: 128px 20px;
+}
+
+.reactTitle {
+  font: var(--mobile-title1-bold);
+  color: var(--gray-900);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.titleStrong {
+  color: var(--blue-400);
+}
+
+.reactDesc {
+  font: var(--mobile-body1-medium);
+  color: var(--gray-500);
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.cardContainer {
+  width: 100%;
+  max-width: fit-content;
+  display: grid;
+  place-items: center;
+  grid-template-columns: repeat(3, 1fr); /* 3열 */
+  grid-template-rows: repeat(2, 1fr); /* 2행 */
+  gap: 16px;
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .reactTitle {
+    font: var(--web-title3-bold);
+    margin-bottom: 8px;
+  }
+
+  .reactDesc {
+    font: var(--web-body2-medium);
+    margin-bottom: 80px;
+  }
+
+  .cardContainer {
+    gap: 24px;
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .reactTitle {
+    font: var(--web-header3-bold);
+    margin-bottom: 12px;
+  }
+
+  .reactDesc {
+    font: var(--web-title3-medium);
+    margin-bottom: 64px;
+  }
+
+  .cardContainer {
+    gap: 24px;
+  }
+}

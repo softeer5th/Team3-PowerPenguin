@@ -1,0 +1,30 @@
+.TabContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--mobile-button1-bold);
+  color: var(--gray-400);
+  flex: 1;
+  text-align: center;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.active {
+  color: var(--gray-600);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .TabContainer {
+    font: var(--web-button4-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .TabContainer {
+    font: var(--web-button2-bold);
+  }
+}

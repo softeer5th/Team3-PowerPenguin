@@ -1,0 +1,144 @@
+.cardContainer {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  background-color: white;
+  padding: 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.cardContainer:hover {
+  border: 1px solid var(--blue-400);
+  transform: scale(1.05);
+}
+
+@keyframes activeAnimation {
+  0% {
+    transform: scale(1);
+    background-color: initial;
+  }
+  100% {
+    transform: scale(1.08);
+    background-color: var(--blue-200);
+  }
+}
+
+.active {
+  animation: activeAnimation 0.4s ease-in-out forwards;
+}
+
+.blocked {
+  pointer-events: none;
+  animation: none;
+}
+
+.iconBg {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+  border-radius: 24px;
+}
+
+.icon {
+  width: 27px;
+  height: 27px;
+}
+
+.cardContentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 4px;
+  margin-left: 34px;
+}
+.cardTitle {
+  font: var(--mobile-title2-bold);
+  color: var(--gray-900);
+}
+
+.cardDesc {
+  font: var(--mobile-body2-medium);
+  color: var(--gray-600);
+}
+
+.countdownText {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  border: 4px solid var(--blue-200);
+  font: var(--mobile-title2-bold);
+  color: var(--blue-400);
+  background-color: rgba(230, 234, 255, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .cardContainer {
+    padding: 8px 12px;
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .iconBg {
+    width: 64px;
+    height: 64px;
+    border-radius: 36px;
+  }
+
+  .cardContentContainer {
+    margin-left: 24px;
+  }
+  .cardTitle {
+    font: var(--web-title5-bold);
+  }
+
+  .cardDesc {
+    font: var(--web-body3-medium);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .cardContainer {
+    padding: 16px 40px;
+    border-radius: 12px;
+  }
+
+  .icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .iconBg {
+    width: 88px;
+    height: 88px;
+    border-radius: 64px;
+  }
+
+  .cardContentContainer {
+    gap: 8px;
+    margin-left: 40px;
+  }
+  .cardTitle {
+    font: var(--web-title1-bold);
+  }
+
+  .cardDesc {
+    font: var(--web-title4-medium);
+  }
+}

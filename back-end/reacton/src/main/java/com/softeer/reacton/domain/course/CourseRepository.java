@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import java.util.Optional;
+import java.util.List;
+
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("SELECT DISTINCT c FROM Course c " +
@@ -23,6 +26,10 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "WHEN '일' THEN 7 " +
             "ELSE 8 END")
     List<Course> findCoursesWithSchedulesByProfessor(@Param("professor") Professor professor);
+
+    Optional<Course> findByAccessCode(int accessCode);
+
+    boolean existsByAccessCode(int accessCode);
 
     List<Object> findByProfessor(Professor professor);
 
