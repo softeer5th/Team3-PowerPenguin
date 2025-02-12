@@ -11,6 +11,27 @@ type UseCourseActionsProps = {
   closeModal: () => void;
 };
 
+const fileSuccessModal = (
+  file: File,
+  setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
+  offModal: () => void
+) => {
+  setModal(
+    <AlertModal
+      type="success"
+      message="파일이 성공적으로 업로드되었습니다."
+      buttonText="확인"
+      onClickCloseButton={() => {
+        offModal();
+      }}
+      onClickModalButton={() => {
+        offModal();
+        console.log('Save file:', file);
+      }}
+    />
+  );
+};
+
 const courseActions = ({
   courses,
   setModal,
@@ -80,20 +101,7 @@ const courseActions = ({
             description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
             buttonText="새 파일 저장"
             onClickModalButton={() => {
-              setModal(
-                <AlertModal
-                  type="success"
-                  message="파일이 성공적으로 업로드되었습니다."
-                  buttonText="확인"
-                  onClickCloseButton={() => {
-                    offModal();
-                  }}
-                  onClickModalButton={() => {
-                    offModal();
-                    console.log('Save file:', file);
-                  }}
-                />
-              );
+              fileSuccessModal(file, setModal, offModal);
             }}
             onClickCloseButton={() => {
               offModal();
@@ -103,20 +111,7 @@ const courseActions = ({
       };
     } else {
       handleFileSave = (file: File) => {
-        setModal(
-          <AlertModal
-            type="success"
-            message="파일이 성공적으로 업로드되었습니다."
-            buttonText="확인"
-            onClickCloseButton={() => {
-              offModal();
-            }}
-            onClickModalButton={() => {
-              offModal();
-              console.log('Save file:', file);
-            }}
-          />
-        );
+        fileSuccessModal(file, setModal, offModal);
       };
     }
 
