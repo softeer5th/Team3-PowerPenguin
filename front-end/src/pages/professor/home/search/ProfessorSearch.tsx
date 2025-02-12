@@ -39,7 +39,7 @@ const ProfessorSearch = () => {
     if (keyword.trim() === '') {
       navigate('/professor');
     }
-  });
+  }, [keyword, navigate]);
 
   useEffect(() => {
     try {
