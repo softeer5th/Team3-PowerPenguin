@@ -1,6 +1,7 @@
 .container {
   width: 1920px;
   background-color: var(--bg);
+  user-select: none;
 }
 
 .content {
@@ -30,4 +31,7 @@
 .filter {
   display: flex;
   gap: 16px;
+  position: relative;
+  height: 53px;
+  overflow: visible;
 }

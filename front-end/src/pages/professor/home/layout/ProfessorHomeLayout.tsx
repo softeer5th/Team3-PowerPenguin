@@ -34,6 +34,8 @@ const ProfessorHomeLayout = () => {
         console.log('Search triggered:', search);
         navigate(`/professor/search/?keyword=${search}`);
       }
+    } else if (event.key === 'Escape') {
+      event.currentTarget.blur();
     }
   };
 
