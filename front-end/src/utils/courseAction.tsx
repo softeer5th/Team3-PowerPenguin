@@ -11,12 +11,17 @@ type UseCourseActionsProps = {
   closeModal: () => void;
 };
 
-const useCourseActions = ({
+const courseActions = ({
   courses,
   setModal,
   openModal,
   closeModal,
 }: UseCourseActionsProps) => {
+  const offModal = () => {
+    setModal(null);
+    closeModal();
+  };
+
   const handleDeleteCourse = (courseId: number) => {
     setModal(
       <AlertModal
@@ -25,13 +30,11 @@ const useCourseActions = ({
         description="삭제된 강의는 복구가 불가능합니다. 정말 삭제하시겠습니까?"
         buttonText="삭제"
         onClickCloseButton={() => {
-          setModal(null);
-          closeModal();
+          offModal();
         }}
         onClickModalButton={() => {
           console.log('Delete course:', courseId);
-          setModal(null);
-          closeModal();
+          offModal();
         }}
       />
     );
@@ -44,13 +47,11 @@ const useCourseActions = ({
       <CourseModal
         course={courses.find((course) => course.id === courseId)}
         onClose={() => {
-          setModal(null);
-          closeModal();
+          offModal();
         }}
         onSubmit={(course) => {
           console.log('Submit course:', course);
-          setModal(null);
-          closeModal();
+          offModal();
         }}
       />
     );
@@ -85,20 +86,17 @@ const useCourseActions = ({
                   message="파일이 성공적으로 업로드되었습니다."
                   buttonText="확인"
                   onClickCloseButton={() => {
-                    setModal(null);
-                    closeModal();
+                    offModal();
                   }}
                   onClickModalButton={() => {
-                    setModal(null);
-                    closeModal();
+                    offModal();
                     console.log('Save file:', file);
                   }}
                 />
               );
             }}
             onClickCloseButton={() => {
-              setModal(null);
-              closeModal();
+              offModal();
             }}
           />
         );
@@ -111,12 +109,10 @@ const useCourseActions = ({
             message="파일이 성공적으로 업로드되었습니다."
             buttonText="확인"
             onClickCloseButton={() => {
-              setModal(null);
-              closeModal();
+              offModal();
             }}
             onClickModalButton={() => {
-              setModal(null);
-              closeModal();
+              offModal();
               console.log('Save file:', file);
             }}
           />
@@ -127,8 +123,7 @@ const useCourseActions = ({
     setModal(
       <FileUploadPopupModal
         onClickCloseButton={() => {
-          setModal(null);
-          closeModal();
+          offModal();
         }}
         onClickSaveButton={(file) => {
           handleFileSave(file);
@@ -143,8 +138,7 @@ const useCourseActions = ({
     setModal(
       <CourseModal
         onClose={() => {
-          setModal(null);
-          closeModal();
+          offModal();
         }}
         onSubmit={(course) => {
           console.log('Submit course:', course);
@@ -164,4 +158,4 @@ const useCourseActions = ({
   };
 };
 
-export default useCourseActions;
+export default courseActions;

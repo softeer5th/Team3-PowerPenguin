@@ -10,7 +10,7 @@ import TodayCourses from './components/TodayCourses';
 import TotalCourses from './components/TotalCourses';
 import FilterDropDown from './components/FilterDropDown';
 import { CourseDay, CourseType } from '../../../utils/util';
-import useCourseActions from '../../../hooks/useCourseAction';
+import courseActions from '../../../utils/courseAction';
 
 const ProfessorHome = () => {
   const [todayCourses, setTodayCourses] = useState<CourseMeta[]>([]);
@@ -27,7 +27,7 @@ const ProfessorHome = () => {
     handleDetailCourse,
     handleFileCourse,
     handleAddCourse,
-  } = useCourseActions({ courses, setModal, openModal, closeModal });
+  } = courseActions({ courses, setModal, openModal, closeModal });
 
   const filteredCourses = courses.filter(
     (course) =>
