@@ -107,6 +107,11 @@ const ProfessorProfile = () => {
     }
   };
 
+  const offModal = () => {
+    setModal(null);
+    closeModal();
+  };
+
   const handleClickLogoutButton = () => {
     setModal(
       <AlertModal
@@ -116,8 +121,7 @@ const ProfessorProfile = () => {
         buttonText="로그아웃 하기"
         onClickModalButton={() => {
           authRepository.logout();
-          setModal(null);
-          closeModal();
+          offModal();
         }}
         onClickCloseButton={closeModal}
       />
@@ -134,8 +138,7 @@ const ProfessorProfile = () => {
         buttonText="회원탈퇴하기"
         onClickModalButton={() => {
           professorRepository.deleteProfessor();
-          setModal(null);
-          closeModal();
+          offModal();
         }}
         onClickCloseButton={closeModal}
       />
