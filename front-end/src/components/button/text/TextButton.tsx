@@ -3,7 +3,7 @@ import S from './TextButton.module.css';
 
 type TextButtonProps = {
   type?: 'button' | 'submit';
-  color: 'blue' | 'red' | 'green' | 'black' | 'white' | 'inherit';
+  color: 'blue' | 'red' | 'green' | 'black' | 'gray' | 'white' | 'inherit';
   size: 'web1' | 'web2' | 'web3' | 'web4' | 'mobile1' | 'mobile2';
   width?: string;
   height?: string;
@@ -22,6 +22,8 @@ function getColorClass(color: string): keyof typeof S {
       return S.greenButton;
     case 'black':
       return S.blackButton;
+    case 'gray':
+      return S.grayButton;
     case 'white':
       return S.whiteButton;
     case 'inherit':

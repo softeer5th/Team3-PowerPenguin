@@ -58,6 +58,12 @@
   border: 1px solid var(--blue-400);
 }
 
+.grayButton {
+  background-color: white;
+  color: var(--gray-700);
+  border: 1px solid var(--gray-500);
+}
+
 .blackButton {
   background-color: var(--gray-900);
   color: white;
