@@ -101,7 +101,7 @@
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .messageContainer {
-    min-width: 676x;
+    min-width: 676px;
     min-height: 134px;
     gap: 12px;
   }

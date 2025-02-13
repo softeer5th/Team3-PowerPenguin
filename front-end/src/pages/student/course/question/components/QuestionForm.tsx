@@ -34,7 +34,11 @@ const QuestionForm = ({
         <div className={S.countText}>
           {inputValue.length}/{INPUT_MAX_LENGTH}
         </div>
-        <button type="submit" className={S.sendButton} disabled={!inputValue}>
+        <button
+          type="submit"
+          className={S.sendButton}
+          disabled={inputValue.trim().length === 0}
+        >
           전송
         </button>
       </div>

@@ -12,7 +12,7 @@ const StudentQuestion = ({ courseId }: { courseId: string }) => {
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchQuestions() {
       try {
         const questionList = await classroomRepository.getQuestions();
         setQuestions(questionList);
@@ -20,26 +20,28 @@ const StudentQuestion = ({ courseId }: { courseId: string }) => {
         console.error('질문 목록을 불러오는 중 오류 발생:', error);
       }
     }
-    fetchData();
+    fetchQuestions();
   }, []);
 
   const handleInputSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const { id, time, content } = await classroomRepository.sendQuestion(
-        courseId,
-        inputValue
-      );
-      const newQuestion = {
-        id,
-        content,
-        time,
-      };
-      setQuestions((prev) => [...prev, newQuestion]);
-      setInputValue('');
-      setSuccessPopup(true);
-    } catch (error) {
-      console.log(error);
+    if (inputValue.trim().length > 0) {
+      try {
+        const { id, time, content } = await classroomRepository.sendQuestion(
+          courseId,
+          inputValue
+        );
+        const newQuestion = {
+          id,
+          content,
+          time,
+        };
+        setQuestions((prev) => [...prev, newQuestion]);
+        setInputValue('');
+        setSuccessPopup(true);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
