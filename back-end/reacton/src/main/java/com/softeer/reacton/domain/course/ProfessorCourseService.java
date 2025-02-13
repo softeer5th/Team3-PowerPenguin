@@ -214,14 +214,11 @@ public class ProfessorCourseService {
 
     private List<CourseSummaryResponse> getTodayCoursesResponse(List<Course> allCourses) {
         String currentDay = TimeUtil.getCurrentDay();
-        LocalTime now = LocalTime.now();
 
         return allCourses.stream()
                 .filter(course -> hasScheduleInDay(course, currentDay))
                 .sorted(Comparator
-                        .comparing((Course course) -> isStartTimeAfterNow(course, currentDay, now))
-                        .reversed()
-                        .thenComparing(course -> getEarliestStartTime(course, currentDay)))
+                        .comparing(course -> getEarliestStartTime(course, currentDay)))
                 .map(course -> CourseSummaryResponse.of(course, getSchedulesForToday(course, currentDay)))
                 .collect(Collectors.toList());
     }
@@ -243,13 +240,6 @@ public class ProfessorCourseService {
                 .map(Schedule::getStartTime)
                 .min(Comparator.naturalOrder())
                 .orElse(LocalTime.MAX);
-    }
-
-    private boolean isStartTimeAfterNow(Course course, String day, LocalTime now) {
-        return course.getSchedules().stream()
-                .filter(schedule -> schedule.getDay().equals(day))
-                .map(Schedule::getStartTime)
-                .anyMatch(startTime -> startTime.isAfter(now));
     }
 
     private List<CourseScheduleResponse> getSchedulesForToday(Course course, String currentDay) {
