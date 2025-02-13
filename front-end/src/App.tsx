@@ -12,6 +12,7 @@ import ProfessorClassRoom from './pages/professor/course/classroom';
 import StudentHome from './pages/student/home/StudentHome';
 import StudentCourse from './pages/student/course/StudentCourse';
 import ProfessorLayout from './pages/professor/ProfessorLayout';
+import StudentLayout from './pages/student/StudentLayout';
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
             <Route path="classroom" element={<ProfessorClassRoom />} />
           </Route>
         </Route>
-        <Route path="student">
+        <Route path="student" element={<StudentLayout />}>
           <Route index element={<StudentHome />} />
           <Route path="course/:courseId" element={<StudentCourse />} />
         </Route>
