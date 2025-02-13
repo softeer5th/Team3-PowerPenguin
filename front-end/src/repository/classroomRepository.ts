@@ -1,4 +1,4 @@
-import { Reaction } from '../core/model';
+import { Question, Reaction } from '../core/model';
 
 class ClassroomRepository {
   async startCourse(courseId: number): Promise<void> {
@@ -25,12 +25,12 @@ class ClassroomRepository {
     console.log('check question:', questionId);
   }
 
-  async sendQuestion(courseId: string, question: string): Promise<string> {
+  async sendQuestion(courseId: string, question: string): Promise<Question> {
     // API: POST /students/questions/{courseId}
 
     console.log('send question:', courseId, question);
 
-    return 'questionId';
+    return { id: 'questionId', time: 'time', content: question };
   }
 
   async sendRequest(courseId: string, request: string): Promise<void> {

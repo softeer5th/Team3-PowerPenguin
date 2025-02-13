@@ -66,7 +66,8 @@ export type Requests = [
 ];
 
 export type Question = {
-  id: number;
+  id: string;
+  time: string;
   content: string;
 };
 
