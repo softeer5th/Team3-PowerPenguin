@@ -116,7 +116,6 @@ public class ProfessorCourseService {
         questionRepository.deleteAllByCourse(course);
         requestRepository.deleteAllByCourse(course);
         courseRepository.delete(course);
-        courseRepository.flush();
 
         log.info("수업이 삭제되었습니다. : courseId = {}", courseId);
     }
