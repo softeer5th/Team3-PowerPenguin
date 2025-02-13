@@ -187,7 +187,8 @@ public class ProfessorController {
                 .build();
 
         return ResponseEntity
-                .noContent()
+                .status(HttpStatus.SEE_OTHER)
+                .header(HttpHeaders.LOCATION, "/")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
