@@ -69,13 +69,11 @@ public class OAuthController {
 
         log.debug("JWT 쿠키 설정이 완료되었습니다. : isSignedUp = {}", isSignedUp);
 
-        return isSignedUp
-                ? ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/professor/register")
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .build()
-                : ResponseEntity.status(HttpStatus.ACCEPTED)
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .build();
+        ResponseEntity.BodyBuilder response = ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+        String redirectUrl = isSignedUp ? "/professor/loading" : "/professor/register";
+
+        return response.header(HttpHeaders.LOCATION, redirectUrl).build();
     }
 }
