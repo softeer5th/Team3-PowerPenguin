@@ -28,7 +28,7 @@ public class OAuthController {
     @Operation(
             summary = "OAuth 로그인 요청",
             description = "OAuth 로그인 페이지로 이동하기 위한 요청을 처리합니다.",
-            responses = { @ApiResponse(responseCode = "302", description = "OAuth 로그인 페이지로 이동합니다.") }
+            responses = {@ApiResponse(responseCode = "302", description = "OAuth 로그인 페이지로 이동합니다.")}
     )
     public ResponseEntity<Void> getOauthLoginUrl(@PathVariable String provider) {
         log.debug("OAuth 로그인 URL을 요청합니다.");
@@ -67,15 +67,15 @@ public class OAuthController {
                 .sameSite("Strict")
                 .build();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-
-        // TODO : 프론트 리다이렉트 코드 추가 예정
-
         log.debug("JWT 쿠키 설정이 완료되었습니다. : isSignedUp = {}", isSignedUp);
 
         return isSignedUp
-                ? ResponseEntity.ok().headers(headers).build()
-                : ResponseEntity.status(HttpStatus.ACCEPTED).headers(headers).build();
+                ? ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header(HttpHeaders.LOCATION, "/professor/register")
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build()
+                : ResponseEntity.status(HttpStatus.ACCEPTED)
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
     }
 }
