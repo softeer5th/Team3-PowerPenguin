@@ -1,7 +1,7 @@
 package com.softeer.reacton.domain.course;
 
-import com.softeer.reacton.domain.course.dto.CourseRequest;
-import com.softeer.reacton.domain.professor.Professor;
+import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfessorCourseTransactionService {
 
     private final CourseRepository courseRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public long saveCourse(CourseRequest request, Professor professor, int accessCode) {
-        Course course = Course.create(request, accessCode, professor);
-        return courseRepository.save(course).getId();
+    public long saveCourse(Course course) {
+        courseRepository.save(course);
+
+        for (Schedule schedule : course.getSchedules()) {
+            schedule.setCourse(course);
+            scheduleRepository.save(schedule);
+        }
+
+        return course.getId();
     }
 }

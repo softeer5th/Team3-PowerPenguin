@@ -67,9 +67,9 @@ public class ProfessorService {
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
         courseRepository.findByProfessor(professor).forEach(course -> {
-            scheduleRepository.deleteByCourse((Course) course);
-            questionRepository.deleteByCourse((Course) course);
-            requestRepository.deleteByCourse((Course) course);
+            scheduleRepository.deleteAllByCourse((Course) course);
+            questionRepository.deleteAllByCourse((Course) course);
+            requestRepository.deleteAllByCourse((Course) course);
         });
         courseRepository.deleteByProfessor(professor);
         professorRepository.delete(professor);

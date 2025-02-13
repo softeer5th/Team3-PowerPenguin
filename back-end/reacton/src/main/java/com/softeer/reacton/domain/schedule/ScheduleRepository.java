@@ -20,5 +20,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "ELSE 8 END, s.startTime ASC")
     List<Schedule> findSchedulesByCourse(Course course);
 
-    void deleteByCourse(Course course);
+    void deleteAllByCourse(Course course);
 }

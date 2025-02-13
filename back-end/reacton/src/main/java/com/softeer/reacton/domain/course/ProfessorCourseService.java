@@ -4,7 +4,9 @@ import com.softeer.reacton.domain.course.dto.*;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.domain.question.Question;
+import com.softeer.reacton.domain.question.QuestionRepository;
 import com.softeer.reacton.domain.request.Request;
+import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +33,8 @@ public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
     private final ScheduleRepository scheduleRepository;
+    private final QuestionRepository questionRepository;
+    private final RequestRepository requestRepository;
     private final ProfessorCourseTransactionService professorCourseTransactionService;
 
     private static final int MAX_RETRIES = 10;
@@ -45,7 +50,11 @@ public class ProfessorCourseService {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        return saveCourseWithRetry(request, professor);
+        Course course = Course.create(request, professor);
+        List<Schedule> schedules = createSchedules(request, course);
+        course.setSchedules(schedules);
+
+        return generateAccessCodeAndSave(course);
     }
 
     public CourseDetailResponse getCourseDetail(long courseId, String oauthId) {
@@ -82,8 +91,17 @@ public class ProfessorCourseService {
         }
 
         Course course = getCourseByProfessor(oauthId, courseId);
-
         course.update(request);
+
+        List<CourseRequest.ScheduleRequest> scheduleRequests = request.getSchedules();
+        scheduleRepository.deleteAllByCourse(course);
+        course.getSchedules().clear(); // 영속성 컨텍스트에서도 제거
+
+        List<Schedule> newSchedules = scheduleRequests.stream()
+                .map(scheduleRequest -> Schedule.create(scheduleRequest, course))
+                .collect(Collectors.toList());
+        scheduleRepository.saveAll(newSchedules);
+        course.setSchedules(newSchedules);
 
         log.info("수업 업데이트가 완료되었습니다. : courseId = {}", courseId);
     }
@@ -94,8 +112,10 @@ public class ProfessorCourseService {
 
         Course course = getCourseByProfessor(oauthId, courseId);
 
+        scheduleRepository.deleteAllByCourse(course);
+        questionRepository.deleteAllByCourse(course);
+        requestRepository.deleteAllByCourse(course);
         courseRepository.delete(course);
-        courseRepository.flush();
 
         log.info("수업이 삭제되었습니다. : courseId = {}", courseId);
     }
@@ -234,13 +254,24 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private long saveCourseWithRetry(CourseRequest request, Professor professor) {
+    private List<Schedule> createSchedules(CourseRequest request, Course course) {
+        List<Schedule> schedules = new ArrayList<>();
+        for (CourseRequest.ScheduleRequest scheduleRequest : request.getSchedules()) {
+            Schedule schedule = Schedule.create(scheduleRequest, course);
+            schedules.add(schedule);
+        }
+        return schedules;
+    }
+
+    private long generateAccessCodeAndSave(Course course) {
         for (int i = 0; i < MAX_RETRIES; i++) {
             int accessCode = generateUniqueAccessCode();
             log.debug("입장 코드 생성 시도 {}회 - {}", i + 1, accessCode);
 
+            course.setAccessCode(accessCode);
+
             try {
-                return professorCourseTransactionService.saveCourse(request, professor, accessCode);
+                return professorCourseTransactionService.saveCourse(course);
             } catch (DataIntegrityViolationException e) {
                 log.warn("입장 코드 중복으로 인해 저장 실패 - 재시도 {}회: {}", i + 1, accessCode);
             }
