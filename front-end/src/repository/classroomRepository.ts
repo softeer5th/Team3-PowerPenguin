@@ -44,6 +44,16 @@ class ClassroomRepository {
 
     console.log('send reaction:', courseId, reaction);
   }
+
+  async getQuestions(): Promise<Question[]> {
+    // API: GET /students/questions
+
+    console.log('get questions');
+    return [
+      { id: 'questionId', time: 'time', content: 'asd' },
+      { id: 'questionId123', time: 'time', content: 'asd' },
+    ];
+  }
 }
 
 export default ClassroomRepository;
