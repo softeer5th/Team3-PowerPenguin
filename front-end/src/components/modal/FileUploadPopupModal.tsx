@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 
 import S from './FileUploadPopupModal.module.css';
 import TextButton from '../button/text/TextButton';
-import CloseIcon from '../../assets/icons/close.svg?react';
+import CloseIcon from '@/assets/icons/close.svg?react';
 
 type FileUploadPopupModalProps = {
   onClickCloseButton: () => void;

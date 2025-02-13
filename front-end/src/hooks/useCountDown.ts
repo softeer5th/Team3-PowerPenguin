@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { CourseMeta } from '../core/model';
-import { createTargetDate, getDayString, TimeType } from '../utils/util';
+import { CourseMeta } from '@/core/model';
+import { createTargetDate, getDayString, TimeType } from '@/utils/util';
 
 const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
   const computeLeftTime = useCallback(() => {

@@ -1,5 +1,5 @@
-import ZoomInIcon from '../../../assets/icons/zoom-in.svg?react';
-import ZoomOutIcon from '../../../assets/icons/zoom-out.svg?react';
+import ZoomInIcon from '@/assets/icons/zoom-in.svg?react';
+import ZoomOutIcon from '@/assets/icons/zoom-out.svg?react';
 import S from './ZoomButton.module.css';
 
 type ZoomButtonProps = {

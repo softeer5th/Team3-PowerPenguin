@@ -1,4 +1,4 @@
-import { CourseMeta } from '../core/model';
+import { CourseMeta } from '@/core/model';
 
 const imageType = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 

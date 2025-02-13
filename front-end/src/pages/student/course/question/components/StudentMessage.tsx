@@ -1,5 +1,5 @@
 import S from './StudentMessage.module.css';
-import CheckSvg from '../../../../../assets/icons/check.svg?react';
+import CheckSvg from '@/assets/icons/check.svg?react';
 import { useState } from 'react';
 
 type StudentMessageProps = {

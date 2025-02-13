@@ -1,5 +1,5 @@
 import S from './RequestCard.module.css';
-import useBlockTimer from '../../../../../hooks/useBlockTimer';
+import useBlockTimer from '@/hooks/useBlockTimer';
 import { useState } from 'react';
 
 type RequestCardProps = {

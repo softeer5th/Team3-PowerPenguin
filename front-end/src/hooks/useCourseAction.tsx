@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { CourseMeta } from '../core/model';
+import { CourseMeta } from '@/core/model';
 import AlertModal from '../components/modal/AlertModal';
 import CourseModal from '../pages/professor/home/modal/CourseModal';
 import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
 import ClassStartModal from '../components/modal/ClassStartModal';
-import { courseRepository } from '../di';
+import { courseRepository } from '@/di';
 
 type UseCourseActionsProps = {
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>;

@@ -1,11 +1,11 @@
 import { Outlet, useNavigate, useSearchParams } from 'react-router';
 import S from './ProfessorHomeLayout.module.css';
-import Logo from '../../../../assets/icons/logo.svg?react';
-import BasicProfile from '../../../../assets/icons/basic-profile.svg?react';
-import SearchIcon from '../../../../assets/icons/Search.svg?react';
-import CloseIcon from '../../../../assets/icons/close.svg?react';
+import Logo from '@/assets/icons/logo.svg?react';
+import BasicProfile from '@/assets/icons/basic-profile.svg?react';
+import SearchIcon from '@/assets/icons/Search.svg?react';
+import CloseIcon from '@/assets/icons/close.svg?react';
 import { useEffect, useState } from 'react';
-import { professorRepository } from '../../../../di';
+import { professorRepository } from '@/di';
 
 const ProfessorHomeLayout = () => {
   const [searchParams] = useSearchParams('');

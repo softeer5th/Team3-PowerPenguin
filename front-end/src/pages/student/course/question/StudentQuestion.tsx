@@ -3,8 +3,8 @@ import SuccessPopup from '../components/SuccessPopup';
 import S from './StudentQuestion.module.css';
 import QuestionForm from './components/QuestionForm';
 import StudentMessage from './components/StudentMessage';
-import { classroomRepository } from '../../../../di';
-import { Question } from '../../../../core/model';
+import { classroomRepository } from '@/di';
+import { Question } from '@/core/model';
 
 const StudentQuestion = ({ courseId }: { courseId: string }) => {
   const [successPopup, setSuccessPopup] = useState(false);

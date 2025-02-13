@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { CourseMeta } from '../../../../core/model';
+import { CourseMeta } from '@/core/model';
 import S from './CourseModal.module.css';
-import ModalInput from '../../../../components/input/ModalInput';
-import CategoryChip from '../../../../components/chip/CategoryChip';
-import DropDown from '../../../../components/dropdown/DropDown';
+import ModalInput from '@/components/input/ModalInput';
+import CategoryChip from '@/components/chip/CategoryChip';
+import DropDown from '@/components/dropdown/DropDown';
 import TimeInput from './components/TimeInput';
-import AddDeleteButton from '../../../../components/button/icon/AddDeleteButton';
-import TextButton from '../../../../components/button/text/TextButton';
-import { CourseError } from '../../../../core/errorType';
-import CloseIcon from '../../../../assets/icons/close.svg?react';
+import AddDeleteButton from '@/components/button/icon/AddDeleteButton';
+import TextButton from '@/components/button/text/TextButton';
+import { CourseError } from '@/core/errorType';
+import CloseIcon from '@/assets/icons/close.svg?react';
 
 type CourseModalProps = {
   course?: CourseMeta;

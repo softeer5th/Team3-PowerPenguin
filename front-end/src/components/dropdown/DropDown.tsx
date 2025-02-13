@@ -1,5 +1,5 @@
 import S from './DropDown.module.css';
-import DownVector from '../../assets/icons/down-vector.svg?react';
+import DownVector from '@/assets/icons/down-vector.svg?react';
 import { useState } from 'react';
 
 type DropDownProps = {

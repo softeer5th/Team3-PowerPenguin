@@ -1,5 +1,5 @@
 import S from './MeatBallMenu.module.css';
-import EtcIcon from '../../../../assets/icons/etc.svg?react';
+import EtcIcon from '@/assets/icons/etc.svg?react';
 
 type MeatBallMenuProps = {
   popup: boolean;

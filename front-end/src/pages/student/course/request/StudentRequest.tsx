@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import RequestCard from './components/RequestCard';
 import S from './StudentRequest.module.css';
-import { classroomRepository } from '../../../../di';
+import { classroomRepository } from '@/di';
 import SuccessPopup from '../components/SuccessPopup';
-import WishSvg from '../../../../assets/icons/wish-emoji.svg?react';
-import WindSvg from '../../../../assets/icons/wind-emoji.svg?react';
-import BulbSvg from '../../../../assets/icons/bulb-emoji.svg?react';
-import MagnifierSvg from '../../../../assets/icons/magnifier-emoji.svg?react';
-import EarSvg from '../../../../assets/icons/ear-emoji.svg?react';
+import WishSvg from '@/assets/icons/wish-emoji.svg?react';
+import WindSvg from '@/assets/icons/wind-emoji.svg?react';
+import BulbSvg from '@/assets/icons/bulb-emoji.svg?react';
+import MagnifierSvg from '@/assets/icons/magnifier-emoji.svg?react';
+import EarSvg from '@/assets/icons/ear-emoji.svg?react';
 import {
   RequestFast,
   RequestHard,
   RequestQuestion,
   RequestSize,
   RequestSound,
-} from '../../../../core/model';
+} from '@/core/model';
 
 export type CardType = 'hard' | 'fast' | 'question' | 'size' | 'sound';
 

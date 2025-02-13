@@ -1,5 +1,5 @@
-import SettingIcon from '../../../assets/icons/setting.svg?react';
-import TrashIcon from '../../../assets/icons/trash.svg?react';
+import SettingIcon from '@/assets/icons/setting.svg?react';
+import TrashIcon from '@/assets/icons/trash.svg?react';
 import S from './RecIconButton.module.css';
 
 type RecIconButtonProps = {

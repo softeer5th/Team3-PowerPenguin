@@ -1,4 +1,4 @@
-import { Question, Reaction } from '../core/model';
+import { Question, Reaction } from '@/core/model';
 
 class ClassroomRepository {
   async startCourse(courseId: number): Promise<void> {

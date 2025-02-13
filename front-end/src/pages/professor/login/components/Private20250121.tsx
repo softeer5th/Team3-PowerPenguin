@@ -1,5 +1,5 @@
 import S from './Private20250121.module.css';
-import CloseIcon from '../../../../assets/icons/close.svg?react';
+import CloseIcon from '@/assets/icons/close.svg?react';
 
 type PrivateProps = {
   onClose: () => void;

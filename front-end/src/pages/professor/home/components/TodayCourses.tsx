@@ -1,15 +1,15 @@
 import S from './TodayCourses.module.css';
-import { CourseMeta } from '../../../../core/model';
+import { CourseMeta } from '@/core/model';
 import CourseCard from './CourseCard';
-import usePagination from '../../../../hooks/usePagination';
+import usePagination from '@/hooks/usePagination';
 import {
   createCourseGroup,
   createTargetDate,
   getDayString,
   todayString,
-} from '../../../../utils/util';
-import PaginationButton from '../../../../components/button/icon/PaginationButton';
-import useCountdown from '../../../../hooks/useCountDown';
+} from '@/utils/util';
+import PaginationButton from '@/components/button/icon/PaginationButton';
+import useCountdown from '@/hooks/useCountDown';
 import { useEffect, useState } from 'react';
 
 type TodayCoursesProps = {

@@ -1,5 +1,5 @@
 import S from './StudentCourse.module.css';
-import Logo from '../../../assets/icons/logo.svg?react';
+import Logo from '@/assets/icons/logo.svg?react';
 import LayoutTab from './components/LayoutTab';
 import { useEffect, useRef, useState } from 'react';
 import StudentRequest from './request/StudentRequest';

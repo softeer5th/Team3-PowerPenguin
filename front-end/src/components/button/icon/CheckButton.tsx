@@ -1,4 +1,4 @@
-import CheckIcon from '../../../assets/icons/check.svg?react';
+import CheckIcon from '@/assets/icons/check.svg?react';
 import S from './CheckButton.module.css';
 
 type CheckButtonProps = {

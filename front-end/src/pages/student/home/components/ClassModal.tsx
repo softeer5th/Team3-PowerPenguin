@@ -1,7 +1,7 @@
 import S from './ClassModal.module.css';
-import CloseSvg from '../../../../assets/icons/close.svg?react';
-import ClockSvg from '../../../../assets/icons/clock.svg?react';
-import PeopleSvg from '../../../../assets/icons/people.svg?react';
+import CloseSvg from '@/assets/icons/close.svg?react';
+import ClockSvg from '@/assets/icons/clock.svg?react';
+import PeopleSvg from '@/assets/icons/people.svg?react';
 import ClassChip from './ClassChip';
 
 export type ClassModalProps = {
