@@ -12,18 +12,19 @@ import {
   formatTime,
   isSoon,
   getCourseColor,
+  TimeType,
 } from '../../../../utils/util';
 import MeatBallMenu from './MeatBallMenu';
-import useCountdown from '../../../../hooks/useCountDown';
 
 type CourseCardProps = {
   course: CourseMeta;
   size: 'small' | 'medium' | 'large';
-  onDeleteCourse: (courseId: number) => void;
-  onEditCourse: (courseId: number) => void;
-  onStartCourse: (courseId: number) => void;
-  onDetailCourse: (courseId: number) => void;
-  onFileCourse: (courseId: number) => void;
+  leftTime?: TimeType;
+  onDeleteCourse: (course: CourseMeta) => void;
+  onEditCourse: (course: CourseMeta) => void;
+  onStartCourse: (course: CourseMeta) => void;
+  onDetailCourse: (course: CourseMeta) => void;
+  onFileCourse: (course: CourseMeta) => void;
 };
 
 const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
@@ -75,6 +76,7 @@ const RenderButtonContainer = (
 const CourseCard = ({
   course,
   size,
+  leftTime,
   onDeleteCourse,
   onEditCourse,
   onStartCourse,
@@ -82,7 +84,6 @@ const CourseCard = ({
   onFileCourse,
 }: CourseCardProps) => {
   const [popup, setPopup] = useState(false);
-  const leftTime = useCountdown(course.schedule);
   const today = new Date();
   const todaySchedule = course.schedule.find(
     (schedule) => schedule.day === getDayString(today.getDay())
@@ -133,8 +134,8 @@ const CourseCard = ({
         size="small"
         onBlur={handleBlur}
         onToggle={handleTogglePopup}
-        onDelete={() => onDeleteCourse(course.id)}
-        onEdit={() => onEditCourse(course.id)}
+        onDelete={() => onDeleteCourse(course)}
+        onEdit={() => onEditCourse(course)}
       />
     </div>
   );
@@ -146,8 +147,8 @@ const CourseCard = ({
         size="medium"
         onBlur={handleBlur}
         onToggle={handleTogglePopup}
-        onDelete={() => onDeleteCourse(course.id)}
-        onEdit={() => onEditCourse(course.id)}
+        onDelete={() => onDeleteCourse(course)}
+        onEdit={() => onEditCourse(course)}
       />
       <div className={S.content}>
         <div className={S.info}>
@@ -182,9 +183,9 @@ const CourseCard = ({
         {RenderButtonContainer(
           '239px',
           '56px',
-          () => onStartCourse(course.id),
-          () => onDetailCourse(course.id),
-          () => onFileCourse(course.id)
+          () => onStartCourse(course),
+          () => onDetailCourse(course),
+          () => onFileCourse(course)
         )}
       </div>
       <div className={S.footer}>
@@ -202,8 +203,8 @@ const CourseCard = ({
         size="large"
         onBlur={handleBlur}
         onToggle={handleTogglePopup}
-        onDelete={() => onDeleteCourse(course.id)}
-        onEdit={() => onEditCourse(course.id)}
+        onDelete={() => onDeleteCourse(course)}
+        onEdit={() => onEditCourse(course)}
       />
       <div className={S.content}>
         <div className={S.info}>
@@ -216,9 +217,7 @@ const CourseCard = ({
               />
             </div>
             <div className={S.time}>
-              {todaySchedule && isSoon(todaySchedule.start)
-                ? `${leftTimeString} 후 시작`
-                : '00 : 00 : 00 후 시작'}
+              {leftTime ? `${leftTimeString} 후 시작` : '00 : 00 : 00 후 시작'}
             </div>
           </div>
           <div className={S.text}>
@@ -245,9 +244,9 @@ const CourseCard = ({
         {RenderButtonContainer(
           '345px',
           '61px',
-          () => onStartCourse(course.id),
-          () => onDetailCourse(course.id),
-          () => onFileCourse(course.id)
+          () => onStartCourse(course),
+          () => onDetailCourse(course),
+          () => onFileCourse(course)
         )}
       </div>
       <div className={S.footer}>

@@ -3,6 +3,7 @@ import S from './ProfessorRegister.module.css';
 import BasicProfile from '../../../assets/icons/basic-profile.svg?react';
 import TextButton from '../../../components/button/text/TextButton';
 import { validateImage, validateName } from '../../../utils/util';
+import { professorRepository } from '../../../di';
 
 const ProfessorRegister = () => {
   const [profile, setProfile] = useState<File | null>(null);
@@ -23,8 +24,9 @@ const ProfessorRegister = () => {
     setName(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (isSubmitting) {
       return;
     }
@@ -47,6 +49,7 @@ const ProfessorRegister = () => {
         return;
       }
       alert('회원가입에 성공했습니다.');
+      await professorRepository.createProfessor(name, profile);
     } catch (error) {
       console.error(error);
       alert('회원가입에 실패했습니다.');

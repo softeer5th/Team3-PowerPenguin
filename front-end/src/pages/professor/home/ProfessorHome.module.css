@@ -61,28 +61,6 @@
   z-index: 1;
 }
 
-.todayCourse {
-  display: flex;
-  flex-direction: row;
-  align-items: end;
-  gap: 116px;
-}
-
-.left {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.todayCourse .title {
-  font: var(--web-header3-bold);
-  color: var(--gray-700);
-}
-
-.todayCourse .title > span {
-  color: var(--blue-400);
-}
-
 .noTodayCourse {
   width: 1371px;
   height: 495px;

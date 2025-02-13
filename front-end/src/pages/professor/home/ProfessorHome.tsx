@@ -1,7 +1,6 @@
 import S from './ProfessorHome.module.css';
 import { courseRepository } from '../../../di';
 import { ReactNode, useEffect, useState } from 'react';
-import CourseCard from './components/CourseCard';
 import { CourseMeta } from '../../../core/model';
 import RocketIcon from '../../../assets/icons/rocket.svg?react';
 import CircleAddButton from '../../../components/button/icon/CircleAddButton';
@@ -10,7 +9,8 @@ import TodayCourses from './components/TodayCourses';
 import TotalCourses from './components/TotalCourses';
 import FilterDropDown from './components/FilterDropDown';
 import { CourseDay, CourseType } from '../../../utils/util';
-import courseActions from '../../../utils/courseAction';
+import useCourseActions from '../../../hooks/useCourseAction';
+import CourseModal from './modal/CourseModal';
 
 const ProfessorHome = () => {
   const [todayCourses, setTodayCourses] = useState<CourseMeta[]>([]);
@@ -26,8 +26,7 @@ const ProfessorHome = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-    handleAddCourse,
-  } = courseActions({ courses, setModal, openModal, closeModal });
+  } = useCourseActions({ setModal, openModal, closeModal });
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -39,11 +38,41 @@ const ProfessorHome = () => {
   );
 
   useEffect(() => {
-    courseRepository.getHomeCourses().then((courses) => {
-      setCourses(courses.totalCourse);
-      setTodayCourses(courses.todayCourse);
-    });
+    async function fetchCourses() {
+      try {
+        const courses = await courseRepository.getHomeCourses();
+        setCourses(courses.totalCourse);
+        setTodayCourses(courses.todayCourse);
+      } catch (error) {
+        console.error('Error while fetching courses:', error);
+      }
+    }
+
+    fetchCourses();
   }, []);
+
+  const handleAddCourse = () => {
+    console.log('Add course');
+    setModal(
+      <CourseModal
+        onClose={() => {
+          setModal(null);
+          closeModal();
+        }}
+        onSubmit={async (course) => {
+          try {
+            console.log('Submit course:', course);
+            setModal(null);
+            closeModal();
+            await courseRepository.createCourse(course);
+          } catch (error) {
+            console.error('Error while creating course:', error);
+          }
+        }}
+      />
+    );
+    openModal();
+  };
 
   return (
     <>
@@ -51,30 +80,14 @@ const ProfessorHome = () => {
         <div className={S.header}>
           <div className={S.headerContainer}>
             {todayCourses.length > 0 ? (
-              <div className={S.todayCourse}>
-                <div className={S.left}>
-                  <h1 className={S.title}>
-                    오늘 수업은 <span>{todayCourses.length}개</span> 있어요!
-                  </h1>
-                  <CourseCard
-                    course={todayCourses[0]}
-                    size="large"
-                    onDetailCourse={handleDetailCourse}
-                    onFileCourse={handleFileCourse}
-                    onStartCourse={handleStartCourse}
-                    onEditCourse={handleEditCourse}
-                    onDeleteCourse={handleDeleteCourse}
-                  />
-                </div>
-                <TodayCourses
-                  todayCourses={todayCourses}
-                  handleDetailCourse={handleDetailCourse}
-                  handleFileCourse={handleFileCourse}
-                  handleStartCourse={handleStartCourse}
-                  handleEditCourse={handleEditCourse}
-                  handleDeleteCourse={handleDeleteCourse}
-                />
-              </div>
+              <TodayCourses
+                todayCourses={todayCourses}
+                onDeleteCourse={handleDeleteCourse}
+                onEditCourse={handleEditCourse}
+                onStartCourse={handleStartCourse}
+                onDetailCourse={handleDetailCourse}
+                onFileCourse={handleFileCourse}
+              />
             ) : (
               <div className={S.noTodayCourse}>
                 <div className={S.rocket}>
@@ -114,11 +127,11 @@ const ProfessorHome = () => {
             </div>
             <TotalCourses
               filteredCourses={filteredCourses}
-              handleDetailCourse={handleDetailCourse}
-              handleFileCourse={handleFileCourse}
-              handleStartCourse={handleStartCourse}
-              handleEditCourse={handleEditCourse}
-              handleDeleteCourse={handleDeleteCourse}
+              onDeleteCourse={handleDeleteCourse}
+              onEditCourse={handleEditCourse}
+              onStartCourse={handleStartCourse}
+              onDetailCourse={handleDetailCourse}
+              onFileCourse={handleFileCourse}
             />
           </div>
         </div>

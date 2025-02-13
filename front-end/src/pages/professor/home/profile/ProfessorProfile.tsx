@@ -55,32 +55,36 @@ const ProfessorProfile = () => {
   const { openModal, closeModal, Modal } = useModal();
 
   useEffect(() => {
-    professorRepository.getProfessor().then((response) => {
-      setProfile({
-        profileImage: response.profileURL,
-        name: response.name,
-      });
+    async function getProfessor() {
+      try {
+        const response = await professorRepository.getProfessor();
+        setProfile({
+          profileImage: response.profileURL,
+          name: response.name,
+        });
+        userEmail.current = response.email;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-      userEmail.current = response.email;
-    });
+    getProfessor();
   }, []);
 
-  const handleClickEdit = (type: 'profile' | 'name') => {
+  const handleClickEdit = async (type: 'profile' | 'name') => {
     try {
       if (type === 'profile') {
         if (!profile.profileImage) {
           alert('프로필 사진을 선택해 주세요.');
           return;
         }
-        fetch(profile.profileImage)
-          .then((response) => response.blob())
-          .then((blob) => new File([blob], 'profile.jpg', { type: blob.type }))
-          .then((file) => {
-            professorRepository.updateProfessorProfile(file);
-            setIsEdit({ ...isEdit, profile: false });
-          });
+        const response = await fetch(profile.profileImage);
+        const blob = await response.blob();
+        const file = new File([blob], 'profile.jpg', { type: blob.type });
+        await professorRepository.updateProfessorProfile(file);
+        setIsEdit({ ...isEdit, profile: false });
       } else if (type === 'name') {
-        professorRepository.updateProfessorName(profile.name);
+        await professorRepository.updateProfessorName(profile.name);
         setIsEdit({ ...isEdit, name: false });
       }
     } catch (error) {
@@ -130,11 +134,14 @@ const ProfessorProfile = () => {
         message="정말 로그아웃하시겠습니까?"
         description="언제든지 다시 로그인 할 수 있습니다. 로그아웃 하시겠습니까?"
         buttonText="로그아웃 하기"
-        onClickModalButton={() => {
-          authRepository.logout();
-          offModal();
+        onClickModalButton={async () => {
+          try {
+            await authRepository.logout();
+          } catch (error) {
+            console.error(error);
+          }
         }}
-        onClickCloseButton={closeModal}
+        onClickCloseButton={offModal}
       />
     );
     openModal();
@@ -147,11 +154,14 @@ const ProfessorProfile = () => {
         message="정말 탈퇴하시겠습니까?"
         description="모든 데이터가 삭제되며 취소할 수 없습니다. 정말 탈퇴하시겠습니까?"
         buttonText="회원탈퇴하기"
-        onClickModalButton={() => {
-          professorRepository.deleteProfessor();
-          offModal();
+        onClickModalButton={async () => {
+          try {
+            await professorRepository.deleteProfessor();
+          } catch (error) {
+            console.error(error);
+          }
         }}
-        onClickCloseButton={closeModal}
+        onClickCloseButton={offModal}
       />
     );
     openModal();

@@ -7,20 +7,20 @@ import PaginationButton from '../../../../components/button/icon/PaginationButto
 
 type TotalCoursesProps = {
   filteredCourses: CourseMeta[];
-  handleDetailCourse: (courseId: number) => void;
-  handleFileCourse: (courseId: number) => void;
-  handleStartCourse: (courseId: number) => void;
-  handleEditCourse: (courseId: number) => void;
-  handleDeleteCourse: (courseId: number) => void;
+  onDetailCourse: (course: CourseMeta) => void;
+  onFileCourse: (course: CourseMeta) => void;
+  onStartCourse: (course: CourseMeta) => void;
+  onEditCourse: (course: CourseMeta) => void;
+  onDeleteCourse: (course: CourseMeta) => void;
 };
 
 function TotalCourses({
   filteredCourses,
-  handleDetailCourse,
-  handleFileCourse,
-  handleStartCourse,
-  handleEditCourse,
-  handleDeleteCourse,
+  onDetailCourse,
+  onFileCourse,
+  onStartCourse,
+  onEditCourse,
+  onDeleteCourse,
 }: TotalCoursesProps) {
   const { prevPage, nextPage, page, totalPages, PaginationDiv } =
     usePagination();
@@ -38,11 +38,11 @@ function TotalCourses({
                     key={course.id}
                     course={course}
                     size="medium"
-                    onDetailCourse={handleDetailCourse}
-                    onFileCourse={handleFileCourse}
-                    onStartCourse={handleStartCourse}
-                    onEditCourse={handleEditCourse}
-                    onDeleteCourse={handleDeleteCourse}
+                    onDetailCourse={onDetailCourse}
+                    onFileCourse={onFileCourse}
+                    onStartCourse={onStartCourse}
+                    onEditCourse={onEditCourse}
+                    onDeleteCourse={onDeleteCourse}
                   />
                 ))}
               </div>

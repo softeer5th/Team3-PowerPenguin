@@ -42,8 +42,13 @@ const ProfessorHomeLayout = () => {
     }
   };
 
+  const handleClickProfile = () => {
+    navigate('/professor/profile');
+  };
+
   useEffect(() => {
-    professorRepository.getProfessorProfile().then((res) => {
+    async function getProfile() {
+      const res = await professorRepository.getProfessorProfile();
       if (res) {
         const img = new Image();
         img.src = res;
@@ -51,7 +56,9 @@ const ProfessorHomeLayout = () => {
           setProfile(img);
         };
       }
-    });
+    }
+
+    getProfile();
   }, []);
 
   return (
@@ -87,7 +94,7 @@ const ProfessorHomeLayout = () => {
             )}
           </div>
         </div>
-        <button className={S.profile}>
+        <button className={S.profile} onClick={handleClickProfile}>
           {profile ? (
             <img className={S.profileImage} src={profile.src} alt="profile" />
           ) : (

@@ -4,9 +4,14 @@ import Logo from '../../../assets/icons/logo.svg?react';
 import LoginImage from './assets/professor-login.png';
 import Private from './components/Private20250121';
 import useModal from '../../../hooks/useModal';
+import { authRepository } from '../../../di';
 
 const ProfessorLogin = () => {
   const { Modal, openModal, closeModal } = useModal();
+
+  const handleLoginGoogle = async () => {
+    await authRepository.login('google');
+  };
 
   return (
     <>
@@ -33,7 +38,7 @@ const ProfessorLogin = () => {
             </div>
             <h1 className={S.loginText}>간편하게 시작해 보세요</h1>
             <div className={S.buttonContainer}>
-              <GoogleLoginButton />
+              <GoogleLoginButton onClick={handleLoginGoogle} />
             </div>
           </div>
           <div className={S.private}>

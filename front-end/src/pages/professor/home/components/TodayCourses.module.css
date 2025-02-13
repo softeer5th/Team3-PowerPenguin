@@ -1,3 +1,41 @@
+.todayCourse {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 116px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.todayCourse .title {
+  font: var(--web-header3-bold);
+  color: var(--gray-700);
+}
+
+.todayCourse .title > span {
+  color: var(--blue-400);
+}
+
+.noLargeCourse {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 579px;
+  height: 495px;
+  border-radius: var(--large);
+  background-color: rgba(255, 255, 255, 0.5);
+  outline: 1px solid var(--gray-400);
+}
+
+.noLargeCourse > span {
+  font: var(--web-title1-medium);
+  color: var(--gray-700);
+}
+
 .todayCourseList {
   width: 676px;
   height: auto;

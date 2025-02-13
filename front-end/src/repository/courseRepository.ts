@@ -146,6 +146,12 @@ class CourseRepository {
     };
   }
 
+  async getOpenedCourse(): Promise<CourseMeta> {
+    // API: GET /professor/courses/active
+
+    return course1;
+  }
+
   async searchCourses(keyword: string): Promise<CourseMeta[]> {
     // API: GET /professors/courses?keyword={keyword}
 
