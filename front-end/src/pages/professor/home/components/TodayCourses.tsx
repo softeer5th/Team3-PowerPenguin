@@ -55,6 +55,29 @@ function TodayCourses({
     }
   }, [leftTime, todayCourses, largeCourseIndex]);
 
+  const renderCourses = () => {
+    const restCourses = todayCourses
+      .slice(largeCourseIndex + 1)
+      .concat(todayCourses.slice(0, largeCourseIndex));
+    const groups = createCourseGroup(restCourses, 3);
+    return groups.map((group, idx) => (
+      <div key={idx} className={S.courseRow}>
+        {group.map((course) => (
+          <CourseCard
+            key={course.id}
+            course={course}
+            size="small"
+            onDetailCourse={onDetailCourse}
+            onFileCourse={onFileCourse}
+            onStartCourse={onStartCourse}
+            onEditCourse={onEditCourse}
+            onDeleteCourse={onDeleteCourse}
+          />
+        ))}
+      </div>
+    ));
+  };
+
   return (
     <div className={S.todayCourse}>
       <div className={S.left}>
@@ -81,28 +104,7 @@ function TodayCourses({
       <div className={S.todayCourseList}>
         <h2 className={S.title}>{todayString()}</h2>
         <PaginationDiv containerStyle={{ width: '608px' }}>
-          {(() => {
-            const restCourses = todayCourses
-              .slice(largeCourseIndex + 1)
-              .concat(todayCourses.slice(0, largeCourseIndex));
-            const groups = createCourseGroup(restCourses, 3);
-            return groups.map((group, idx) => (
-              <div key={idx} className={S.courseRow}>
-                {group.map((course) => (
-                  <CourseCard
-                    key={course.id}
-                    course={course}
-                    size="small"
-                    onDetailCourse={onDetailCourse}
-                    onFileCourse={onFileCourse}
-                    onStartCourse={onStartCourse}
-                    onEditCourse={onEditCourse}
-                    onDeleteCourse={onDeleteCourse}
-                  />
-                ))}
-              </div>
-            ));
-          })()}
+          {renderCourses()}
         </PaginationDiv>
         <div className={S.todayCourseController}>
           <PaginationButton
