@@ -1,0 +1,105 @@
+.formContainer {
+  width: 100%;
+  max-width: 390px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px 20px 20px;
+  background-color: var(--bg);
+  border-radius: 8px;
+}
+
+.textareaBox {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  overflow: auto;
+  font: var(--mobile-caption1-medium);
+}
+
+.textareaBox::placeholder {
+  font: var(--mobile-caption1-medium);
+  color: var(--gray-400);
+}
+
+.textareaBox::-webkit-scrollbar {
+  display: none;
+}
+
+.formFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.countText {
+  font: var(--mobile-caption2-medium);
+  color: var(--gray-500);
+}
+
+.sendButton {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font: var(--mobile-button2-medium);
+  background-color: var(--blue-400);
+  color: white;
+}
+
+.sendButton:disabled {
+  background-color: var(--gray-300);
+  color: var(--gray-500);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .formContainer {
+    max-width: 652px;
+    height: 216px;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .textareaBox {
+    font: var(--web-body-list18-medium);
+  }
+
+  .textareaBox::placeholder {
+    font: var(--web-body-list18-medium);
+  }
+
+  .countText {
+    font: var(--web-caption4-medium);
+  }
+
+  .sendButton {
+    border-radius: 8px;
+    font: var(--web-button3-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .formContainer {
+    max-width: 908px;
+    height: 282px;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .textareaBox {
+    font: var(--web-body-list20-medium);
+  }
+
+  .textareaBox::placeholder {
+    font: var(--web-body-list20-medium);
+  }
+
+  .countText {
+    font: var(--web-caption2-medium);
+  }
+
+  .sendButton {
+    border-radius: 8px;
+    font: var(--web-button4-bold);
+  }
+}

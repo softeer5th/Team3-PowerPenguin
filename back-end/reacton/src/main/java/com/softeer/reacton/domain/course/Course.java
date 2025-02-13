@@ -3,10 +3,12 @@ package com.softeer.reacton.domain.course;
 import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.domain.course.enums.CourseType;
 import com.softeer.reacton.domain.professor.Professor;
+import com.softeer.reacton.domain.question.Question;
+import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.schedule.Schedule;
+import com.softeer.reacton.global.entity.BaseEntity;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
-import com.softeer.reacton.global.util.TimeUtil;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "course")
 @Entity
-public class Course {
+public class Course extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +44,7 @@ public class Course {
     @Column(nullable = false, length = 20)
     private CourseType type; // 수업 종류 (전공, 교양, 기타)
 
+    @Setter
     @Column(nullable = false, unique = true)
     private int accessCode;
 
@@ -51,7 +54,6 @@ public class Course {
     @Column(length = 512)
     private String fileUrl; // 강의 자료 URL
 
-    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor; // 교수 정보 (외래 키)
@@ -59,6 +61,16 @@ public class Course {
     @Setter
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Schedule> schedules = new ArrayList<>();
+
+    @Setter
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @OrderBy("createdAt ASC")
+    private List<Question> questions = new ArrayList<>();
+
+    @Setter
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @OrderBy("count DESC")
+    private List<Request> requests = new ArrayList<>();
 
     @Builder
     private Course(String name, String courseCode, int capacity, String university, CourseType type, int accessCode, Professor professor) {
@@ -72,19 +84,15 @@ public class Course {
         this.professor = professor;
     }
 
-    public static Course create(CourseRequest request, int accessCode, Professor professor) {
-        Course course = Course.builder()
+    public static Course create(CourseRequest request, Professor professor) {
+        return Course.builder()
                 .name(request.getName())
                 .courseCode(request.getCourseCode())
                 .capacity(request.getCapacity())
                 .university(request.getUniversity())
                 .type(request.getType())
-                .accessCode(accessCode)
                 .professor(professor)
                 .build();
-
-        course.schedules = createScheduleList(request, course);
-        return course;
     }
 
     public void update(CourseRequest request) {
@@ -93,20 +101,6 @@ public class Course {
         this.capacity = request.getCapacity();
         this.university = request.getUniversity();
         this.type = request.getType();
-
-        this.schedules.clear();
-        this.schedules.addAll(createScheduleList(request, this));
-    }
-
-    private static List<Schedule> createScheduleList(CourseRequest request, Course course) {
-        return request.getSchedules().stream()
-                .map(scheduleRequest -> Schedule.builder()
-                        .day(scheduleRequest.getDay())
-                        .startTime(TimeUtil.parseTime(scheduleRequest.getStartTime()))
-                        .endTime(TimeUtil.parseTime(scheduleRequest.getEndTime()))
-                        .course(course)
-                        .build())
-                .toList();
     }
 
     public void activate() {

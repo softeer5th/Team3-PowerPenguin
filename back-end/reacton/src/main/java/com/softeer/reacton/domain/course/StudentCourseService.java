@@ -37,13 +37,13 @@ public class StudentCourseService {
             throw new BaseException(CourseErrorCode.COURSE_NOT_ACTIVE);
         }
 
-        List<CourseScheduleResponse> schedules = getSchedulesByCourseId(course.getId());
+        List<CourseScheduleResponse> schedules = getSchedulesByCourseId(course);
 
         return CourseSummaryResponse.of(course, schedules);
     }
 
-    private List<CourseScheduleResponse> getSchedulesByCourseId(long courseId) {
-        List<Schedule> schedules = scheduleRepository.findSchedulesByCourseId(courseId);
+    private List<CourseScheduleResponse> getSchedulesByCourseId(Course course) {
+        List<Schedule> schedules = scheduleRepository.findSchedulesByCourse(course);
 
         return schedules.stream()
                 .map(schedule -> new CourseScheduleResponse(

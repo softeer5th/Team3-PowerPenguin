@@ -1,0 +1,132 @@
+.messageContainer {
+  display: flex;
+  width: 100%;
+  max-width: 372px;
+  flex-direction: column;
+  align-items: end;
+  gap: 8px;
+}
+
+@keyframes moveOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100vw);
+    opacity: 0;
+  }
+}
+
+.active {
+  animation: moveOut 0.5s ease-in-out forwards;
+}
+
+.messageBox {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 16px;
+  background-color: var(--bg);
+  border-radius: 20px 0 20px 20px;
+}
+
+.messageContent {
+  align-self: start;
+  word-break: break-word;
+  font: var(--mobile-caption1-medium);
+  color: var(--gray-900);
+  flex: 1;
+}
+
+.buttonSvg {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background-color: var(--blue-200);
+  border: 1px solid white;
+  transition: background-color 0.2s ease-in;
+}
+
+.checkButton {
+  background-color: var(--blue-400);
+  pointer-events: none;
+}
+
+.checkSvg {
+  width: 13px;
+  height: 9px;
+  color: white;
+}
+
+.time {
+  font: var(--mobile-caption3-regular);
+  color: var(--gray-700);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .messageContainer {
+    max-width: 596px;
+    gap: 12px;
+  }
+
+  .messageBox {
+    padding: 16px;
+    border-radius: 20px 0 20px 20px;
+  }
+
+  .messageContent {
+    font: var(--web-body-list18-medium);
+  }
+
+  .buttonSvg {
+    width: 36px;
+    height: 36px;
+    border-radius: 20px;
+  }
+
+  .checkSvg {
+    width: 16px;
+    height: 11px;
+  }
+
+  .time {
+    font: var(--web-caption4-medium);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .messageContainer {
+    min-width: 676px;
+    min-height: 134px;
+    gap: 12px;
+  }
+
+  .messageBox {
+    gap: 16px;
+  }
+
+  .messageContent {
+    font: var(--web-body-list18-medium);
+  }
+
+  .buttonSvg {
+    width: 36px;
+    height: 36px;
+    border-radius: 20px;
+  }
+
+  .checkSvg {
+    width: 16px;
+    height: 11px;
+  }
+
+  .time {
+    font: var(--web-caption4-medium);
+    color: var(--gray-700);
+  }
+}

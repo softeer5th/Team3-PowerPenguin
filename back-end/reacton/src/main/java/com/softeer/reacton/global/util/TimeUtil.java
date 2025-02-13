@@ -4,13 +4,25 @@ import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.TimeUtilErrorCode;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Map;
 
 @Slf4j
 public class TimeUtil {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    private static final Map<DayOfWeek, String> DAYMAPPER = Map.of(
+            DayOfWeek.MONDAY, "월",
+            DayOfWeek.TUESDAY, "화",
+            DayOfWeek.WEDNESDAY, "수",
+            DayOfWeek.THURSDAY, "목",
+            DayOfWeek.FRIDAY, "금",
+            DayOfWeek.SATURDAY, "토",
+            DayOfWeek.SUNDAY, "일"
+    );
 
     public static LocalTime parseTime(String time) {
         if (time == null || time.isBlank()) {
@@ -37,5 +49,10 @@ public class TimeUtil {
         LocalTime start = parseTime(startTime);
         LocalTime end = parseTime(endTime);
         return end.isAfter(start);
+    }
+
+    public static String getCurrentDay() {
+        DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
+        return DAYMAPPER.get(dayOfWeek);
     }
 }
