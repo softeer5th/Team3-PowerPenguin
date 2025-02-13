@@ -50,7 +50,7 @@ const FileUploadPopupModal = ({
               className={S.deleteButton}
               onClick={() => {
                 setFile(null);
-                fileInputRef.current!.value = '';
+                if (fileInputRef.current) fileInputRef.current.value = '';
               }}
             >
               <CloseIcon width="1rem" height="1rem" color="white" />

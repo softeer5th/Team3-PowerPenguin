@@ -61,7 +61,7 @@ function TodayCourses({
         <h1 className={S.title}>
           오늘 수업은 <span>{todayCourses.length}개</span> 있어요!
         </h1>
-        {largeCourseIndex < todayCourses.length - 1 ? (
+        {largeCourseIndex < todayCourses.length ? (
           <CourseCard
             course={todayCourses[largeCourseIndex]}
             size="large"
