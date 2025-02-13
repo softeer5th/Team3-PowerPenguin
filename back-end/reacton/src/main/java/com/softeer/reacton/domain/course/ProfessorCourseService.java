@@ -4,7 +4,9 @@ import com.softeer.reacton.domain.course.dto.*;
 import com.softeer.reacton.domain.professor.Professor;
 import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.domain.question.Question;
+import com.softeer.reacton.domain.question.QuestionRepository;
 import com.softeer.reacton.domain.request.Request;
+import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
@@ -31,6 +33,8 @@ public class ProfessorCourseService {
     private final ProfessorRepository professorRepository;
     private final CourseRepository courseRepository;
     private final ScheduleRepository scheduleRepository;
+    private final QuestionRepository questionRepository;
+    private final RequestRepository requestRepository;
     private final ProfessorCourseTransactionService professorCourseTransactionService;
 
     private static final int MAX_RETRIES = 10;
@@ -108,6 +112,9 @@ public class ProfessorCourseService {
 
         Course course = getCourseByProfessor(oauthId, courseId);
 
+        scheduleRepository.deleteAllByCourse(course);
+        questionRepository.deleteAllByCourse(course);
+        requestRepository.deleteAllByCourse(course);
         courseRepository.delete(course);
         courseRepository.flush();
 
