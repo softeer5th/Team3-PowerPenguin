@@ -215,7 +215,7 @@ public class ProfessorController {
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.SET_COOKIE, "/")
+                .header(HttpHeaders.LOCATION, "/")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
