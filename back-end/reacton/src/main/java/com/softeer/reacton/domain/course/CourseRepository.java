@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 import java.util.Optional;
-import java.util.List;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
@@ -34,4 +33,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Object> findByProfessor(Professor professor);
 
     void deleteByProfessor(Professor professor);
+
+    Optional<Course> findByProfessorAndIsActiveTrue(Professor professor);
 }

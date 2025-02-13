@@ -21,9 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,6 +37,16 @@ public class ProfessorCourseService {
 
     private static final int MAX_RETRIES = 10;
     private final SecureRandom secureRandom = new SecureRandom();
+
+    public Map<String, String> getActiveCourseByUser(String oauthId) {
+        log.debug("활성화된 수업을 조회합니다.");
+        Professor professor = professorRepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
+
+        return courseRepository.findByProfessorAndIsActiveTrue(professor)
+                .map(course -> Map.of("courseId", course.getId().toString()))
+                .orElse(Collections.emptyMap());
+    }
 
     public long createCourse(String oauthId, CourseRequest request) {
         log.debug("수업을 생성합니다.");
@@ -284,6 +292,5 @@ public class ProfessorCourseService {
     private int generateUniqueAccessCode() {
         return 100000 + secureRandom.nextInt(1000000); // 100000~999999
     }
-
 }
 

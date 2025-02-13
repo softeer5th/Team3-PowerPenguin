@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,31 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProfessorCourseController {
     private final ProfessorCourseService professorCourseService;
+
+    @GetMapping("/active")
+    @Operation(
+            summary = "활성화된 수업 조회",
+            description = "활성화된 수업을 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "활성화된 수업이 존재합니다."),
+                    @ApiResponse(responseCode = "303", description = "활성화된 수업이 없습니다. 홈 화면으로 이동합니다.")
+            }
+    )
+    public ResponseEntity<?> getActiveCourses(HttpServletRequest request) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        Map<String, String> activeCourse = professorCourseService.getActiveCourseByUser(oauthId);
+
+        if (!activeCourse.isEmpty()) {
+            log.debug("활성화된 수업이 존재합니다. : courseId = {}", activeCourse.get("courseId"));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(SuccessResponse.of("활성화된 수업이 존재합니다.", activeCourse));
+        } else {
+            log.debug("활성화된 수업이 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                    .header(HttpHeaders.LOCATION, "/professor")
+                    .build();
+        }
+    }
 
     @PostMapping
     @Operation(
