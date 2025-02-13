@@ -46,7 +46,13 @@ const FileUploadPopupModal = ({
               {file.name}{' '}
               <p className={S.fileSize}>({Math.floor(file.size / 1000)}K)</p>
             </span>
-            <button className={S.deleteButton} onClick={() => setFile(null)}>
+            <button
+              className={S.deleteButton}
+              onClick={() => {
+                setFile(null);
+                fileInputRef.current!.value = '';
+              }}
+            >
               <CloseIcon width="1rem" height="1rem" color="white" />
             </button>
           </div>

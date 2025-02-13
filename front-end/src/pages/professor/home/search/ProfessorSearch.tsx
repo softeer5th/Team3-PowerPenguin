@@ -7,7 +7,7 @@ import { CourseDay, CourseType } from '../../../../utils/util';
 import FilterDropDown from '../components/FilterDropDown';
 import TotalCourses from '../components/TotalCourses';
 import useModal from '../../../../hooks/useModal';
-import courseActions from '../../../../utils/courseAction';
+import useCourseActions from '../../../../hooks/useCourseAction';
 
 const ProfessorSearch = () => {
   const [courses, setCourses] = useState<CourseMeta[]>([]);
@@ -21,7 +21,7 @@ const ProfessorSearch = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = courseActions({ courses, setModal, openModal, closeModal });
+  } = useCourseActions({ setModal, openModal, closeModal });
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') || '';
   const navigate = useNavigate();
@@ -71,11 +71,11 @@ const ProfessorSearch = () => {
             </div>
             <TotalCourses
               filteredCourses={filteredCourses}
-              handleDetailCourse={handleDetailCourse}
-              handleDeleteCourse={handleDeleteCourse}
-              handleEditCourse={handleEditCourse}
-              handleFileCourse={handleFileCourse}
-              handleStartCourse={handleStartCourse}
+              onDetailCourse={handleDetailCourse}
+              onDeleteCourse={handleDeleteCourse}
+              onEditCourse={handleEditCourse}
+              onFileCourse={handleFileCourse}
+              onStartCourse={handleStartCourse}
             />
           </div>
         </div>

@@ -1,17 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { CourseMeta } from '../core/model';
 import AlertModal from '../components/modal/AlertModal';
 import CourseModal from '../pages/professor/home/modal/CourseModal';
 import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
+import ClassStartModal from '../components/modal/ClassStartModal';
+import { courseRepository } from '../di';
 
 type UseCourseActionsProps = {
-  courses: CourseMeta[];
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>;
   openModal: () => void;
   closeModal: () => void;
 };
 
 const fileSuccessModal = (
+  courseId: string,
   file: File,
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
   offModal: () => void
@@ -24,16 +27,20 @@ const fileSuccessModal = (
       onClickCloseButton={() => {
         offModal();
       }}
-      onClickModalButton={() => {
-        offModal();
-        console.log('Save file:', file);
+      onClickModalButton={async () => {
+        try {
+          offModal();
+          console.log('Save file:', file);
+          await courseRepository.uploadCourseFile(courseId, file);
+        } catch (error) {
+          console.error('Failed to upload file:', error);
+        }
       }}
     />
   );
 };
 
-const courseActions = ({
-  courses,
+const useCourseActions = ({
   setModal,
   openModal,
   closeModal,
@@ -42,8 +49,9 @@ const courseActions = ({
     setModal(null);
     closeModal();
   };
+  const navigate = useNavigate();
 
-  const handleDeleteCourse = (courseId: number) => {
+  const handleDeleteCourse = (course: CourseMeta) => {
     setModal(
       <AlertModal
         type="caution"
@@ -53,44 +61,69 @@ const courseActions = ({
         onClickCloseButton={() => {
           offModal();
         }}
-        onClickModalButton={() => {
-          console.log('Delete course:', courseId);
-          offModal();
+        onClickModalButton={async () => {
+          try {
+            console.log('Delete course:', course.id);
+            offModal();
+            await courseRepository.deleteCourse(course.id);
+          } catch (error) {
+            console.error('Failed to delete course:', error);
+          }
         }}
       />
     );
     openModal();
   };
 
-  const handleEditCourse = (courseId: number) => {
-    console.log('Edit course:', courseId);
+  const handleEditCourse = (course: CourseMeta) => {
+    console.log('Edit course:', course.id);
     setModal(
       <CourseModal
-        course={courses.find((course) => course.id === courseId)}
+        course={course}
         onClose={() => {
           offModal();
         }}
-        onSubmit={(course) => {
-          console.log('Submit course:', course);
-          offModal();
+        onSubmit={async (course) => {
+          try {
+            console.log('Submit course:', course);
+            offModal();
+            await courseRepository.updateCourse(course);
+          } catch (error) {
+            console.error('Failed to update course:', error);
+          }
         }}
       />
     );
     openModal();
   };
 
-  const handleStartCourse = (courseId: number) => {
-    console.log('Start course:', courseId);
+  const handleStartCourse = (course: CourseMeta) => {
+    if (!course) {
+      return;
+    }
+    setModal(
+      <ClassStartModal
+        course={course}
+        handleClickBackButton={offModal}
+        handleClickStartButton={() => {
+          console.log('Start course:', course.id);
+          offModal();
+          navigate(`/professor/course/${course.id}/classroom`);
+        }}
+      />
+    );
+    openModal();
   };
 
-  const handleDetailCourse = (courseId: number) => {
-    console.log('Detail course:', courseId);
+  const handleDetailCourse = (course: CourseMeta) => {
+    console.log('Detail course:', course.id);
+
+    navigate(`/professor/course/${course.id}`);
   };
 
-  const handleFileCourse = (courseId: number) => {
-    console.log('File course:', courseId);
+  const handleFileCourse = (course: CourseMeta) => {
+    console.log('File course:', course.id);
 
-    const course = courses.find((course) => course.id === courseId);
     const handleFileSave = (file: File) => {
       if (course?.fileURL) {
         setModal(
@@ -100,7 +133,7 @@ const courseActions = ({
             description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
             buttonText="새 파일 저장"
             onClickModalButton={() => {
-              fileSuccessModal(file, setModal, offModal);
+              fileSuccessModal(course.id.toString(), file, setModal, offModal);
             }}
             onClickCloseButton={() => {
               offModal();
@@ -108,7 +141,7 @@ const courseActions = ({
           />
         );
       } else {
-        fileSuccessModal(file, setModal, offModal);
+        fileSuccessModal(course.id.toString(), file, setModal, offModal);
       }
     };
 
@@ -125,29 +158,13 @@ const courseActions = ({
     openModal();
   };
 
-  const handleAddCourse = () => {
-    console.log('Add course');
-    setModal(
-      <CourseModal
-        onClose={() => {
-          offModal();
-        }}
-        onSubmit={(course) => {
-          console.log('Submit course:', course);
-        }}
-      />
-    );
-    openModal();
-  };
-
   return {
     handleDeleteCourse,
     handleEditCourse,
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-    handleAddCourse,
   };
 };
 
-export default courseActions;
+export default useCourseActions;

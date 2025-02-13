@@ -4,6 +4,14 @@ import { createTargetDate, getDayString, TimeType } from '../utils/util';
 
 const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
   const computeLeftTime = useCallback(() => {
+    if (!scheduleList) {
+      return {
+        hour: 0,
+        minute: 0,
+        second: 0,
+      };
+    }
+
     const now = new Date();
     const currentSchedule = scheduleList.find(
       (schedule) => schedule.day === getDayString(now.getDay())
@@ -27,6 +35,15 @@ const useCountdown = (scheduleList: CourseMeta['schedule']): TimeType => {
   const [leftTime, setLeftTime] = useState<TimeType>(computeLeftTime());
 
   useEffect(() => {
+    if (!scheduleList) {
+      setLeftTime({
+        hour: 0,
+        minute: 0,
+        second: 0,
+      });
+      return;
+    }
+
     const interval = setInterval(() => {
       const now = new Date();
       const currentSchedule = scheduleList.find(

@@ -29,7 +29,7 @@ const FilterDropDown = ({ title, options, setTitle }: FilterDropDownProps) => {
       >
         <div className={S.filterDropDown}>
           <div className={S.filterDropDownTitle}>
-            <span>{isOpen ? initialTitleRef.current : title}</span>
+            <span>{title}</span>
             <BottomVector className={S.filterDropDownIcon} />
           </div>
           {isOpen && (
@@ -37,6 +37,19 @@ const FilterDropDown = ({ title, options, setTitle }: FilterDropDownProps) => {
               className={S.filterDropDownContent}
               onMouseDown={(e) => e.preventDefault()}
             >
+              {title !== initialTitleRef.current && (
+                <div
+                  key="all"
+                  className={S.filterDropDownOption}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTitle(initialTitleRef.current);
+                    setIsOpen(false);
+                  }}
+                >
+                  전체
+                </div>
+              )}
               {options.map((option) => (
                 <div
                   key={option}

@@ -65,12 +65,13 @@ export type TimeType = {
   second: number;
 };
 
-export const formatTime = ({ hour, minute, second }: TimeType) => {
-  if (hour < 0) return '00 : 00 : 00';
-  if (minute < 0) return '00 : 00 : 00';
-  if (second < 0) return '00 : 00 : 00';
+export const formatTime = (time?: TimeType) => {
+  if (!time) return '00 : 00 : 00';
+  if (time.hour < 0) return '00 : 00 : 00';
+  if (time.minute < 0) return '00 : 00 : 00';
+  if (time.second < 0) return '00 : 00 : 00';
 
-  return `${hour.toString().padStart(2, '0')} : ${minute.toString().padStart(2, '0')} : ${second
+  return `${time.hour.toString().padStart(2, '0')} : ${time.minute.toString().padStart(2, '0')} : ${time.second
     .toString()
     .padStart(2, '0')}`;
 };

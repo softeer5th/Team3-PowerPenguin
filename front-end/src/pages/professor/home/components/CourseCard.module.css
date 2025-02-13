@@ -91,7 +91,7 @@
   display: flex;
   flex-direction: column;
   margin: 34px;
-  gap: 44px;
+  height: 278px;
 }
 
 .medium .info {
@@ -139,14 +139,16 @@
 }
 
 .medium .metaText {
-  font: var(--web-body3-medium);
+  font: var(--web-body2-medium);
   color: var(--gray-500);
+  white-space: break-word;
 }
 
 .medium .buttonContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
 }
 
 .medium .subButton {
@@ -237,7 +239,7 @@
   display: flex;
   flex-direction: column;
   margin: 42px;
-  gap: 56px;
+  height: 344px;
 }
 
 .large .info {
@@ -304,7 +306,7 @@
 }
 
 .large .metaText {
-  font: var(--web-body2-medium);
+  font: var(--web-body1-medium);
   color: var(--gray-500);
 }
 
@@ -313,6 +315,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 15px;
+  margin-top: auto;
 }
 
 .large .subButton {
