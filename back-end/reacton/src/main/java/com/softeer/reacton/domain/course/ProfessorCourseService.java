@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,8 +87,17 @@ public class ProfessorCourseService {
         }
 
         Course course = getCourseByProfessor(oauthId, courseId);
-
         course.update(request);
+
+        List<CourseRequest.ScheduleRequest> scheduleRequests = request.getSchedules();
+        scheduleRepository.deleteAllByCourse(course);
+        course.getSchedules().clear(); // 영속성 컨텍스트에서도 제거
+
+        List<Schedule> newSchedules = scheduleRequests.stream()
+                .map(scheduleRequest -> Schedule.create(scheduleRequest, course))
+                .collect(Collectors.toList());
+        scheduleRepository.saveAll(newSchedules);
+        course.setSchedules(newSchedules);
 
         log.info("수업 업데이트가 완료되었습니다. : courseId = {}", courseId);
     }

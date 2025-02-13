@@ -21,4 +21,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findSchedulesByCourse(Course course);
 
     void deleteByCourse(Course course);
+
+    void deleteAllByCourse(Course course);
 }
