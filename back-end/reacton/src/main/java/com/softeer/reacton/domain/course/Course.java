@@ -48,6 +48,7 @@ public class Course extends BaseEntity {
     @Column(nullable = false, unique = true)
     private int accessCode;
 
+    @Getter
     @Column(nullable = false)
     private boolean isActive;
 
