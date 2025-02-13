@@ -45,7 +45,11 @@ public class ProfessorCourseService {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        return saveCourseWithRetry(request, professor);
+        Course course = Course.create(request, professor);
+        List<Schedule> schedules = createSchedules(request, course);
+        course.setSchedules(schedules);
+
+        return generateAccessCodeAndSave(course);
     }
 
     public CourseDetailResponse getCourseDetail(long courseId, String oauthId) {
@@ -234,13 +238,24 @@ public class ProfessorCourseService {
                 .collect(Collectors.toList());
     }
 
-    private long saveCourseWithRetry(CourseRequest request, Professor professor) {
+    private List<Schedule> createSchedules(CourseRequest request, Course course) {
+        List<Schedule> schedules = new ArrayList<>();
+        for (CourseRequest.ScheduleRequest scheduleRequest : request.getSchedules()) {
+            Schedule schedule = Schedule.create(scheduleRequest, course);
+            schedules.add(schedule);
+        }
+        return schedules;
+    }
+
+    private long generateAccessCodeAndSave(Course course) {
         for (int i = 0; i < MAX_RETRIES; i++) {
             int accessCode = generateUniqueAccessCode();
             log.debug("입장 코드 생성 시도 {}회 - {}", i + 1, accessCode);
 
+            course.setAccessCode(accessCode);
+
             try {
-                return professorCourseTransactionService.saveCourse(request, professor, accessCode);
+                return professorCourseTransactionService.saveCourse(course);
             } catch (DataIntegrityViolationException e) {
                 log.warn("입장 코드 중복으로 인해 저장 실패 - 재시도 {}회: {}", i + 1, accessCode);
             }

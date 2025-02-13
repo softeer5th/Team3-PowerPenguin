@@ -9,7 +9,6 @@ import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.global.entity.BaseEntity;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
-import com.softeer.reacton.global.util.TimeUtil;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +44,7 @@ public class Course extends BaseEntity {
     @Column(nullable = false, length = 20)
     private CourseType type; // 수업 종류 (전공, 교양, 기타)
 
+    @Setter
     @Column(nullable = false, unique = true)
     private int accessCode;
 
@@ -84,19 +84,15 @@ public class Course extends BaseEntity {
         this.professor = professor;
     }
 
-    public static Course create(CourseRequest request, int accessCode, Professor professor) {
-        Course course = Course.builder()
+    public static Course create(CourseRequest request, Professor professor) {
+        return Course.builder()
                 .name(request.getName())
                 .courseCode(request.getCourseCode())
                 .capacity(request.getCapacity())
                 .university(request.getUniversity())
                 .type(request.getType())
-                .accessCode(accessCode)
                 .professor(professor)
                 .build();
-
-        course.schedules = createScheduleList(request, course);
-        return course;
     }
 
     public void update(CourseRequest request) {
@@ -105,20 +101,6 @@ public class Course extends BaseEntity {
         this.capacity = request.getCapacity();
         this.university = request.getUniversity();
         this.type = request.getType();
-
-        this.schedules.clear();
-        this.schedules.addAll(createScheduleList(request, this));
-    }
-
-    private static List<Schedule> createScheduleList(CourseRequest request, Course course) {
-        return request.getSchedules().stream()
-                .map(scheduleRequest -> Schedule.builder()
-                        .day(scheduleRequest.getDay())
-                        .startTime(TimeUtil.parseTime(scheduleRequest.getStartTime()))
-                        .endTime(TimeUtil.parseTime(scheduleRequest.getEndTime()))
-                        .course(course)
-                        .build())
-                .toList();
     }
 
     public void activate() {
