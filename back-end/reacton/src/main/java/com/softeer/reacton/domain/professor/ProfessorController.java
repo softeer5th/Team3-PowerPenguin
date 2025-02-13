@@ -159,13 +159,12 @@ public class ProfessorController {
                 .sameSite("Strict")
                 .build();
 
-        // TODO : 프론트 리다이렉트 코드 추가 예정
-
         log.debug("회원가입에 성공했습니다 : name = {}", name);
         log.info("회원가입에 성공했습니다.");
 
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.SEE_OTHER)
+                .header(HttpHeaders.LOCATION, "/professor")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
