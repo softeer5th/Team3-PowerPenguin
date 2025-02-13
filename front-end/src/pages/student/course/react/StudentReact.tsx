@@ -1,15 +1,15 @@
 import S from './StudentReact.module.css';
-import OkaySvg from '../../../../assets/icons/okay-emoji.svg?react';
-import ClapSvg from '../../../../assets/icons/clap-emoji.svg?react';
-import ThumbUpSvg from '../../../../assets/icons/thumb-up-emoji.svg?react';
-import HeartSvg from '../../../../assets/icons/heart-emoji.svg?react';
-import CrySvg from '../../../../assets/icons/cry-emoji.svg?react';
-import ScreamSvg from '../../../../assets/icons/scream-emoji.svg?react';
+import OkaySvg from '@/assets/icons/okay-emoji.svg?react';
+import ClapSvg from '@/assets/icons/clap-emoji.svg?react';
+import ThumbUpSvg from '@/assets/icons/thumb-up-emoji.svg?react';
+import HeartSvg from '@/assets/icons/heart-emoji.svg?react';
+import CrySvg from '@/assets/icons/cry-emoji.svg?react';
+import ScreamSvg from '@/assets/icons/scream-emoji.svg?react';
 import SuccessPopup from '../components/SuccessPopup';
 import { useState } from 'react';
 import ReactCard from './components/ReactCard';
-import { classroomRepository } from '../../../../di';
-import { Reaction } from '../../../../core/model';
+import { classroomRepository } from '@/di';
+import { Reaction } from '@/core/model';
 
 const CARD_List = [
   { type: 'okay', icon: OkaySvg },

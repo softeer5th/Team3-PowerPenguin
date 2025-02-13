@@ -1,6 +1,6 @@
 import S from './PopupModal.module.css';
-import LoadingIcon from '../../assets/icons/loading.svg?react';
-import WarningIcon from '../../assets/icons/warning.svg?react';
+import LoadingIcon from '@/assets/icons/loading.svg?react';
+import WarningIcon from '@/assets/icons/warning.svg?react';
 
 type PopupModalProps = {
   type: 'loading' | 'caution';

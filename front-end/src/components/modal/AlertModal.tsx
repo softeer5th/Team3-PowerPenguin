@@ -1,9 +1,9 @@
 import S from './AlertModal.module.css';
 import TextButton from '../button/text/TextButton';
-import CloseIcon from '../../assets/icons/close.svg?react';
-import WarningIcon from '../../assets/icons/warning.svg?react';
-import CheckIcon from '../../assets/icons/modal-check.svg?react';
-import QuestionIcon from '../../assets/icons/question-mark.svg?react';
+import CloseIcon from '@/assets/icons/close.svg?react';
+import WarningIcon from '@/assets/icons/warning.svg?react';
+import CheckIcon from '@/assets/icons/modal-check.svg?react';
+import QuestionIcon from '@/assets/icons/question-mark.svg?react';
 
 type AlertModalProps = {
   type: 'caution' | 'success' | 'ask';

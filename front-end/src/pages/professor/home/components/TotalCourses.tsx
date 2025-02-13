@@ -1,9 +1,9 @@
-import { CourseMeta } from '../../../../core/model';
+import { CourseMeta } from '@/core/model';
 import S from './TotalCourses.module.css';
-import usePagination from '../../../../hooks/usePagination';
-import { createCourseGroup } from '../../../../utils/util';
+import usePagination from '@/hooks/usePagination';
+import { createCourseGroup } from '@/utils/util';
 import CourseCard from './CourseCard';
-import PaginationButton from '../../../../components/button/icon/PaginationButton';
+import PaginationButton from '@/components/button/icon/PaginationButton';
 
 type TotalCoursesProps = {
   filteredCourses: CourseMeta[];

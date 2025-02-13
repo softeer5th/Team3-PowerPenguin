@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import S from './ProfessorSearch.module.css';
-import { CourseMeta } from '../../../../core/model';
-import { courseRepository } from '../../../../di';
-import { CourseDay, CourseType } from '../../../../utils/util';
+import { CourseMeta } from '@/core/model';
+import { courseRepository } from '@/di';
+import { CourseDay, CourseType } from '@/utils/util';
 import FilterDropDown from '../components/FilterDropDown';
 import TotalCourses from '../components/TotalCourses';
-import useModal from '../../../../hooks/useModal';
-import useCourseActions from '../../../../hooks/useCourseAction';
+import useModal from '@/hooks/useModal';
+import useCourseActions from '@/hooks/useCourseAction';
 
 const ProfessorSearch = () => {
   const [courses, setCourses] = useState<CourseMeta[]>([]);

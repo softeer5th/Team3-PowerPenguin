@@ -1,4 +1,4 @@
-import BackIcon from '../../../assets/icons/arrow-back.svg?react';
+import BackIcon from '@/assets/icons/arrow-back.svg?react';
 import S from './CircleBackButton.module.css';
 
 type CircleBackButtonProps = {

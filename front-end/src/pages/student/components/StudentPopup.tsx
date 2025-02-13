@@ -1,6 +1,6 @@
 import S from './StudentPopup.module.css';
-import CloseSvg from '../../../assets/icons/close.svg?react';
-import WarnSvg from '../../../assets/icons/warning.svg?react';
+import CloseSvg from '@/assets/icons/close.svg?react';
+import WarnSvg from '@/assets/icons/warning.svg?react';
 type StudentPopupProps = {
   title: string;
   content: string;

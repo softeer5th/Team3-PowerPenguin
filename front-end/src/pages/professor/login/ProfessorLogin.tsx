@@ -1,10 +1,10 @@
 import GoogleLoginButton from './components/GoogleLoginButton';
 import S from './ProfessorLogin.module.css';
-import Logo from '../../../assets/icons/logo.svg?react';
+import Logo from '@/assets/icons/logo.svg?react';
 import LoginImage from './assets/professor-login.png';
 import Private from './components/Private20250121';
-import useModal from '../../../hooks/useModal';
-import { authRepository } from '../../../di';
+import useModal from '@/hooks/useModal';
+import { authRepository } from '@/di';
 
 const ProfessorLogin = () => {
   const { Modal, openModal, closeModal } = useModal();

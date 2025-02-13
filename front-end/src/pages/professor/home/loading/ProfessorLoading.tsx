@@ -1,9 +1,9 @@
 import S from './ProfessorLoading.module.css';
-import LoadingIcon from '../../../../assets/icons/loading.svg?react';
-import useModal from '../../../../hooks/useModal';
+import LoadingIcon from '@/assets/icons/loading.svg?react';
+import useModal from '@/hooks/useModal';
 import React, { useEffect, useState } from 'react';
-import { courseRepository } from '../../../../di';
-import ClassStartModal from '../../../../components/modal/ClassStartModal';
+import { courseRepository } from '@/di';
+import ClassStartModal from '@/components/modal/ClassStartModal';
 
 const ProfessorLoading = () => {
   const { openModal, closeModal, Modal } = useModal();

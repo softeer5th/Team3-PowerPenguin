@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import S from './FilterDropDown.module.css';
-import BottomVector from '../../../../assets/icons/bottom-vector.svg?react';
+import BottomVector from '@/assets/icons/bottom-vector.svg?react';
 
 type FilterDropDownProps = {
   title: string;

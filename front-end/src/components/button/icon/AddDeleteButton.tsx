@@ -1,5 +1,5 @@
-import PlusIcon from '../../../assets/icons/plus.svg?react';
-import MinusIcon from '../../../assets/icons/minus.svg?react';
+import PlusIcon from '@/assets/icons/plus.svg?react';
+import MinusIcon from '@/assets/icons/minus.svg?react';
 import S from './AddDeleteButton.module.css';
 
 type AddDeleteButtonProps = {

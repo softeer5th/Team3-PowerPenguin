@@ -1,19 +1,19 @@
 import { useState, useCallback } from 'react';
 import S from './CourseCard.module.css';
-import { CourseMeta } from '../../../../core/model';
-import CategoryChip from '../../../../components/chip/CategoryChip';
-import BarChartIcon from '../../../../assets/icons/barchart.svg?react';
-import ClipIcon from '../../../../assets/icons/clip.svg?react';
-import ClockIcon from '../../../../assets/icons/clock.svg?react';
-import PeopleIcon from '../../../../assets/icons/people.svg?react';
-import TextButton from '../../../../components/button/text/TextButton';
+import { CourseMeta } from '@/core/model';
+import CategoryChip from '@/components/chip/CategoryChip';
+import BarChartIcon from '@/assets/icons/barchart.svg?react';
+import ClipIcon from '@/assets/icons/clip.svg?react';
+import ClockIcon from '@/assets/icons/clock.svg?react';
+import PeopleIcon from '@/assets/icons/people.svg?react';
+import TextButton from '@/components/button/text/TextButton';
 import {
   getDayString,
   formatTime,
   isSoon,
   getCourseColor,
   TimeType,
-} from '../../../../utils/util';
+} from '@/utils/util';
 import MeatBallMenu from './MeatBallMenu';
 
 type CourseCardProps = {

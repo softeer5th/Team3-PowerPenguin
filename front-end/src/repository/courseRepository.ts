@@ -7,7 +7,7 @@ import {
   RequestQuestion,
   RequestSize,
   RequestSound,
-} from '../core/model';
+} from '@/core/model';
 
 // Mock data
 const course1: CourseMeta = {

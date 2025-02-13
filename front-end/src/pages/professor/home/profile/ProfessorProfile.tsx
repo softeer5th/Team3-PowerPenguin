@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import S from './ProfessorProfile.module.css';
-import { authRepository, professorRepository } from '../../../../di';
-import BasicProfile from '../../../../assets/icons/basic-profile.svg?react';
-import TextButton from '../../../../components/button/text/TextButton';
-import { validateImage } from '../../../../utils/util';
-import useModal from '../../../../hooks/useModal';
-import AlertModal from '../../../../components/modal/AlertModal';
+import { authRepository, professorRepository } from '@/di';
+import BasicProfile from '@/assets/icons/basic-profile.svg?react';
+import TextButton from '@/components/button/text/TextButton';
+import { validateImage } from '@/utils/util';
+import useModal from '@/hooks/useModal';
+import AlertModal from '@/components/modal/AlertModal';
 
 const createEditButton = ({
   onEdit,

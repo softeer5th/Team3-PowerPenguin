@@ -1,15 +1,15 @@
 import S from './ProfessorHome.module.css';
-import { courseRepository } from '../../../di';
+import { courseRepository } from '@/di';
 import { ReactNode, useEffect, useState } from 'react';
-import { CourseMeta } from '../../../core/model';
-import RocketIcon from '../../../assets/icons/rocket.svg?react';
-import CircleAddButton from '../../../components/button/icon/CircleAddButton';
-import useModal from '../../../hooks/useModal';
+import { CourseMeta } from '@/core/model';
+import RocketIcon from '@/assets/icons/rocket.svg?react';
+import CircleAddButton from '@/components/button/icon/CircleAddButton';
+import useModal from '@/hooks/useModal';
 import TodayCourses from './components/TodayCourses';
 import TotalCourses from './components/TotalCourses';
 import FilterDropDown from './components/FilterDropDown';
-import { CourseDay, CourseType } from '../../../utils/util';
-import useCourseActions from '../../../hooks/useCourseAction';
+import { CourseDay, CourseType } from '@/utils/util';
+import useCourseActions from '@/hooks/useCourseAction';
 import CourseModal from './modal/CourseModal';
 
 const ProfessorHome = () => {

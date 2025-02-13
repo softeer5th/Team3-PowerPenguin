@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import S from './ReactCard.module.css';
-import useBlockTimer from '../../../../../hooks/useBlockTimer';
+import useBlockTimer from '@/hooks/useBlockTimer';
 
 type ReactCardProps = {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;

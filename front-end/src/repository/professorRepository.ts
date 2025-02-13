@@ -1,4 +1,4 @@
-import { Professor } from '../core/model';
+import { Professor } from '@/core/model';
 
 class ProfessorRepository {
   /**

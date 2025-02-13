@@ -1,5 +1,5 @@
-import PrevIcon from '../../../assets/icons/back-vector.svg?react';
-import NextIcon from '../../../assets/icons/next-vector.svg?react';
+import PrevIcon from '@/assets/icons/back-vector.svg?react';
+import NextIcon from '@/assets/icons/next-vector.svg?react';
 import S from './PaginationButton.module.css';
 
 type PaginationButtonProps = {

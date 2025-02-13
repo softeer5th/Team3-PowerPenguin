@@ -1,7 +1,7 @@
 import S from './StudentHome.module.css';
-import Logo from '../../../assets/icons/logo.svg?react';
+import Logo from '@/assets/icons/logo.svg?react';
 import { useState } from 'react';
-import useModal from '../../../hooks/useModal';
+import useModal from '@/hooks/useModal';
 import ClassModal from './components/ClassModal';
 import StudentPopup from '../components/StudentPopup';
 import { useNavigate } from 'react-router';

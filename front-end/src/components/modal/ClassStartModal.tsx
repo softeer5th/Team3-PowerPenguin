@@ -1,7 +1,7 @@
 import S from './ClassStartModal.module.css';
-import { CourseMeta } from '../../core/model';
-import ClockIcon from '../../assets/icons/clock.svg?react';
-import PeopleIcon from '../../assets/icons/people.svg?react';
+import { CourseMeta } from '@/core/model';
+import ClockIcon from '@/assets/icons/clock.svg?react';
+import PeopleIcon from '@/assets/icons/people.svg?react';
 import TextButton from '../button/text/TextButton';
 
 type ClassStartModalProps = {

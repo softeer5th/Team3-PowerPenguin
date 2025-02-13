@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import S from './ProfessorRegister.module.css';
-import BasicProfile from '../../../assets/icons/basic-profile.svg?react';
-import TextButton from '../../../components/button/text/TextButton';
-import { validateImage, validateName } from '../../../utils/util';
-import { professorRepository } from '../../../di';
+import BasicProfile from '@/assets/icons/basic-profile.svg?react';
+import TextButton from '@/components/button/text/TextButton';
+import { validateImage, validateName } from '@/utils/util';
+import { professorRepository } from '@/di';
 
 const ProfessorRegister = () => {
   const [profile, setProfile] = useState<File | null>(null);
