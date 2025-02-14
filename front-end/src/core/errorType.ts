@@ -1,20 +1,22 @@
-export class ClientError extends Error {
-  status: number;
+import { ResponseError } from './model';
 
-  constructor(status: number, message: string) {
-    super(message);
+export class ClientError extends Error {
+  errorCode: string;
+
+  constructor(error: ResponseError) {
+    super(error.message);
     this.name = 'ClientError';
-    this.status = status;
+    this.errorCode = error.errorCode;
   }
 }
 
 export class ServerError extends Error {
-  status: number;
+  errorCode: string;
 
-  constructor(status: number, message: string) {
-    super(message);
+  constructor(error: ResponseError) {
+    super(error.message);
     this.name = 'ServerError';
-    this.status = status;
+    this.errorCode = error.errorCode;
   }
 }
 

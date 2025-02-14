@@ -20,6 +20,8 @@ const useModal = () => {
       };
     }, []);
 
+    if (!isOpen) return null;
+
     const modal = React.createElement(
       'div',
       {
