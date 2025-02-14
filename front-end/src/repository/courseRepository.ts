@@ -196,10 +196,9 @@ class CourseRepository {
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status >= 400 && response.status < 500)
-        throw new ClientError(data as ResponseError);
+      if (response.status >= 500) throw new ServerError(data as ResponseError);
       else {
-        throw new ServerError(data as ResponseError);
+        throw new ClientError(data as ResponseError);
       }
     }
 
