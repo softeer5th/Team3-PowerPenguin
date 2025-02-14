@@ -5,12 +5,24 @@ import LoginImage from './assets/professor-login.png';
 import Private from './components/Private20250121';
 import useModal from '@/hooks/useModal';
 import { authRepository } from '@/di';
+import { useState } from 'react';
 
 const ProfessorLogin = () => {
   const { Modal, openModal, closeModal } = useModal();
+  const [modal, setModal] = useState(false);
+
+  const handleClickPrivate = () => {
+    setModal(true);
+    openModal();
+  };
 
   const handleLoginGoogle = async () => {
-    await authRepository.login('google');
+    try {
+      const redirectURL = await authRepository.login('google');
+      console.log(redirectURL);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -42,15 +54,22 @@ const ProfessorLogin = () => {
             </div>
           </div>
           <div className={S.private}>
-            <button className={S.privateButton} onClick={openModal}>
+            <button className={S.privateButton} onClick={handleClickPrivate}>
               개인정보 처리방침
             </button>
           </div>
         </div>
       </div>
-      <Modal>
-        <Private onClose={closeModal} />
-      </Modal>
+      {modal && (
+        <Modal>
+          <Private
+            onClose={() => {
+              closeModal();
+              setModal(false);
+            }}
+          />
+        </Modal>
+      )}
     </>
   );
 };
