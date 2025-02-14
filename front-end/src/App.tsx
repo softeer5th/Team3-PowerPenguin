@@ -36,7 +36,7 @@ function App() {
         </Route>
         <Route path="student" element={<StudentLayout />}>
           <Route index element={<StudentHome />} />
-          <Route path="course/:courseId" element={<StudentCourse />} />
+          <Route path="course" element={<StudentCourse />} />
         </Route>
       </Routes>
     </BrowserRouter>

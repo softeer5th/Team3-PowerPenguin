@@ -1,3 +1,4 @@
+import { ClientError, ServerError } from '@/core/errorType';
 import {
   Course,
   CourseMeta,
@@ -7,6 +8,7 @@ import {
   RequestQuestion,
   RequestSize,
   RequestSound,
+  ResponseError,
 } from '@/core/model';
 
 // Mock data
@@ -180,13 +182,36 @@ class CourseRepository {
   }
 
   async getCourseSummary(accessCode: number): Promise<CourseSummary> {
-    // API: GET /students/courses/summary?accessCode={accessCode}
+    // API: GET /students/courses/${accessCode}/summary
 
-    console.log('get course summary:', accessCode);
+    const response = await fetch(
+      `/api/students/courses/${accessCode}/summary`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const data = await response.json();
 
-    return {
-      ...course1,
-    };
+    if (!response.ok) {
+      if (response.status >= 400 && response.status < 500)
+        throw new ClientError(data as ResponseError);
+      else {
+        throw new ServerError(data as ResponseError);
+      }
+    }
+
+    // return {
+    //   name: course1.name,
+    //   code: course1.code,
+    //   schedule: course1.schedule,
+    //   capacity: course1.capacity,
+    //   university: course1.university,
+    //   classType: course1.classType,
+    // };
+    return data;
   }
 
   async getCourseFile(courseId: string): Promise<File> {
