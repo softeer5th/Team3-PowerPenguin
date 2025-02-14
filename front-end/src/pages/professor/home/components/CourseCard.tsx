@@ -13,6 +13,7 @@ import {
   isSoon,
   getCourseColor,
   TimeType,
+  formatSchedule,
 } from '@/utils/util';
 import MeatBallMenu from './MeatBallMenu';
 
@@ -26,14 +27,6 @@ type CourseCardProps = {
   onDetailCourse: (course: CourseMeta) => void;
   onFileCourse: (course: CourseMeta) => void;
 };
-
-const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
-  scheduleList.map((schedule, index) => (
-    <span key={schedule.day}>
-      {schedule.day} {schedule.start} - {schedule.end}
-      {index < scheduleList.length - 1 && ', '}
-    </span>
-  ));
 
 const RenderButtonContainer = (
   width: string,
@@ -170,7 +163,14 @@ const CourseCard = ({
               <div className={S.metaItem}>
                 <ClockIcon className={S.metaIcon} />
                 <span className={S.metaText}>
-                  {renderSchedule(course.schedule)}
+                  {course.schedule.map((schedule, index) => (
+                    <span key={schedule.day}>
+                      {formatSchedule(
+                        schedule,
+                        index === course.schedule.length - 1
+                      )}
+                    </span>
+                  ))}
                 </span>
               </div>
               <div className={S.metaItem}>
@@ -231,7 +231,14 @@ const CourseCard = ({
               <div className={S.metaItem}>
                 <ClockIcon className={S.metaIcon} />
                 <span className={S.metaText}>
-                  {renderSchedule(course.schedule)}
+                  {course.schedule.map((schedule, index) => (
+                    <span key={schedule.day}>
+                      {formatSchedule(
+                        schedule,
+                        index === course.schedule.length - 1
+                      )}
+                    </span>
+                  ))}
                 </span>
               </div>
               <div className={S.metaItem}>
