@@ -110,6 +110,7 @@ const ProfessorRegister = () => {
           </div>
           <TextButton
             text="회원가입하기"
+            type="submit"
             color="blue"
             size="web4"
             height="80px"

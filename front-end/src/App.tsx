@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 
-import Home from './pages/home';
+import Home from './pages/home/Home';
 import ProfessorHomeLayout from './pages/professor/home/layout/ProfessorHomeLayout';
 import ProfessorHome from './pages/professor/home/ProfessorHome';
 import ProfessorSearch from './pages/professor/home/search/ProfessorSearch';
