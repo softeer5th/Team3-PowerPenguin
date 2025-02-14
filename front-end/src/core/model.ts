@@ -88,3 +88,9 @@ export type Course = {
 export type CourseMeta = Omit<Course, 'requests' | 'questions'>;
 
 export type CourseSummary = Omit<CourseMeta, 'id' | 'accessCode' | 'fileURL'>;
+
+export type ResponseError = {
+  success: boolean;
+  errorCode: string;
+  message: string;
+};
