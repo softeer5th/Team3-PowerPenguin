@@ -42,12 +42,10 @@ const RequestBar = ({
 }: RequestBarProps) => {
   const displayTitle = title.slice(0, -2);
   return (
-    <div
-      className={`${S.requestBar} ${index === 0 ? S.first : ''} ${index === 1 ? S.second : ''}`}
-    >
+    <div className={`${S.requestBar} ${index < 2 && S.active}`}>
       <div
         className={S.percentage}
-        style={{ width: percentage === 0 ? '18px' : `${percentage}%` }}
+        style={{ width: `max(${percentage}%, 18px)` }}
       >
         <RequestBarContent title={displayTitle} Emoji={Emoji} count={count} />
       </div>

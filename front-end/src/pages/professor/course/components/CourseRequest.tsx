@@ -1,5 +1,12 @@
 import S from './CourseRequest.module.css';
-import { Requests } from '@/core/model';
+import {
+  Requests,
+  RequestFast,
+  RequestHard,
+  RequestQuestion,
+  RequestSize,
+  RequestSound,
+} from '@/core/model';
 import BulbEmoji from '@/assets/icons/bulb-emoji.svg?react';
 import EarEmoji from '@/assets/icons/ear-emoji.svg?react';
 import MagnifierEmoji from '@/assets/icons/magnifier-emoji.svg?react';
@@ -19,15 +26,54 @@ const EmojiType = {
   sound: EarEmoji,
 };
 
+const getRequestPercentage = (count: number, max: number) => {
+  if (max === 0) return 0;
+  return (count / max) * 100;
+};
+
 const CourseRequest = ({ requests }: CourseRequestProps) => {
   const sortedRequests = requests.sort((a, b) => b.count - a.count);
 
   return (
     <div className={S.courseRequest}>
       {sortedRequests.length === 0 ? (
-        <div className={S.requestBar}>
-          <p>No requests yet</p>
-        </div>
+        <>
+          <RequestBar
+            index={0}
+            title={RequestSize.title}
+            Emoji={EmojiType.size}
+            count={0}
+            percentage={0}
+          />
+          <RequestBar
+            index={1}
+            title={RequestQuestion.title}
+            Emoji={EmojiType.question}
+            count={0}
+            percentage={0}
+          />
+          <RequestBar
+            index={2}
+            title={RequestHard.title}
+            Emoji={EmojiType.hard}
+            count={0}
+            percentage={0}
+          />
+          <RequestBar
+            index={3}
+            title={RequestSound.title}
+            Emoji={EmojiType.sound}
+            count={0}
+            percentage={0}
+          />
+          <RequestBar
+            index={4}
+            title={RequestFast.title}
+            Emoji={EmojiType.fast}
+            count={0}
+            percentage={0}
+          />
+        </>
       ) : (
         sortedRequests.map((request, index) => (
           <RequestBar
@@ -36,7 +82,10 @@ const CourseRequest = ({ requests }: CourseRequestProps) => {
             title={request.type.title}
             Emoji={EmojiType[request.type.kind]}
             count={request.count}
-            percentage={(request.count / sortedRequests[0].count) * 100}
+            percentage={getRequestPercentage(
+              request.count,
+              sortedRequests[0].count
+            )}
           />
         ))
       )}
