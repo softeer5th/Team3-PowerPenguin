@@ -17,6 +17,7 @@
   font: var(--web-body-list20-regular);
   color: var(--gray-600);
   word-break: break-all;
+  user-select: text;
 }
 
 .noQuestion > .question {
