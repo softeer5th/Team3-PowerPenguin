@@ -1,0 +1,89 @@
+.requestBar {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg);
+  outline: 1px solid var(--gray-400);
+  border-radius: 24px 100px 100px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.percentage {
+  height: 100%;
+  position: absolute;
+  z-index: 2;
+  background-color: var(--gray-300);
+  border-radius: 0px 100px 100px 0px;
+  overflow: hidden;
+}
+
+.first > .percentage,
+.second > .percentage {
+  background-color: var(--sub-green-500);
+}
+
+.content {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 596px;
+  height: 100%;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  margin-left: 13px;
+  gap: 11px;
+}
+
+.emojiBackground {
+  width: 38px;
+  height: 38px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  outline: 1px solid var(--gray-300);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emoji {
+  width: 20px;
+  height: 20px;
+}
+
+.title {
+  font: var(--web-title4-medium);
+  color: var(--gray-500);
+}
+
+.first .title,
+.second .title {
+  font: var(--web-title4-medium);
+  color: var(--sub-green-500);
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+}
+
+.first .percentage .title,
+.second .percentage .title {
+  color: white;
+}
+
+.count {
+  font: var(--web-title4-bold);
+  color: var(--gray-400);
+  margin-right: 36px;
+}
+
+.first .count,
+.second .count {
+  color: var(--sub-green-500);
+}
+
+.first .percentage .count,
+.second .percentage .count {
+  color: white;
+}
