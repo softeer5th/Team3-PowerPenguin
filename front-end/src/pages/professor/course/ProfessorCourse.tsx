@@ -26,11 +26,11 @@ const ProfessorCourse = () => {
     handleStartCourse,
     handleFileCourse,
   } = useCourseActions({ setModal, openModal, closeModal });
-  const handleClickBack = () => {
-    console.log('Click Back');
-  };
-
   const navigate = useNavigate();
+
+  const handleClickBack = () => {
+    navigate('/professor');
+  };
 
   useEffect(() => {
     async function getCourse() {
