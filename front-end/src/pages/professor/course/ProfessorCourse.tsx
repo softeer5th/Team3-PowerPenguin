@@ -112,9 +112,9 @@ const ProfessorCourse = () => {
           </div>
         </div>
         <div className={S.professorCourseBody}>
-          <div className={S.professorCourseBodyContainer}>
-            <h2 className={S.professorCourseBodyHeader}>지난번 수업 데이터</h2>
-            <div className={S.professorCourseBodyContent}>
+          <div className={S.bodyContainer}>
+            <h2 className={S.bodyHeader}>지난번 수업 데이터</h2>
+            <div className={S.bodyContent}>
               <div className={S.courseBodyContainer}>
                 <h3 className={S.courseBodyTitle}>
                   💬 이전 수업에서 해결되지 못한 질문
@@ -123,12 +123,10 @@ const ProfessorCourse = () => {
               </div>
               <div className={S.courseBodyContainer}>
                 <h3 className={S.courseBodyTitle}>📊 이전 수업 반응 통계</h3>
-                <div className={S.courseBodyContent}>
-                  <CourseRequest requests={course?.requests || []} />
-                </div>
+                <CourseRequest requests={course?.requests || []} />
               </div>
             </div>
-            <div className={S.professorCourseBodyButtonContainer}>
+            <div className={S.bodyButtonContainer}>
               <TextButton
                 color="black"
                 size="web2"

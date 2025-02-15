@@ -119,3 +119,55 @@
   display: flex;
   gap: 10px;
 }
+
+.professorCourseBody {
+  background: radial-gradient(
+      45.11% 45.11% at 50% 54.89%,
+      rgba(0, 36, 224, 0.15) 0%,
+      rgba(0, 36, 224, 0) 100%
+    )
+    rgba(234, 241, 250, 1);
+}
+
+.bodyContainer {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 54px 274px;
+}
+
+.bodyHeader {
+  font: var(--web-header3-bold);
+  color: var(--gray-900);
+}
+
+.bodyContent {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.courseBodyContainer {
+  width: 676px;
+  height: 548px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  outline: 1px solid var(--gray-300);
+  border-radius: var(--large);
+  box-shadow: 0px 0px 20px 0px rgba(162, 175, 208, 0.3);
+  padding: 40px;
+  gap: 20px;
+}
+
+.courseBodyTitle {
+  font: var(--web-title3-bold);
+  color: var(--gray-800);
+}
+
+.bodyButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 21px;
+  margin-top: 54px;
+}
