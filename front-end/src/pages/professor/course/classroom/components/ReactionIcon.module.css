@@ -1,0 +1,33 @@
+.emojiContainer {
+  position: absolute;
+  right: -20px;
+  bottom: 100px;
+  width: 43px;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 43px;
+  background: linear-gradient(
+    180deg,
+    #0028fd 0%,
+    var(--blue-300, #b0bcfe) 100%
+  );
+  animation: floatUp 4s ease-in-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-400px);
+  }
+}
+
+.emoji {
+  width: 26px;
+  height: 26px;
+}
