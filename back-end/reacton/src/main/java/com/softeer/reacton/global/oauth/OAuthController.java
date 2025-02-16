@@ -64,13 +64,12 @@ public class OAuthController {
 
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", loginResult.getAccessToken())
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(isSignedUp ? cookieConfig.getAuthExpiration() : cookieConfig.getSignupExpiration())
                 .sameSite("Strict")
                 .domain(cookieConfig.getDomain())
                 .build();
-
         log.debug("JWT 쿠키 설정이 완료되었습니다. : isSignedUp = {}", isSignedUp);
 
         ResponseEntity.BodyBuilder response = ResponseEntity.status(HttpStatus.SEE_OTHER)

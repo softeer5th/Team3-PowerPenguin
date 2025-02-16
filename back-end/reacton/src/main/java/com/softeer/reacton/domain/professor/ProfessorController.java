@@ -157,7 +157,7 @@ public class ProfessorController {
         String newAccessToken = professorService.signUp(name, profileImageFile, oauthId, email, isSignedUp);
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", newAccessToken)
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(cookieConfig.getAuthExpiration())
                 .sameSite("Strict")
@@ -185,7 +185,7 @@ public class ProfessorController {
     public ResponseEntity<Void> logout() {
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
@@ -213,7 +213,7 @@ public class ProfessorController {
 
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
