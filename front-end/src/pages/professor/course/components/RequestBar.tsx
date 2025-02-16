@@ -9,30 +9,6 @@ type RequestBarProps = {
   percentage: number;
 };
 
-type RequestBarContentProps = {
-  title: string;
-  Emoji: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  count: number;
-};
-
-const RequestBarContent = ({ title, Emoji, count }: RequestBarContentProps) => {
-  return (
-    <div className={S.content}>
-      <div className={S.main}>
-        <div className={S.emojiBackground}>
-          <Emoji className={S.emoji} />
-        </div>
-        <div className={S.title}>
-          <span className={S.titleGreen}>{title}</span>
-        </div>
-      </div>
-      <div className={S.count}>
-        <span>{count}</span>
-      </div>
-    </div>
-  );
-};
-
 const RequestBar = ({
   index,
   title,
@@ -42,14 +18,26 @@ const RequestBar = ({
 }: RequestBarProps) => {
   const displayTitle = title.slice(0, -2);
   return (
-    <div className={`${S.requestBar} ${index < 2 && S.active}`}>
-      <div
-        className={S.percentage}
-        style={{ width: `max(${percentage}%, 18px)` }}
-      >
-        <RequestBarContent title={displayTitle} Emoji={Emoji} count={count} />
+    <div className={S.container}>
+      <div className={`${S.wrapper} ${index < 2 && S.active}`}>
+        <div
+          className={S.percentage}
+          style={{ width: `max(${percentage}%, 18px)` }}
+        />
+        <div className={S.content}>
+          <div className={S.main}>
+            <div className={S.emojiBackground}>
+              <Emoji className={S.emoji} />
+            </div>
+            <div className={S.title}>
+              <span className={S.titleGreen}>{displayTitle}</span>
+            </div>
+          </div>
+          <div className={S.count}>
+            <span>{count}</span>
+          </div>
+        </div>
       </div>
-      <RequestBarContent title={displayTitle} Emoji={Emoji} count={count} />
     </div>
   );
 };
