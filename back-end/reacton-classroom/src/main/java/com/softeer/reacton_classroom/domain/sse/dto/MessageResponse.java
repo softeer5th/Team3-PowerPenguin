@@ -11,4 +11,3 @@ public class MessageResponse {
     private String type;
     private String content;
 }
-
