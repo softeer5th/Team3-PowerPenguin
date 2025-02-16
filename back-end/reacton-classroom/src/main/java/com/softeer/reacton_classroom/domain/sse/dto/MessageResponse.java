@@ -1,4 +1,4 @@
-package com.softeer.reacton_classroom.sse.dto;
+package com.softeer.reacton_classroom.domain.sse.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
