@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -31,6 +32,9 @@ public class ProfessorController {
 
     private final ProfessorService professorService;
     private final CookieConfig cookieConfig;
+
+    @Value("${frontend.base-url}")
+    private String FRONTEND_BASE_URL;
 
     @GetMapping
     @Operation(
@@ -165,7 +169,7 @@ public class ProfessorController {
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/professor")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + "professor")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
@@ -190,7 +194,7 @@ public class ProfessorController {
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL)
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
@@ -218,7 +222,7 @@ public class ProfessorController {
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL)
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
