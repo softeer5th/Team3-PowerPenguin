@@ -1,9 +1,11 @@
-package com.softeer.reacton_classroom.sse.controller;
+package com.softeer.reacton_classroom.domain.sse.controller;
 
-import com.softeer.reacton_classroom.sse.dto.MessageResponse;
-import com.softeer.reacton_classroom.sse.service.SseService;
+import com.softeer.reacton_classroom.domain.sse.dto.MessageResponse;
+import com.softeer.reacton_classroom.domain.sse.service.SseService;
+import com.softeer.reacton_classroom.global.dto.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
@@ -25,10 +27,12 @@ public class SseController {
     }
 
     @PostMapping("/message/course/{courseId}")
-    public ResponseEntity<Void> sendMessage(@PathVariable String courseId, @RequestBody MessageResponse message) {
+    public ResponseEntity<SuccessResponse> sendMessage(@PathVariable String courseId, @RequestBody MessageResponse message) {
         log.debug("메시지 전송을 요청합니다. : courseId = {}", courseId);
         sseService.sendMessage(courseId, message);
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 전송했습니다."));
     }
 }
 
