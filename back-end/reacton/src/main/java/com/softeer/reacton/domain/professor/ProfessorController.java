@@ -157,6 +157,7 @@ public class ProfessorController {
                 .path("/")
                 .maxAge(cookieConfig.getAuthExpiration())
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         log.debug("회원가입에 성공했습니다 : name = {}", name);
@@ -184,6 +185,7 @@ public class ProfessorController {
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         return ResponseEntity
@@ -211,6 +213,7 @@ public class ProfessorController {
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         return ResponseEntity

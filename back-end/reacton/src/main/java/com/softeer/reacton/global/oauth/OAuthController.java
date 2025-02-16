@@ -65,6 +65,7 @@ public class OAuthController {
                 .path("/")
                 .maxAge(isSignedUp ? cookieConfig.getAuthExpiration() : cookieConfig.getSignupExpiration())
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         log.debug("JWT 쿠키 설정이 완료되었습니다. : isSignedUp = {}", isSignedUp);
