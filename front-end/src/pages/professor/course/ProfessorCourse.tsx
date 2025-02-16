@@ -98,12 +98,16 @@ const ProfessorCourse = () => {
               </div>
               <div className={S.headerButtonContainer}>
                 <RecIconButton
-                  onButtonClick={() => handleEditCourse(course as CourseMeta)}
+                  onButtonClick={() =>
+                    course && handleEditCourse(course as CourseMeta)
+                  }
                   type="setting"
                   bg="gray"
                 />
                 <RecIconButton
-                  onButtonClick={() => handleDeleteCourse(course as CourseMeta)}
+                  onButtonClick={() =>
+                    course && handleDeleteCourse(course as CourseMeta)
+                  }
                   type="trash"
                   bg="red"
                 />

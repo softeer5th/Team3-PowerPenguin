@@ -17,8 +17,8 @@ const CourseQuestion = ({ questions }: CourseQuestionProps) => {
         {questions.length === 0 ? (
           <QuestionPage question="" />
         ) : (
-          questions.map((question, index) => (
-            <QuestionPage key={index} question={question.content} />
+          questions.map((question) => (
+            <QuestionPage key={question.id} question={question.content} />
           ))
         )}
       </PaginationDiv>
