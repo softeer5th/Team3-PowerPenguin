@@ -31,6 +31,13 @@ const getRequestPercentage = (count: number, max: number) => {
   return (count / max) * 100;
 };
 
+const getIsActive = (requests: Requests, index: number) => {
+  if (requests[index].count === requests[0].count) return true;
+  else {
+    return index < 2;
+  }
+};
+
 const CourseRequest = ({ requests }: CourseRequestProps) => {
   const sortedRequests = requests.sort((a, b) => b.count - a.count);
 
@@ -39,35 +46,30 @@ const CourseRequest = ({ requests }: CourseRequestProps) => {
       {sortedRequests.length === 0 ? (
         <>
           <RequestBar
-            index={0}
             title={RequestSize.title}
             Emoji={EmojiType.size}
             count={0}
             percentage={0}
           />
           <RequestBar
-            index={1}
             title={RequestQuestion.title}
             Emoji={EmojiType.question}
             count={0}
             percentage={0}
           />
           <RequestBar
-            index={2}
             title={RequestHard.title}
             Emoji={EmojiType.hard}
             count={0}
             percentage={0}
           />
           <RequestBar
-            index={3}
             title={RequestSound.title}
             Emoji={EmojiType.sound}
             count={0}
             percentage={0}
           />
           <RequestBar
-            index={4}
             title={RequestFast.title}
             Emoji={EmojiType.fast}
             count={0}
@@ -78,7 +80,6 @@ const CourseRequest = ({ requests }: CourseRequestProps) => {
         sortedRequests.map((request, index) => (
           <RequestBar
             key={index}
-            index={index}
             title={request.type.title}
             Emoji={EmojiType[request.type.kind]}
             count={request.count}
@@ -86,6 +87,7 @@ const CourseRequest = ({ requests }: CourseRequestProps) => {
               request.count,
               sortedRequests[0].count
             )}
+            isActive={getIsActive(sortedRequests, index)}
           />
         ))
       )}

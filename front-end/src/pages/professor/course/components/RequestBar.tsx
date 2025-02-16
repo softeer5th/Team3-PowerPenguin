@@ -2,24 +2,24 @@ import React from 'react';
 import S from './RequestBar.module.css';
 
 type RequestBarProps = {
-  index: number;
   title: string;
   Emoji: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   count: number;
   percentage: number;
+  isActive?: boolean;
 };
 
 const RequestBar = ({
-  index,
   title,
   Emoji,
   count,
   percentage,
+  isActive = false,
 }: RequestBarProps) => {
   const displayTitle = title.slice(0, -2);
   return (
     <div className={S.container}>
-      <div className={`${S.wrapper} ${index < 2 && S.active}`}>
+      <div className={`${S.wrapper} ${isActive && S.active}`}>
         <div
           className={S.percentage}
           style={{ width: `max(${percentage}%, 18px)` }}
