@@ -1,4 +1,4 @@
-import { CourseMeta } from '@/core/model';
+import { CourseMeta, Schedule } from '@/core/model';
 
 const imageType = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
@@ -96,3 +96,7 @@ export function createCourseGroup(courses: CourseMeta[], size: number) {
 
 export const CourseDay = ['월', '화', '수', '목', '금', '토', '일'];
 export const CourseType = ['전공', '교양', '기타'];
+
+export const formatSchedule = (schedule: Schedule, isEnd: boolean) => {
+  return `${schedule.day} ${schedule.start} - ${schedule.end}${isEnd ? '' : ', '}`;
+};

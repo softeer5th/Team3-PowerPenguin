@@ -1,0 +1,174 @@
+.professorCourse {
+  width: 1920px;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.professorCourseHeader {
+  width: 100%;
+  height: 221px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.backButton {
+  position: absolute;
+  float: left;
+  left: 139px;
+  top: 43px;
+}
+
+.professorCourseHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  margin: 48px 274px;
+  width: 100%;
+}
+
+.professorCourseHeaderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.infoText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.courseUniversity {
+  font: var(--web-body1-bold);
+  color: var(--sub-orange-500);
+}
+
+.courseTitle {
+  font: var(--web-title1-bold);
+  color: var(--sub-black-900);
+}
+
+.courseSubInfo {
+  display: flex;
+  align-items: center;
+}
+
+.courseSchedule {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.clockIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.subInfoText {
+  font: var(--web-body2-medium);
+  color: var(--gray-500);
+}
+
+.divider {
+  height: 16px;
+  border: 1.2px solid var(--gray-400);
+  margin: 0px 13px;
+}
+
+.coursePeople {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.peopleIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.courseCategory {
+  width: 64px;
+  height: 34px;
+  margin-left: 18px;
+  font: var(--web-body3-bold);
+}
+
+.right {
+  display: flex;
+  gap: 46px;
+}
+
+.courseAccessCode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 237px;
+  height: 60px;
+  outline: 2px solid var(--gray-300);
+  border-radius: 10px;
+}
+
+.accessCodeText {
+  font: var(--web-body2-medium);
+  color: var(--gray-700);
+}
+
+.headerButtonContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.professorCourseBody {
+  background: radial-gradient(
+      45.11% 45.11% at 50% 54.89%,
+      rgba(0, 36, 224, 0.15) 0%,
+      rgba(0, 36, 224, 0) 100%
+    )
+    rgba(234, 241, 250, 1);
+}
+
+.bodyContainer {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 54px 274px;
+}
+
+.bodyHeader {
+  font: var(--web-header3-bold);
+  color: var(--gray-900);
+}
+
+.bodyContent {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.courseBodyContainer {
+  width: 676px;
+  height: 548px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  outline: 1px solid var(--gray-300);
+  border-radius: var(--large);
+  box-shadow: 0px 0px 20px 0px rgba(162, 175, 208, 0.3);
+  padding: 35px 40px;
+  gap: 20px;
+}
+
+.courseBodyTitle {
+  font: var(--web-title3-bold);
+  color: var(--gray-800);
+}
+
+.bodyButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 21px;
+  margin-top: 54px;
+}
