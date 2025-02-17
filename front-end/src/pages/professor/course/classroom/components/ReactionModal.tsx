@@ -24,6 +24,7 @@ type ReactionModalProps = {
   secondReactionCount: number;
   thirdReaction: keyof typeof emojiType;
   thirdReactionCount: number;
+  onClose: () => void;
 };
 
 const EmojiContainer = ({
@@ -62,10 +63,11 @@ const ReactionModal = ({
   secondReactionCount,
   thirdReaction,
   thirdReactionCount,
+  onClose,
 }: ReactionModalProps) => {
   return (
     <div className={S.reactionModal}>
-      <button className={S.closeButton}>
+      <button className={S.closeButton} onClick={onClose}>
         <CloseIcon className={S.closeIcon} />
       </button>
       <span className={S.title}>TOP 3</span>
