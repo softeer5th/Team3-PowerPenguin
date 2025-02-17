@@ -32,7 +32,7 @@ public class ProfessorService {
     private final S3Service s3Service;
 
     private static final Set<String> ALLOWED_IMAGE_FILE_EXTENSIONS = Set.of("png", "jpg", "jpeg", "heic");
-    private static final long MAX_IMAGE_FILE_SIZE = 64 * 1024;
+    private static final long MAX_IMAGE_FILE_SIZE = 5L * 1024 * 1024;
     private static final String PROFILE_DIRECTORY = "profiles/";
 
     public String signUp(String name, MultipartFile profileImageFile, String oauthId, String email, Boolean isSignedUp) {
