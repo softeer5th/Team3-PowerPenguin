@@ -6,12 +6,14 @@ import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
+import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentCourseService {
 
+    private final JwtTokenUtil jwtTokenUtil;
     private final CourseRepository courseRepository;
     private final ScheduleRepository scheduleRepository;
 
@@ -42,6 +45,16 @@ public class StudentCourseService {
         return CourseSummaryResponse.of(course, schedules);
     }
 
+    public String registerCourse(int accessCode) {
+        log.debug("accessCode와 일치하는 수업을 찾습니다. : accessCode = {}", accessCode);
+        Course course = getCourse(accessCode);
+        checkIfOpen(course);
+
+        String studentId = UUID.randomUUID().toString();
+        log.debug("임시 studentId를 발급했습니다. : studentId = {}", studentId);
+        return jwtTokenUtil.createStudentAccessToken(studentId, course.getId());
+    }
+
     private List<CourseScheduleResponse> getSchedulesByCourseId(Course course) {
         List<Schedule> schedules = scheduleRepository.findSchedulesByCourse(course);
 
@@ -52,5 +65,16 @@ public class StudentCourseService {
                         schedule.getEndTime().toString()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    private Course getCourse(int accessCode) {
+        return courseRepository.findByAccessCode(accessCode)
+                .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
+    }
+
+    private void checkIfOpen(Course course) {
+        if (!course.isActive()) {
+            throw new BaseException(CourseErrorCode.COURSE_NOT_ACTIVE);
+        }
     }
 }
