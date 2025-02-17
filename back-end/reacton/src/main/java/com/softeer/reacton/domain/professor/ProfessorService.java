@@ -87,10 +87,8 @@ public class ProfessorService {
         log.debug("회원 탈퇴 처리를 완료했습니다. : email = {}", professor.getEmail());
     }
 
-    public Map<String, String> getProfileInfo(String oauthId) {
+    public ProfessorInfoResponse getProfileInfo(String oauthId) {
         log.debug("사용자의 이름, 이메일 주소를 가져옵니다.");
-
-        Map<String, String> profileInfo = new HashMap<>();
 
         Optional<Professor> existingUser = professorRepository.findByOauthId(oauthId);
 
@@ -99,10 +97,8 @@ public class ProfessorService {
             return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
         });
 
-        profileInfo.put("name", professor.getName());
-        profileInfo.put("email", professor.getEmail());
-
-        return profileInfo;
+        URL profileImageUrl = s3Service.generatePresignedUrl(professor.getProfileImageS3Key(), 1);
+        return new ProfessorInfoResponse(professor.getName(), professor.getEmail(), String.valueOf(profileImageUrl));
     }
 
     public Map<String, String> getProfileImage(String oauthId) {

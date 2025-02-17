@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.professor;
 
+import com.softeer.reacton.domain.professor.dto.ProfessorInfoResponse;
 import com.softeer.reacton.domain.professor.dto.UpdateNameRequest;
 import com.softeer.reacton.global.config.CookieConfig;
 import com.softeer.reacton.global.dto.SuccessResponse;
@@ -39,20 +40,20 @@ public class ProfessorController {
     @GetMapping
     @Operation(
             summary = "교수 프로필 정보 조회",
-            description = "교수의 이름과 이메일 정보를 가져옵니다.",
+            description = "교수의 이름과 이메일, 프로필 이미지 url을 가져옵니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공적으로 조회했습니다."),
                     @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
-    public ResponseEntity<SuccessResponse<Map<String, String>>> getProfileInfo(HttpServletRequest request) {
-        log.debug("사용자의 이름, 이메일 주소를 요청합니다.");
+    public ResponseEntity<SuccessResponse<ProfessorInfoResponse>> getProfileInfo(HttpServletRequest request) {
+        log.debug("사용자의 이름, 이메일 주소, 프로필 이미지 url을 요청합니다.");
 
         String oauthId = (String) request.getAttribute("oauthId");
-        Map<String, String> response = professorService.getProfileInfo(oauthId);
+        ProfessorInfoResponse response = professorService.getProfileInfo(oauthId);
 
-        log.info("사용자의 이름, 이메일 주소를 가져오는 데 성공했습니다.");
+        log.info("사용자의 이름, 이메일 주소, 프로필 이미지 url을 가져오는 데 성공했습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.OK)
