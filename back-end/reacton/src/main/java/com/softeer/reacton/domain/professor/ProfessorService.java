@@ -136,18 +136,28 @@ public class ProfessorService {
     public Map<String, String> updateImage(String oauthId, MultipartFile profileImageFile) {
         log.debug("사용자의 프로필 이미지를 수정합니다.");
 
-        // TODO: 현재 파일을 DB에 저장하지만, 추후 클라우드 스토리지(S3 등)에 업로드하도록 변경 예정
-        byte[] newImageBytes = getImageBytes(profileImageFile);
+        String existingS3Key = professorRepository.getProfileImageS3KeyByOauthId(oauthId);
+        String profileImageFilename = "";
+        String profileImageS3Key = "";
+        URL imageUrl = null;
 
-        int updatedRows = professorRepository.updateImage(oauthId, newImageBytes);
-        if (updatedRows == 0) {
-            log.debug("사용자 정보를 가져오는 과정에서 발생한 에러입니다. : User does not exist.");
-            throw new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
+        if (profileImageFile != null && !profileImageFile.isEmpty()) {
+            profileImageFilename = profileImageFile.getOriginalFilename();
+            profileImageS3Key = s3Service.uploadFile(profileImageFile, PROFILE_DIRECTORY);
+            validateProfileImage(profileImageFile.getSize(), profileImageFilename);
+            imageUrl = s3Service.generatePresignedUrl(profileImageS3Key, 1);
+        } else {
+            log.debug("새로운 프로필 이미지가 제공되지 않았으므로 기존 이미지 삭제.");
         }
 
-        log.debug("프로필 이미지 수정이 완료되었습니다.");
+        if (existingS3Key != null && !existingS3Key.isEmpty()) {
+            s3Service.deleteFile(existingS3Key);
+            log.debug("기존 프로필 이미지({})를 S3에서 삭제했습니다.", existingS3Key);
+        }
+        updateUserProfileImage(oauthId, profileImageFilename, profileImageS3Key);
 
-        return Map.of("imageUrl", Arrays.toString(newImageBytes));
+        log.debug("프로필 이미지 수정이 완료되었습니다.");
+        return Map.of("imageUrl", imageUrl != null ? imageUrl.toString() : "");
     }
 
     private void validateProfileImage(Long fileSize, String fileName) {
@@ -184,5 +194,23 @@ public class ProfessorService {
         }
 
         return imageBytes;
+    }
+
+    private void updateUserProfileImage(String oauthId, String profileImageFilename, String profileImageS3Key) {
+        try {
+            int updatedRows = professorRepository.updateImage(oauthId, profileImageFilename, profileImageS3Key);
+            if (updatedRows == 0) {
+                throw new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error("프로필 이미지 업데이트 중 오류 발생: {}", e.getMessage(), e);
+
+            if (profileImageS3Key != null && !profileImageS3Key.isEmpty()) {
+                s3Service.deleteFile(profileImageS3Key);
+                log.debug("DB 업데이트 실패로 인해 새로 업로드한 프로필 이미지({})를 S3에서 삭제했습니다.", profileImageS3Key);
+            }
+
+            throw e;
+        }
     }
 }

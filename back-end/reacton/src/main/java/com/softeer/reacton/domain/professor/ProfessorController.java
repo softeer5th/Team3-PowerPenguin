@@ -125,13 +125,13 @@ public class ProfessorController {
         log.debug("사용자의 프로필 이미지 수정을 요청합니다.");
 
         String oauthId = (String) request.getAttribute("oauthId");
-        Map<String, String> response = professorService.updateImage(oauthId, profileImageFile);
+        Map<String, String> imageUrl = professorService.updateImage(oauthId, profileImageFile);
 
         log.info("사용자의 프로필 이미지를 성공적으로 변경했습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(SuccessResponse.of("프로필 이미지를 성공적으로 변경했습니다.", response));
+                .body(SuccessResponse.of("사용자의 프로필 이미지를 성공적으로 변경했습니다.", imageUrl));
     }
 
     @PostMapping("/signup")
