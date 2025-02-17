@@ -31,7 +31,7 @@ public class CourseDetailResponse {
                 .university(course.getUniversity())
                 .type(course.getType().toString())
                 .accessCode(course.getAccessCode())
-                .fileUrl(course.getFileUrl())
+                .fileUrl(course.getFileName())
                 .schedules(schedules)
                 .questions(questions)
                 .requests(requests)

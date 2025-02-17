@@ -52,7 +52,8 @@ public class ProfessorService {
                 .oauthId(oauthId)
                 .email(email)
                 .name(name)
-                .profileImage(imageBytes)
+                .profileImageFilename(null)
+                .profileImageS3Key(null)
                 .build();
         professorRepository.save(professor);
 
@@ -106,7 +107,7 @@ public class ProfessorService {
         });
 
         // TODO: S3 도입 후 imageUrl을 리턴하도록 수정 필요
-        return Map.of("imageUrl", Arrays.toString(professor.getProfileImage()));
+        return Map.of("imageUrl", professor.getProfileImageFilename());
     }
 
     public Map<String, String> updateName(String oauthId, String newName) {
