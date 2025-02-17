@@ -47,6 +47,23 @@ public class S3Service {
         }
     }
 
+    public void deleteFile(String key) {
+        try {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+
+            log.info("S3 파일 삭제 완료: {}", key);
+        } catch (S3Exception e) {
+            log.error("S3 파일 삭제 실패: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
+
     private String generateFileName(MultipartFile file) {
         return UUID.randomUUID() + "." + file.getOriginalFilename();
     }
