@@ -85,6 +85,8 @@ export type Course = {
   questions: Question[];
 };
 
+export type ProfessorQuestion = Omit<Question, 'time'>;
+
 export type CourseMeta = Omit<Course, 'requests' | 'questions'>;
 
 export type CourseSummary = Omit<CourseMeta, 'id' | 'accessCode' | 'fileURL'>;
