@@ -11,8 +11,12 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.IOException;
+import java.net.URL;
+import java.time.Duration;
 import java.util.UUID;
 
 @Slf4j
@@ -20,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3Service {
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
 
     @Value("${aws.bucket.name}")
     private String bucketName;
@@ -63,6 +68,28 @@ public class S3Service {
         }
     }
 
+    public URL generatePresignedUrl(String key, int expirationMinutes) {
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(expirationMinutes))
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+
+            log.info("Presigned URL 생성 완료: {}", presignedRequest.url());
+
+            return presignedRequest.url();
+        } catch (S3Exception e) {
+            log.error("Presigned URL 생성 실패: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
 
     private String generateFileName(MultipartFile file) {
         return UUID.randomUUID() + "." + file.getOriginalFilename();
