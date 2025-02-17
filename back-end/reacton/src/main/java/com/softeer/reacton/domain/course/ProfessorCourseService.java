@@ -12,12 +12,14 @@ import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
+import com.softeer.reacton.global.s3.S3Service;
 import com.softeer.reacton.global.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.SecureRandom;
 import java.time.LocalTime;
@@ -34,8 +36,10 @@ public class ProfessorCourseService {
     private final QuestionRepository questionRepository;
     private final RequestRepository requestRepository;
     private final ProfessorCourseTransactionService professorCourseTransactionService;
+    private final S3Service s3Service;
 
     private static final int MAX_RETRIES = 10;
+    private static final String FILE_DIRECTORY = "course-files/";
     private final SecureRandom secureRandom = new SecureRandom();
 
     public Map<String, String> getActiveCourseByUser(String oauthId) {
@@ -146,6 +150,31 @@ public class ProfessorCourseService {
         course.deactivate();
 
         log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
+    }
+
+    @Transactional
+    public Map<String, String> uploadFile(String oauthId, long courseId, MultipartFile file) {
+        Course course = getCourseByProfessor(oauthId, courseId);
+
+        String filename = null;
+        String s3Key;
+
+        if (!file.isEmpty() && validateFile(file)) {
+            filename = file.getOriginalFilename();
+
+            s3Key = s3Service.uploadFile(file, FILE_DIRECTORY);
+
+            if (isFileExists(course)) {
+                s3Service.deleteFile(course.getFileS3Key());
+                log.debug("기존 강의자료 파일 삭제 완료: {}", course.getFileName());
+            }
+
+            course.setFileName(filename);
+            course.setFileS3Key(s3Key);
+            courseRepository.save(course);
+        }
+
+        return Map.of("filename", filename != null ? filename : "");
     }
 
     private Professor getProfessorByOauthId(String oauthId) {
@@ -282,5 +311,29 @@ public class ProfessorCourseService {
     private int generateUniqueAccessCode() {
         return 100000 + secureRandom.nextInt(1000000); // 100000~999999
     }
-}
 
+    private boolean validateFile(MultipartFile file) {
+        if (file.isEmpty()) {
+            return false;
+        }
+
+        String fileName = file.getOriginalFilename();
+        if (fileName == null || !fileName.toLowerCase().endsWith(".pdf")) {
+            return false;
+        }
+
+        try {
+            String mimeType = file.getContentType();
+            if (mimeType == null || !mimeType.equals("application/pdf")) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isFileExists(Course course) {
+        return course.getFileName() != null && !course.getFileName().isEmpty() && course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
+    }
+}

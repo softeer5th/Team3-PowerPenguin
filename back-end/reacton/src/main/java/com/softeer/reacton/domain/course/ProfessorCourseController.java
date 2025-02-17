@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class ProfessorCourseController {
         } else {
             log.debug("활성화된 수업이 존재하지 않습니다.");
             return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                    .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL+"professor")
+                    .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + "professor")
                     .build();
         }
     }
@@ -179,6 +180,24 @@ public class ProfessorCourseController {
         professorCourseService.closeCourse(oauthId, courseId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{courseId}/file")
+    @Operation(
+            summary = "수업 강의자료 파일 업로드",
+            description = "courseId에 해당하는 수업",
+            responses = {@ApiResponse(responseCode = "200", description = "수업 강의자료 파일이 업로드되었습니다.")}
+    )
+    public ResponseEntity<SuccessResponse<Map<String, String>>> uploadFile(
+            HttpServletRequest request,
+            @PathVariable(value = "courseId") long courseId,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        String oauthId = (String) request.getAttribute("oauthId");
+        Map<String, String> response = professorCourseService.uploadFile(oauthId, courseId, file);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("수업 강의자료 파일 업로드에 성공했습니다.", response));
     }
 
 }
