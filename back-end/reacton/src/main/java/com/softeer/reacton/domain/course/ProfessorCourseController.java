@@ -185,7 +185,7 @@ public class ProfessorCourseController {
     @PostMapping("/{courseId}/file")
     @Operation(
             summary = "수업 강의자료 파일 업로드",
-            description = "courseId에 해당하는 수업",
+            description = "courseId에 해당하는 수업에 강의자료 파일을 업로드합니다.",
             responses = {@ApiResponse(responseCode = "200", description = "수업 강의자료 파일이 업로드되었습니다.")}
     )
     public ResponseEntity<SuccessResponse<Map<String, String>>> uploadFile(
