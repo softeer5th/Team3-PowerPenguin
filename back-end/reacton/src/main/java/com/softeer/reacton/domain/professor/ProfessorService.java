@@ -2,6 +2,7 @@ package com.softeer.reacton.domain.professor;
 
 import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.domain.course.CourseRepository;
+import com.softeer.reacton.domain.professor.dto.ProfessorInfoResponse;
 import com.softeer.reacton.domain.question.QuestionRepository;
 import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
