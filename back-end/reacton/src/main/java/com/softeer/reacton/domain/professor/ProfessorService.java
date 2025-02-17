@@ -9,6 +9,7 @@ import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
+import com.softeer.reacton.global.s3.S3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,11 @@ public class ProfessorService {
     private final ScheduleRepository scheduleRepository;
     private final QuestionRepository questionRepository;
     private final RequestRepository requestRepository;
+    private final S3Service s3Service;
 
     private static final Set<String> ALLOWED_IMAGE_FILE_EXTENSIONS = Set.of("png", "jpg", "jpeg", "heic");
     private static final long MAX_IMAGE_FILE_SIZE = 64 * 1024;
+    private static final String PROFILE_DIRECTORY = "profiles/";
 
     public String signUp(String name, MultipartFile profileImageFile, String oauthId, String email, Boolean isSignedUp) {
         log.debug("회원가입 처리를 시작합니다.");
@@ -45,15 +48,21 @@ public class ProfessorService {
             throw new BaseException(ProfessorErrorCode.ALREADY_REGISTERED_USER);
         }
 
-        // TODO: 현재 파일을 DB에 저장하지만, 추후 클라우드 스토리지(S3 등)에 업로드하도록 변경 예정
-        byte[] imageBytes = getImageBytes(profileImageFile);
+        String fileName = null;
+        String s3Key = null;
+
+        if (!profileImageFile.isEmpty()) {
+            fileName = profileImageFile.getOriginalFilename();
+            validateProfileImage(profileImageFile.getSize(), fileName);
+            s3Key = s3Service.uploadFile(profileImageFile, PROFILE_DIRECTORY);
+        }
 
         Professor professor = Professor.builder()
                 .oauthId(oauthId)
                 .email(email)
                 .name(name)
-                .profileImageFilename(null)
-                .profileImageS3Key(null)
+                .profileImageFilename(fileName)
+                .profileImageS3Key(s3Key)
                 .build();
         professorRepository.save(professor);
 
@@ -141,14 +150,13 @@ public class ProfessorService {
         return Map.of("imageUrl", Arrays.toString(newImageBytes));
     }
 
-    private void validateProfileImage(MultipartFile file) {
-        if (file.getSize() > MAX_IMAGE_FILE_SIZE) {
+    private void validateProfileImage(Long fileSize, String fileName) {
+        if (fileSize > MAX_IMAGE_FILE_SIZE) {
             throw new BaseException(FileErrorCode.FILE_SIZE_EXCEEDED);
         }
 
-        String originalFilename = file.getOriginalFilename();
-        if (originalFilename != null) {
-            String fileExtension = getFileExtension(originalFilename);
+        if (fileName != null) {
+            String fileExtension = getFileExtension(fileName);
             if (!ALLOWED_IMAGE_FILE_EXTENSIONS.contains(fileExtension.toLowerCase())) {
                 throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
             }
@@ -166,7 +174,7 @@ public class ProfessorService {
     private byte[] getImageBytes(MultipartFile profileImageFile) {
         byte[] imageBytes = null;
         if (profileImageFile != null && !profileImageFile.isEmpty()) {
-            validateProfileImage(profileImageFile);
+            validateProfileImage(profileImageFile.getSize(), profileImageFile.getOriginalFilename());
             try {
                 imageBytes = profileImageFile.getBytes();
             } catch (IOException e) {
