@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 @Slf4j
@@ -75,6 +76,7 @@ public class ProfessorService {
     public void delete(String oauthId) {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
+        s3Service.deleteFile(professor.getProfileImageS3Key());
 
         courseRepository.findByProfessor(professor).forEach(course -> {
             scheduleRepository.deleteAllByCourse((Course) course);
