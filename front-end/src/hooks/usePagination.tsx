@@ -27,6 +27,12 @@ function usePagination() {
       setTotalPages(total);
     }, [total]);
 
+    useEffect(() => {
+      if (page >= totalPages && totalPages > 0) {
+        setPage(totalPages - 1);
+      }
+    }, [totalPages]);
+
     const hiddenRef = useRef<HTMLDivElement>(null);
     const [contentHeight, setContentHeight] = useState<number | null>(null);
 
@@ -76,7 +82,7 @@ function usePagination() {
     );
   };
 
-  return { prevPage, nextPage, PaginationDiv, page, totalPages };
+  return { setPage, prevPage, nextPage, PaginationDiv, page, totalPages };
 }
 
 export default usePagination;
