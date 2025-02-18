@@ -32,6 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> WHITE_LIST_URLS = List.of(
             "/auth/google/url",
             "/auth/google/callback",
+            "/swagger-ui",
+            "/swagger-ui/**",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
             "/students/courses"
     );
 
@@ -48,6 +52,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.debug("JWT 토큰 관련 필터 작업을 수행합니다.");
 
         String requestUri = request.getRequestURI();
+        log.debug("URL : " + requestUri);
+        if (isWhiteListed("/v3/api-docs/swagger-config")) log.debug("/v3/api-docs 있음");
         if (isWhiteListed(requestUri)) {
             log.debug("필터를 적용하지 않는 URL 주소입니다. : requestUri = {}", requestUri);
             chain.doFilter(request, response);

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.*;
 public class OAuthController {
 
     private final OAuthService oauthService;
-
     private final CookieConfig cookieConfig;
+
+    @Value("${frontend.base-url}")
+    private String FRONTEND_BASE_URL;
 
     @GetMapping("/{provider}/url")
     @Operation(
@@ -37,7 +40,7 @@ public class OAuthController {
 
         log.info("OAuth 로그인 URL을 생성했습니다.");
 
-        return ResponseEntity.status(HttpStatus.FOUND)
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .header(HttpHeaders.LOCATION, oauthLoginUrl)
                 .build();
     }
@@ -61,19 +64,19 @@ public class OAuthController {
 
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", loginResult.getAccessToken())
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(isSignedUp ? cookieConfig.getAuthExpiration() : cookieConfig.getSignupExpiration())
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
-
         log.debug("JWT 쿠키 설정이 완료되었습니다. : isSignedUp = {}", isSignedUp);
 
         ResponseEntity.BodyBuilder response = ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+        log.debug(FRONTEND_BASE_URL);
+        String redirectUrl = isSignedUp ? "professor/loading" : "professor/register";
 
-        String redirectUrl = isSignedUp ? "/professor/loading" : "/professor/register";
-
-        return response.header(HttpHeaders.LOCATION, redirectUrl).build();
+        return response.header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + redirectUrl).build();
     }
 }

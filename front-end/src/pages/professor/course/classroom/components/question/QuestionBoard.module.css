@@ -1,0 +1,109 @@
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  width: 511px;
+}
+
+.questionController {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-bottom: 15px;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 2px solid white;
+}
+
+.buttonContainer:disabled {
+  border: 2px solid var(--gray-700);
+}
+
+.buttonContainer:disabled .icon {
+  color: var(--gray-700);
+}
+.icon {
+  width: 7px;
+  height: 14px;
+  fill: none;
+  color: white;
+}
+
+.shadowContainer {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.noQuestion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 511px;
+  height: 279px;
+  background-color: var(--gray-800);
+  border-radius: 8px;
+  font: var(--web-body2-bold);
+  color: var(--gray-400);
+}
+
+.firstShadow {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: 10px;
+  height: 100%;
+  border-radius: 8px;
+  z-index: -3;
+  background: var(--gray-500, #8593b0);
+  box-shadow: 0px 0px 20px 0px rgba(217, 249, 237, 0.2);
+}
+
+.secondShadow {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  top: 20px;
+  z-index: -4;
+  border-radius: 8px;
+  background: var(--gray-700, #4d586f);
+  box-shadow: 0px 0px 20px 0px rgba(217, 249, 237, 0.2);
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  font: var(--web-body3-bold);
+  color: var(--gray-400);
+}
+
+.currentPage {
+  color: white;
+}
+
+.countContainer {
+  font: var(--web-body2-bold);
+  color: white;
+  text-align: center;
+}
+
+.questionCount {
+  color: var(--sub-green-500);
+}
+
+.noQuestionDesc {
+  font: var(--web-body2-bold);
+  color: white;
+  text-align: center;
+  margin-top: 18px;
+}

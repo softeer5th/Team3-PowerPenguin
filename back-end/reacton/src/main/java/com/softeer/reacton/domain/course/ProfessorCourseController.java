@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProfessorCourseController {
     private final ProfessorCourseService professorCourseService;
+
+    @Value("${frontend.base-url}")
+    private String FRONTEND_BASE_URL;
 
     @GetMapping("/active")
     @Operation(
@@ -47,7 +51,7 @@ public class ProfessorCourseController {
         } else {
             log.debug("활성화된 수업이 존재하지 않습니다.");
             return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                    .header(HttpHeaders.LOCATION, "/professor")
+                    .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL+"professor")
                     .build();
         }
     }
