@@ -49,7 +49,6 @@ public class StudentQuestionService {
                 .build();
 
         log.debug("질문을 저장합니다.");
-        System.out.println("question.isComplete: " + question.getIsComplete());
         Question savedQuestion = questionRepository.save(question);
 
         CourseQuestionResponse questionDto = new CourseQuestionResponse(

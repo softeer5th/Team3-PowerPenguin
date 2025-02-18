@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/students/questions")
-@Tag(name = "Student Classroom API", description = "학생 강의실 관련 API")
+@Tag(name = "Student Questions API", description = "학생 질문 관련 API")
 @RequiredArgsConstructor
 public class StudentQuestionController {
 
