@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@JsonPropertyOrder({"name", "email", "profileImageUrl"})
+@JsonPropertyOrder({"name", "email", "imageUrl"})
 public class ProfessorInfoResponse {
     private String name;
     private String email;
-    private String profileImageUrl;
+    private String imageUrl;
 }
