@@ -1,5 +1,4 @@
 import S from './PDFViewer.module.css';
-import React from 'react';
 
 export type PDFViewerProps = {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -7,11 +6,11 @@ export type PDFViewerProps = {
   handleArrowKey: (event: React.KeyboardEvent) => void;
 };
 
-const PDFViewer: React.FC<PDFViewerProps> = ({
+const PDFViewer = ({
   containerRef,
   canvasRef,
   handleArrowKey,
-}) => {
+}: PDFViewerProps) => {
   return (
     <div className="pdf-viewer">
       <div
