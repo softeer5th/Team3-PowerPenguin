@@ -15,4 +15,5 @@ public class OAuthProvider {
     private final String tokenUri;
     private final String userInfoUri;
     private final String scope;
+    private final String prompt;
 }
