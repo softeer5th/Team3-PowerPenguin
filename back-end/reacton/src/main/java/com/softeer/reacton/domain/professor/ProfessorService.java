@@ -113,7 +113,11 @@ public class ProfessorService {
             return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
         });
 
-        return Map.of("imageFileName", professor.getProfileImageFileName());
+        String imageUrl = "";
+        if (isFileExists(professor)) {
+            imageUrl = s3Service.generatePresignedUrl(professor.getProfileImageS3Key(), PRESIGNED_URL_EXPIRATION_MINUTES).toString();
+        }
+        return Map.of("imageUrl", imageUrl);
     }
 
     public Map<String, String> updateName(String oauthId, String newName) {
@@ -199,8 +203,12 @@ public class ProfessorService {
         }
     }
 
+    private boolean isFileExists(Professor professor) {
+        return professor.getProfileImageFileName() != null && !professor.getProfileImageFileName().isEmpty() && professor.getProfileImageS3Key() != null && !professor.getProfileImageS3Key().isEmpty();
+    }
+
     private void deleteExistingFileIfExists(Professor professor) {
-        if (professor.getProfileImageFileName() != null && !professor.getProfileImageFileName().isEmpty() && professor.getProfileImageS3Key() != null && !professor.getProfileImageS3Key().isEmpty()) {
+        if (isFileExists(professor)) {
             s3Service.deleteFile(professor.getProfileImageS3Key());
             log.debug("기존 프로필 이미지({})를 S3에서 삭제했습니다.", professor.getProfileImageS3Key());
         }
