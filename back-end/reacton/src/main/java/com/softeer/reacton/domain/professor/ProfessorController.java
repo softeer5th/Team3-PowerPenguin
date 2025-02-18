@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -31,6 +32,9 @@ public class ProfessorController {
 
     private final ProfessorService professorService;
     private final CookieConfig cookieConfig;
+
+    @Value("${frontend.base-url}")
+    private String FRONTEND_BASE_URL;
 
     @GetMapping
     @Operation(
@@ -153,10 +157,11 @@ public class ProfessorController {
         String newAccessToken = professorService.signUp(name, profileImageFile, oauthId, email, isSignedUp);
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", newAccessToken)
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(cookieConfig.getAuthExpiration())
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         log.debug("회원가입에 성공했습니다 : name = {}", name);
@@ -164,7 +169,7 @@ public class ProfessorController {
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/professor")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + "professor")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
@@ -180,15 +185,16 @@ public class ProfessorController {
     public ResponseEntity<Void> logout() {
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL)
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
@@ -207,15 +213,16 @@ public class ProfessorController {
 
         ResponseCookie jwtCookie = ResponseCookie.from("access_token", "")
                 .httpOnly(true)
-                .secure(false) // TODO : HTTP에서도 쿠키 전송 가능하도록 설정 (배포 환경에서는 true로 변경)
+                .secure(true)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL)
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
