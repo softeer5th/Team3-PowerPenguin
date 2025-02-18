@@ -35,7 +35,7 @@ jobs:
 
       - name: Make application.properties (without sensitive data)
         run: |
-          cd back-end/reacton/src/main/resources
+          mkdir -p back-end/reacton/src/main/resources
           touch application.properties
           echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > application.properties
         shell: bash
