@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 @Builder
-public class QuestionResponse {
+public class QuestionAllResponse {
     List<CourseQuestionResponse> questions;
 
-    public static QuestionResponse of(List<CourseQuestionResponse> questions) {
-        return QuestionResponse.builder()
+    public static QuestionAllResponse of(List<CourseQuestionResponse> questions) {
+        return QuestionAllResponse.builder()
                 .questions(questions)
                 .build();
     }
