@@ -32,20 +32,30 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
-      - name: Make application.properties (without sensitive data)
+            
+      - name: Generate application.properties from GitHub Secrets
         run: |
           echo "🔍 Ensuring the resources directory exists..."
-          mkdir -p back-end/reacton/src/main/resources 
+          mkdir -p back-end/reacton/src/main/resources
+
           echo "🔍 Creating application.properties..."
           rm -f back-end/reacton/src/main/resources/application.properties
           touch back-end/reacton/src/main/resources/application.properties
-          echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > back-end/reacton/src/main/resources/application.properties
+
+          cat <<EOF > back-end/reacton/src/main/resources/application.properties
+          spring.datasource.url=${{ secrets.DB_URL }}
+          spring.datasource.username=${{ secrets.DB_USERNAME }}
+          spring.datasource.password=${{ secrets.DB_PASSWORD }}
+          spring.jpa.hibernate.ddl-auto=${{ secrets.SPRING_JPA_HIBERNATE_DDL_AUTO }}
+          jwt.secret-key=${{ secrets.JWT_SECRET_KEY }}
+          EOF
+
           echo "📂 Listing resources directory content:"
           ls -lh back-end/reacton/src/main/resources/
+
           echo "📄 application.properties content:"
           cat back-end/reacton/src/main/resources/application.properties || echo "❌ application.properties is empty!"
-      
+
       - name: Grant execute permission for gradlew
         run: chmod +x back-end/reacton/gradlew
 
@@ -71,21 +81,16 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
+            set -e  # 🔥 오류 발생 시 즉시 종료
             cd ~/app/back-end/reacton
-            rm -f .env
-            echo "DB_URL=jdbc:mysql://${{ secrets.DB_PRIVATE_IP }}:3306/reacton" > .env
-            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-            echo "SPRING_JPA_HIBERNATE_DDL_AUTO=update" >> .env
-            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME}}" >> .env
-            cat .env
+
             echo "🔄 Pulling latest Docker images..."
             sudo docker-compose pull || { echo "❌ Failed to pull Docker images"; exit 1; }
+
             echo "🚀 Running Docker containers..."
             sudo docker-compose up -d --remove-orphans || { echo "❌ Failed to start containers"; exit 1; }
-            echo "🧹 Cleaning up..."
-            rm -f .env
+
+            echo "🧹 Cleaning up unused images..."
             sudo docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
+
             echo "✅ Deployment completed successfully!"
-        
