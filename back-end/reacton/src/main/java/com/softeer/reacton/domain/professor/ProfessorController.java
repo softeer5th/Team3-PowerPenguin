@@ -110,7 +110,7 @@ public class ProfessorController {
     }
 
 
-    @PatchMapping("/img")
+    @PatchMapping("/image")
     @Operation(
             summary = "사용자 프로필 이미지 변경",
             description = "사용자의 프로필 이미지를 변경합니다.",
