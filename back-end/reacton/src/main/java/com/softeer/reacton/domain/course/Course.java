@@ -52,8 +52,13 @@ public class Course extends BaseEntity {
     @Column(nullable = false)
     private boolean isActive;
 
-    @Column(length = 512)
-    private String fileUrl; // 강의 자료 URL
+    @Setter
+    @Column
+    private String fileName;
+
+    @Setter
+    @Column(length = 512, name="file_s3_key")
+    private String fileS3Key;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id", nullable = false)

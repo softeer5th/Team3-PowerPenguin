@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@JsonPropertyOrder({"id", "name", "courseCode", "capacity", "university", "type", "accessCode", "schedules"})
+@JsonPropertyOrder({"id", "name", "courseCode", "capacity", "university", "type", "accessCode","fileName", "schedules"})
 public class CourseSummaryResponse {
     private Long id;
     private String name;
@@ -18,6 +18,7 @@ public class CourseSummaryResponse {
     private String university;
     private String type;
     private int accessCode;
+    private String fileName;
     private List<CourseScheduleResponse> schedules;
 
     public static CourseSummaryResponse of(Course course, List<CourseScheduleResponse> schedules) {
@@ -30,6 +31,7 @@ public class CourseSummaryResponse {
                 .type(course.getType().toString())
                 .accessCode(course.getAccessCode())
                 .schedules(schedules)
+                .fileName(course.getFileName() != null && !course.getFileName().isEmpty() ? course.getFileName() : "")
                 .build();
     }
 }
