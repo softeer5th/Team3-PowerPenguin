@@ -17,7 +17,10 @@ public class Question extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 36)
+    private String studentId;
+
+    @Column(nullable = false, length = 600)
     private String content;
 
     @Column(nullable = false, length = 20)

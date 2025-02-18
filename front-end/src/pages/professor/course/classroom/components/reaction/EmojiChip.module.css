@@ -1,0 +1,18 @@
+.chipContainer {
+  display: flex;
+  align-items: center;
+  padding: 10px 13px;
+  background-color: var(--gray-900);
+  border-radius: 10px;
+  gap: 9px;
+}
+
+.chipEmoji {
+  width: 22px;
+  height: 22px;
+}
+
+.chipCount {
+  color: white;
+  font: var(--web-title5-medium);
+}

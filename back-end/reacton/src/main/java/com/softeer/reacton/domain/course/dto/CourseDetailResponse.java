@@ -9,8 +9,9 @@ import java.util.List;
 
 @Getter
 @Builder
-@JsonPropertyOrder({"name", "courseCode", "capacity", "university", "type", "accessCode", "fileName", "schedules", "questions", "requests"})
+@JsonPropertyOrder({"id", "name", "courseCode", "capacity", "university", "type", "accessCode", "fileName", "schedules", "questions", "requests"})
 public class CourseDetailResponse {
+    private Long id;
     private String name;
     private String courseCode;
     private int capacity;
@@ -25,6 +26,7 @@ public class CourseDetailResponse {
     public static CourseDetailResponse of(Course course, List<CourseScheduleResponse> schedules,
                                           List<CourseQuestionResponse> questions, List<CourseRequestResponse> requests) {
         return CourseDetailResponse.builder()
+                .id(course.getId())
                 .name(course.getName())
                 .courseCode(course.getCourseCode())
                 .capacity(course.getCapacity())

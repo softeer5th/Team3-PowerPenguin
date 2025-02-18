@@ -5,6 +5,10 @@ import useModal from '@/hooks/useModal';
 import ClassModal from './components/ClassModal';
 import StudentPopup from '../components/StudentPopup';
 import { useNavigate } from 'react-router';
+import { courseRepository } from '@/di';
+import { CourseSummary } from '@/core/model';
+import { getDayString } from '@/utils/util';
+import { ClientError, ServerError } from '@/core/errorType';
 
 const StudentHome = () => {
   const navigate = useNavigate();
@@ -12,7 +16,7 @@ const StudentHome = () => {
   const [modalType, setModalType] = useState<
     'classModal' | 'notFound' | 'notStart' | null
   >(null);
-  const [classInfo, setClassInfo] = useState({});
+  const [classInfo, setClassInfo] = useState<CourseSummary | null>(null);
 
   const { openModal, closeModal, Modal } = useModal();
 
@@ -23,31 +27,60 @@ const StudentHome = () => {
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // 서버에서 요청 받아서 어떤 모달 띄울지 정하기
-    // setModalType();
-    // setClassInfo();
-    openModal();
+    try {
+      const course = await courseRepository.getCourseSummary(
+        Number(admissionCode)
+      );
+      setClassInfo(course);
+      setModalType('classModal');
+      openModal();
+    } catch (error) {
+      if (error instanceof ClientError) {
+        if (error.errorCode === 'COURSE_NOT_FOUND') {
+          setModalType('notFound');
+          openModal();
+        } else if (error.errorCode === 'COURSE_NOT_OPENED') {
+          setModalType('notStart');
+          openModal();
+        }
+      } else if (error instanceof ServerError) {
+        alert('서버에러')!;
+      }
+    }
   };
 
   const handleCheckClick = () => {
     closeModal();
 
-    // 입장하기 버튼
-    // navigate(`/course/${classInfo.id}`);
+    navigate('/student/course');
   };
 
   const renderModal = () => {
     switch (modalType) {
-      case 'classModal':
+      case 'classModal': {
+        if (!classInfo) return null;
+        const currentSchedule = classInfo.schedule?.find(
+          (schedule) => schedule.day === getDayString(new Date().getDay())
+        );
+
         return (
           <ClassModal
             closeModal={closeModal}
-            classInfo={classInfo}
+            university={classInfo.university}
+            courseTitle={classInfo.name}
+            coursePeople={classInfo.capacity}
+            courseDay={currentSchedule?.day}
+            courseNumber={classInfo.code}
+            startTime={currentSchedule?.start}
+            endTime={currentSchedule?.end}
+            courseSort={classInfo.classType}
             onCheckClick={handleCheckClick}
           />
         );
+      }
+
       case 'notFound':
         return (
           <StudentPopup
@@ -57,6 +90,7 @@ const StudentHome = () => {
             content="다시 한번 코드를 확인해주세요"
           />
         );
+
       case 'notStart':
         return (
           <StudentPopup
@@ -66,6 +100,7 @@ const StudentHome = () => {
             content="잠시만 기다려주세요"
           />
         );
+
       default:
         return null;
     }

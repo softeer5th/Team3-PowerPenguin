@@ -1,0 +1,27 @@
+.counterContainer {
+  width: 302px;
+  position: relative;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 16px 20px 16px 24px;
+  border-radius: 100px 12px 12px 100px;
+  background-color: var(--gray-800);
+}
+
+.fullContainer {
+  width: fit-content;
+}
+
+.counterText {
+  color: white;
+  font: var(--web-title5-bold);
+  margin-left: 34px;
+}
+
+.emojiContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  gap: 8px;
+}

@@ -35,7 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/swagger-ui",
             "/swagger-ui/**",
             "/v3/api-docs",
-            "/v3/api-docs/**"
+            "/v3/api-docs/**",
+            "/students/courses"
+    );
+
+    private static final List<String> STUDENT_ACCESS_URLS = List.of(
+            "/students/classroom",
+            "/students/question",
+            "/students/request",
+            "/students/reaction"
     );
 
     @Override
@@ -53,20 +61,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            String token = getJwtFromCookie(request);
-            jwtTokenUtil.validateToken(token);
-            Map<String, Object> userInfo = jwtTokenUtil.getUserInfoFromToken(token);
-
-            request.setAttribute("oauthId", userInfo.get("oauthId"));
-            request.setAttribute("email", userInfo.get("email"));
-            request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
-
-            log.debug("JWT 검증에 성공했습니다. : email = {}", userInfo.get("email"));
+            if ((isStudentRequest(requestUri))) {
+                filterStudent(request);
+            } else {
+                filterProfessor(request);
+            }
 
             chain.doFilter(request, response);
         } catch (BaseException e) {
             setErrorResponse(response, e);
         }
+    }
+
+    private void filterStudent(HttpServletRequest request) {
+        String token = getJwtFromCookie(request);
+        jwtTokenUtil.validateToken(token);
+        Map<String, Object> userInfo = jwtTokenUtil.getStudentInfoFromToken(token);
+
+        request.setAttribute("studentId", userInfo.get("studentId"));
+        request.setAttribute("courseId", userInfo.get("courseId"));
+
+        log.debug("JWT 검증에 성공했습니다. : studentId = {}", userInfo.get("studentId"));
+    }
+
+    private void filterProfessor(HttpServletRequest request) {
+        String token = getJwtFromCookie(request);
+        jwtTokenUtil.validateToken(token);
+        Map<String, Object> userInfo = jwtTokenUtil.getProfessorInfoFromToken(token);
+
+        request.setAttribute("oauthId", userInfo.get("oauthId"));
+        request.setAttribute("email", userInfo.get("email"));
+        request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
+
+        log.debug("JWT 검증에 성공했습니다. : email = {}", userInfo.get("email"));
     }
 
     private boolean isWhiteListed(String requestUri) {
@@ -84,6 +111,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private boolean isStudentRequest(String requestUri) {
+        return STUDENT_ACCESS_URLS.stream().anyMatch(requestUri::startsWith);
     }
 
     private void setErrorResponse(HttpServletResponse response, BaseException e) throws IOException {

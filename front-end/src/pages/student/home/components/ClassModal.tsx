@@ -7,23 +7,28 @@ import ClassChip from './ClassChip';
 export type ClassModalProps = {
   university: string;
   courseTitle: string;
-  coursePeople: string;
-  courseDay: string;
+  coursePeople: number;
+  courseDay?: string;
   courseNumber: string;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
   courseSort: string;
+  closeModal: () => void;
+  onCheckClick: () => void;
 };
 
 const ClassModal = ({
-  classInfo,
+  university,
+  courseTitle,
+  coursePeople,
+  courseDay,
+  courseNumber,
+  startTime,
+  endTime,
+  courseSort,
   closeModal,
   onCheckClick,
-}: {
-  classInfo: ClassModalProps;
-  closeModal: () => void;
-  onCheckClick: () => void;
-}) => {
+}: ClassModalProps) => {
   return (
     <div className={S.modalContainer} onClick={(e) => e.stopPropagation()}>
       <div className={S.modalTitle}>강의 정보를 확인해주세요</div>
@@ -31,19 +36,19 @@ const ClassModal = ({
         <CloseSvg width="100%" height="100%" />
       </button>
       <div className={S.contentContainer}>
-        <ClassChip text={classInfo.courseSort} />
-        <div className={S.university}>{classInfo.university}</div>
+        <ClassChip text={courseSort} />
+        <div className={S.university}>{university}</div>
         <div
           className={S.courseTitle}
-        >{`${classInfo.courseTitle} (${classInfo.courseNumber})`}</div>
+        >{`${courseTitle} (${courseNumber})`}</div>
         <div className={S.courseDescBox}>
           <span className={S.courseTime}>
             <ClockSvg className={S.descSvg} />
-            {`${classInfo.courseDay} ${classInfo.startTime}-${classInfo.endTime}`}
+            {`${courseDay} ${startTime}-${endTime}`}
           </span>
           <span className={S.coursePeople}>
             <PeopleSvg className={S.descSvg} />
-            {classInfo.coursePeople}
+            {coursePeople}명
           </span>
         </div>
       </div>
