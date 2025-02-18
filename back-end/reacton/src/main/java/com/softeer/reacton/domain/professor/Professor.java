@@ -26,17 +26,17 @@ public class Professor {
     private String oauthId;
 
     @Column
-    private String profileImageFilename;
+    private String profileImageFileName;
 
     @Column(length = 512, name = "profile_image_s3_key")
     private String profileImageS3Key;
 
     @Builder
-    public Professor(String email, String name, String oauthId, String profileImageFilename, String profileImageS3Key) {
+    public Professor(String email, String name, String oauthId, String profileImageFileName, String profileImageS3Key) {
         this.email = email;
         this.name = name;
         this.oauthId = oauthId;
-        this.profileImageFilename = profileImageFilename;
+        this.profileImageFileName = profileImageFileName;
         this.profileImageS3Key = profileImageS3Key;
     }
 

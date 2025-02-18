@@ -9,6 +9,7 @@ import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
+import com.softeer.reacton.global.exception.code.S3ErrorCode;
 import com.softeer.reacton.global.jwt.JwtTokenUtil;
 import com.softeer.reacton.global.s3.S3Service;
 import jakarta.transaction.Transactional;
@@ -37,7 +38,7 @@ public class ProfessorService {
     private static final String PROFILE_DIRECTORY = "profiles/";
     private static final int PRESIGNED_URL_EXPIRATION_MINUTES = 1;
 
-    public String signUp(String name, MultipartFile profileImageFile, String oauthId, String email, Boolean isSignedUp) {
+    public String signUp(String name, MultipartFile file, String oauthId, String email, Boolean isSignedUp) {
         log.debug("회원가입 처리를 시작합니다.");
 
         if (isSignedUp) {
@@ -52,23 +53,21 @@ public class ProfessorService {
 
         String fileName = null;
         String s3Key = null;
-
-        if (!profileImageFile.isEmpty()) {
-            fileName = profileImageFile.getOriginalFilename();
-            validateProfileImage(profileImageFile.getSize(), fileName);
-            s3Key = s3Service.uploadFile(profileImageFile, PROFILE_DIRECTORY);
+        if (validateProfileImage(file)) {
+            fileName = file.getOriginalFilename();
+            s3Key = s3Service.uploadFile(file, PROFILE_DIRECTORY);
         }
 
         Professor professor = Professor.builder()
                 .oauthId(oauthId)
                 .email(email)
                 .name(name)
-                .profileImageFilename(fileName)
+                .profileImageFileName(fileName)
                 .profileImageS3Key(s3Key)
                 .build();
         professorRepository.save(professor);
 
-        log.debug("회원가입 처리를 완료했습니다. : email = {}, name = {}", email, name);
+        log.debug("회원가입 처리를 완료했습니다. : email = {}, name = {}, fileName = {}", email, name, fileName);
 
         return jwtTokenUtil.createAuthAccessToken(oauthId, email);
     }
@@ -114,7 +113,7 @@ public class ProfessorService {
             return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
         });
 
-        return Map.of("imageFilename", professor.getProfileImageFilename());
+        return Map.of("imageFileName", professor.getProfileImageFileName());
     }
 
     public Map<String, String> updateName(String oauthId, String newName) {
@@ -131,69 +130,79 @@ public class ProfessorService {
         return Map.of("name", newName);
     }
 
-    public Map<String, String> updateImage(String oauthId, MultipartFile profileImageFile) {
+    public Map<String, String> updateImage(String oauthId, MultipartFile file) {
         log.debug("사용자의 프로필 이미지를 수정합니다.");
+        Professor professor = professorRepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        String existingS3Key = professorRepository.getProfileImageS3KeyByOauthId(oauthId);
-        String profileImageFilename = "";
-        String profileImageS3Key = "";
-        URL imageUrl = null;
+        deleteExistingFileIfExists(professor);
 
-        if (profileImageFile != null && !profileImageFile.isEmpty()) {
-            profileImageFilename = profileImageFile.getOriginalFilename();
-            profileImageS3Key = s3Service.uploadFile(profileImageFile, PROFILE_DIRECTORY);
-            validateProfileImage(profileImageFile.getSize(), profileImageFilename);
-            imageUrl = s3Service.generatePresignedUrl(profileImageS3Key, PRESIGNED_URL_EXPIRATION_MINUTES);
+        String profileImageFileName = null;
+        String profileImageS3Key = null;
+        String imageUrl = "";
+        if (validateProfileImage(file)) {
+            profileImageFileName = file.getOriginalFilename();
+            profileImageS3Key = s3Service.uploadFile(file, PROFILE_DIRECTORY);
+            imageUrl = s3Service.generatePresignedUrl(profileImageS3Key, PRESIGNED_URL_EXPIRATION_MINUTES).toString();
         } else {
-            log.debug("새로운 프로필 이미지가 제공되지 않았으므로 기존 이미지 삭제.");
+            log.debug("새로운 프로필 이미지가 제공되지 않았으므로 기존 이미지를 삭제합니다.");
         }
 
-        if (existingS3Key != null && !existingS3Key.isEmpty()) {
-            s3Service.deleteFile(existingS3Key);
-            log.debug("기존 프로필 이미지({})를 S3에서 삭제했습니다.", existingS3Key);
-        }
-        updateUserProfileImage(oauthId, profileImageFilename, profileImageS3Key);
+        updateUserProfileImage(oauthId, profileImageFileName, profileImageS3Key);
 
         log.debug("프로필 이미지 수정이 완료되었습니다.");
-        return Map.of("imageUrl", imageUrl != null ? imageUrl.toString() : "");
+        return Map.of("imageUrl", imageUrl);
     }
 
-    private void validateProfileImage(Long fileSize, String fileName) {
-        if (fileSize > MAX_IMAGE_FILE_SIZE) {
+    private boolean validateProfileImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return false;
+        }
+
+        if (file.getSize() > MAX_IMAGE_FILE_SIZE) {
             throw new BaseException(FileErrorCode.IMAGE_FILE_SIZE_EXCEEDED);
         }
 
-        if (fileName != null) {
-            String fileExtension = getFileExtension(fileName);
+        String fileName = file.getOriginalFilename();
+        if (fileName != null && !fileName.isEmpty()) {
+            String fileExtension = getFileExtension(file.getOriginalFilename());
             if (!ALLOWED_IMAGE_FILE_EXTENSIONS.contains(fileExtension.toLowerCase())) {
                 throw new BaseException(FileErrorCode.INVALID_IMAGE_FILE_TYPE);
             }
         }
+
+        return true;
     }
 
-    private String getFileExtension(String filename) {
-        int lastDotIndex = filename.lastIndexOf(".");
+    private String getFileExtension(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex == -1) {
             return ""; // 확장자가 없는 경우
         }
-        return filename.substring(lastDotIndex + 1);
+        return fileName.substring(lastDotIndex + 1);
     }
 
-    private void updateUserProfileImage(String oauthId, String profileImageFilename, String profileImageS3Key) {
+    private void updateUserProfileImage(String oauthId, String profileImageFileName, String profileImageS3Key) {
         try {
-            int updatedRows = professorRepository.updateImage(oauthId, profileImageFilename, profileImageS3Key);
+            int updatedRows = professorRepository.updateImage(oauthId, profileImageFileName, profileImageS3Key);
             if (updatedRows == 0) {
                 throw new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
             }
         } catch (Exception e) {
-            log.error("프로필 이미지 업데이트 중 오류 발생: {}", e.getMessage(), e);
+            log.error("프로필 이미지 업데이트 중 오류가 발생했습니다.");
 
             if (profileImageS3Key != null && !profileImageS3Key.isEmpty()) {
                 s3Service.deleteFile(profileImageS3Key);
                 log.debug("DB 업데이트 실패로 인해 새로 업로드한 프로필 이미지({})를 S3에서 삭제했습니다.", profileImageS3Key);
             }
+            throw new BaseException(S3ErrorCode.S3_INTERNAL_ERROR);
+        }
+    }
 
-            throw e;
+    private void deleteExistingFileIfExists(Professor professor) {
+        if (professor.getProfileImageFileName() != null && !professor.getProfileImageFileName().isEmpty() && professor.getProfileImageS3Key() != null && !professor.getProfileImageS3Key().isEmpty()) {
+            s3Service.deleteFile(professor.getProfileImageS3Key());
+            log.debug("기존 프로필 이미지({})를 S3에서 삭제했습니다.", professor.getProfileImageS3Key());
         }
     }
 }

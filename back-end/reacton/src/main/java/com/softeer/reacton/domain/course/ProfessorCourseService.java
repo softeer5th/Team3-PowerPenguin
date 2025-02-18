@@ -10,6 +10,7 @@ import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.Handler.S3ExceptionHandler;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
@@ -158,26 +159,22 @@ public class ProfessorCourseService {
     @Transactional
     public Map<String, String> uploadFile(String oauthId, long courseId, MultipartFile file) {
         Course course = getCourseByProfessor(oauthId, courseId);
+        deleteExistingFileIfExists(course);
 
-        String filename = null;
-        String s3Key;
-
-        if (!file.isEmpty() && validateFile(file)) {
-            filename = file.getOriginalFilename();
-
+        String fileName = null;
+        String s3Key = null;
+        if (validateFile(file)) {
+            fileName = file.getOriginalFilename();
             s3Key = s3Service.uploadFile(file, FILE_DIRECTORY);
-
-            if (isFileExists(course)) {
-                s3Service.deleteFile(course.getFileS3Key());
-                log.debug("기존 강의자료 파일 삭제 완료: {}", course.getFileName());
-            }
-
-            course.setFileName(filename);
-            course.setFileS3Key(s3Key);
-            courseRepository.save(course);
+        }else {
+            log.debug("요청에 파일이 존재하지 않으므로 기존에 저장된 파일만 삭제합니다.");
         }
 
-        return Map.of("filename", filename != null ? filename : "");
+        course.setFileName(fileName);
+        course.setFileS3Key(s3Key);
+        courseRepository.save(course);
+
+        return Map.of("fileName", fileName != null ? fileName : "");
     }
 
     public Map<String, String> getCourseFileUrl(String oauthId, long courseId) {
@@ -325,9 +322,10 @@ public class ProfessorCourseService {
     }
 
     private boolean validateFile(MultipartFile file) {
-        if (file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             return false;
         }
+
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new BaseException(FileErrorCode.FILE_SIZE_EXCEEDED);
         }
@@ -337,19 +335,25 @@ public class ProfessorCourseService {
             throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
         }
 
-        try {
-            String mimeType = file.getContentType();
-            if (mimeType == null || !mimeType.equals("application/pdf")) {
-                throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
-            }
-        } catch (Exception e) {
-            return false;
+        String mimeType = file.getContentType();
+        if (mimeType == null || !mimeType.equals("application/pdf")) {
+            throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
         }
+
         return true;
     }
 
-    private boolean isFileExists(Course course) {
-        return course.getFileName() != null && !course.getFileName().isEmpty() && course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
+    private void deleteExistingFileIfExists(Course course) {
+        if (course.getFileName() != null && !course.getFileName().isEmpty() &&
+                course.getFileS3Key() != null && !course.getFileS3Key().isEmpty()) {
+
+            s3Service.deleteFile(course.getFileS3Key());
+            log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
+        }
     }
 
+    private boolean isFileExists(Course course) {
+        return course.getFileName() != null && !course.getFileName().isEmpty() &&
+                course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
+    }
 }
