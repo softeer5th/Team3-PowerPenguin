@@ -1,0 +1,228 @@
+.reactionModal {
+  width: 1240px;
+  height: 791px;
+  background: radial-gradient(
+      100% 100% at 50% 0%,
+      #6900bc 0%,
+      rgba(105, 0, 188, 0) 100%
+    ),
+    var(--blue-800);
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+  border-radius: var(--large);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+@keyframes particle1 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes particle2 {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.reactionModal::before,
+.reactionModal::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-image: url('../assets/particle.png');
+  background-size: 120%;
+  opacity: 0.5;
+  animation: particle2 4s linear infinite;
+}
+
+.reactionModal::before {
+  animation: particle1 4s linear infinite;
+}
+
+.reactionModal::after {
+  animation: particle2 4s linear infinite;
+}
+
+.closeButton {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+  background-color: var(--gray-900);
+  border-radius: var(--small);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.closeIcon {
+  width: 19px;
+  height: 19px;
+  color: var(--gray-100);
+}
+
+.title {
+  position: absolute;
+  top: 152px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Pretendard Variable';
+  font-size: 88px;
+  font-weight: 800;
+  background: linear-gradient(180deg, #ffffff 0%, #f5e4ff 40%, #b0bcfe 100%);
+  color: transparent;
+  background-clip: text;
+  z-index: 1;
+}
+
+.subTitle {
+  position: absolute;
+  width: 376px;
+  height: 49px;
+  top: 82px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--medium);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.subTitle > span {
+  font-family: 'Pretendard Variable';
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(0deg, #b0bcfe 0%, #ffffff 100%);
+  color: transparent;
+  background-clip: text;
+}
+
+.emojiContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  bottom: 49px;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.rank1 {
+  left: 50%;
+}
+
+.rank2 {
+  left: 20%;
+}
+
+.rank3 {
+  left: 80%;
+}
+
+.emojiWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 50%;
+  position: relative;
+}
+
+.rank1 .emojiWrapper {
+  width: 291px;
+  height: 291px;
+  transform: translateY(-30px);
+}
+
+.rank2 .emojiWrapper {
+  width: 220px;
+  height: 220px;
+}
+
+.rank3 .emojiWrapper {
+  width: 169px;
+  height: 169px;
+}
+
+.emojiBackground {
+  background: linear-gradient(180deg, #0028fd 0%, #b0bcfe 100%);
+  border-radius: 50%;
+  width: calc(100% - 15px);
+  height: calc(100% - 15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rank1 .emoji {
+  width: 170px;
+  height: 170px;
+}
+
+.rank2 .emoji {
+  width: 128px;
+  height: 128px;
+}
+
+.rank3 .emoji {
+  width: 102px;
+  height: 102px;
+}
+
+.rank {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translateX(50%);
+}
+
+.rank1 .rank {
+  transform: translateY(25%);
+}
+
+.rank3 .rank {
+  transform: translateX(calc(50% + 15px));
+}
+
+.rank2 .rank,
+.rank3 .rank {
+  width: 71px;
+  height: 71px;
+  background-color: var(--blue-300);
+  border-radius: 50%;
+  border: 8px solid rgba(83, 110, 255, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: 900 38px 'Pretendard Variable';
+  color: rgba(83, 110, 255, 1);
+}
+
+.count {
+  width: 140px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--medium);
+  font: 700 22px 'Pretendard Variable';
+  color: white;
+}
