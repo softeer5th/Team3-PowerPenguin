@@ -2,6 +2,7 @@ package com.softeer.reacton.global.exception.Handler;
 
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.dto.ExceptionResponse;
+import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.GlobalErrorCode;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.MethodNotAllowedException;
 
 @Slf4j
@@ -81,5 +83,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(GlobalErrorCode.VALIDATION_FAILURE.getStatus())
                 .body(ExceptionResponse.of(GlobalErrorCode.VALIDATION_FAILURE, e.getMessage()));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ExceptionResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        log.warn(FileErrorCode.FILE_SIZE_EXCEEDED.getMessage());
+        return ResponseEntity
+                .status(FileErrorCode.FILE_SIZE_EXCEEDED.getStatus())
+                .body(ExceptionResponse.of(FileErrorCode.FILE_SIZE_EXCEEDED));
     }
 }
