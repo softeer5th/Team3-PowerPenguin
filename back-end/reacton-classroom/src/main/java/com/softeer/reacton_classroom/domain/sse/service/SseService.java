@@ -10,7 +10,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
 import java.time.Duration;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +25,7 @@ public class SseService {
 
     public Flux<ServerSentEvent<MessageResponse>> subscribeCourseMessages(String courseId) {
         Sinks.Many<MessageResponse> sink = courseSinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
-        courseStudentMap.computeIfAbsent(courseId, k -> new HashSet<>());
+        courseStudentMap.computeIfAbsent(courseId, k -> ConcurrentHashMap.newKeySet());
 
         log.debug("교수와 연결 가능한 SSE 통신을 찾았습니다.");
         return openCourseConnection(sink, courseId);
