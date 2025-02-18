@@ -1,0 +1,76 @@
+name: PR Closed - Set End Date & Close Issues
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  repository-projects: write
+
+jobs:
+  pr-closed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set End Date in Project
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const projectId = "PVT_kwDOC1gbws4Aw4Qy";
+            const endDateFieldId = "PVTF_lADOC1gbws4Aw4QyzgnFEDE";
+
+            const prId = context.payload.pull_request.node_id;
+
+            const projectItems = await github.graphql(`
+              query {
+                node(id: "${prId}") {
+                  ... on PullRequest {
+                    projectItems(first: 1) {
+                      nodes { id }
+                    }
+                  }
+                }
+              }
+            `);
+
+            if (projectItems.node.projectItems.nodes.length > 0) {
+              const itemId = projectItems.node.projectItems.nodes[0].id;
+              const endDate = new Date().toISOString();
+
+              await github.graphql(`
+                mutation {
+                  updateProjectV2ItemFieldValue(input: { 
+                    projectId: "${projectId}", 
+                    itemId: "${itemId}", 
+                    fieldId: "${endDateFieldId}", 
+                    value: { date: "${endDate}" }
+                  }) {
+                    clientMutationId
+                  }
+                }
+              `);
+            }
+
+      - name: Close Linked Issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const { data: linkedIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: [`pr-${prNumber}`]
+            });
+
+            for (const issue of linkedIssues) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: "closed"
+              });
+            }
