@@ -11,6 +11,7 @@ import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class StudentClassroomService {
     private final QuestionRepository questionRepository;
     private final CourseRepository courseRepository;
 
+    @Transactional(readOnly = true)
     public ClassroomQuestionResponse getQuestionsByStudentId(String studentId, Long courseId) {
         log.debug("이전에 질문했던 목록을 조회합니다. : studentId = {}, courseId = {}", studentId, courseId);
 
