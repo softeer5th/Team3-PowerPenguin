@@ -177,6 +177,15 @@ public class ProfessorCourseService {
         return Map.of("filename", filename != null ? filename : "");
     }
 
+    public Map<String, String> getCourseFileUrl(String oauthId, long courseId) {
+        Course course = getCourseByProfessor(oauthId, courseId);
+        if (isFileExists(course)) {
+            String s3Url = s3Service.generatePresignedUrl(course.getFileS3Key(), 1).toString();
+            return Map.of("fileUrl", s3Url);
+        }
+        return Map.of("fileUrl", "");
+    }
+
     private Professor getProfessorByOauthId(String oauthId) {
         return professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
@@ -336,4 +345,5 @@ public class ProfessorCourseService {
     private boolean isFileExists(Course course) {
         return course.getFileName() != null && !course.getFileName().isEmpty() && course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
     }
+
 }
