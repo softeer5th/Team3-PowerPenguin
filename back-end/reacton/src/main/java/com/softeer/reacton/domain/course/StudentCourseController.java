@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -23,6 +24,9 @@ public class StudentCourseController {
 
     private final StudentCourseService studentCourseService;
     private final CookieConfig cookieConfig;
+
+    @Value("${frontend.base-url}")
+    private String FRONTEND_BASE_URL;
 
     @GetMapping("/{accessCode}/summary")
     @Operation(
@@ -69,13 +73,14 @@ public class StudentCourseController {
                 .path("/")
                 .maxAge(cookieConfig.getStudentAccessExpiration())
                 .sameSite("Strict")
+                .domain(cookieConfig.getDomain())
                 .build();
 
         log.info("수업 참여에 성공했습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, "/students/classroom")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + "students/classroom")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }
