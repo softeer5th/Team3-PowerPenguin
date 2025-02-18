@@ -9,11 +9,13 @@ import CryEmoji from '@/assets/icons/cry-emoji.svg?react';
 import EmojiChip from './EmojiChip';
 import ToggleButton from '@/components/toggle/ToggleButton';
 import ReactionIcon from './ReactionIcon';
-import { Reaction } from '@/core/model';
+import { Reaction, ReactionType } from '@/core/model';
+import { Action } from '../../ProfessorClassroom';
 
 type EmojiCounterProps = {
   emojiCounts: Record<Reaction, number>;
-  reactions: Reaction[];
+  reactions: ReactionType[];
+  dispatch: React.Dispatch<Action>;
 };
 
 const CHIP_LIST = [
@@ -25,10 +27,14 @@ const CHIP_LIST = [
   { type: 'like', icon: LikeEmoji },
 ] as const;
 
-const getEmojiIcon = (reaction: Reaction) =>
-  CHIP_LIST.find((chip) => chip.type === reaction)?.icon;
+const getEmojiIcon = (reaction: ReactionType) =>
+  CHIP_LIST.find((chip) => chip.type === reaction.type)?.icon;
 
-const EmojiCounter = ({ emojiCounts, reactions }: EmojiCounterProps) => {
+const EmojiCounter = ({
+  emojiCounts,
+  reactions,
+  dispatch,
+}: EmojiCounterProps) => {
   const [isOpenCounter, setIsOpenCounter] = useState(true);
 
   const handleToggle = () => setIsOpenCounter((prev) => !prev);
@@ -48,10 +54,16 @@ const EmojiCounter = ({ emojiCounts, reactions }: EmojiCounterProps) => {
             ))}
           </div>
 
-          {reactions.map((reaction, index) => {
+          {reactions.map((reaction) => {
             const EmojiComponent = getEmojiIcon(reaction);
             return EmojiComponent ? (
-              <ReactionIcon key={index} Emoji={EmojiComponent} />
+              <ReactionIcon
+                key={reaction.id}
+                Emoji={EmojiComponent}
+                onAnimatedEnd={() =>
+                  dispatch({ type: 'REMOVE', payload: reaction.id })
+                }
+              />
             ) : null;
           })}
         </>
