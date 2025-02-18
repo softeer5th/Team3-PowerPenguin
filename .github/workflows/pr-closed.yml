@@ -22,14 +22,13 @@ jobs:
             const endDateFieldId = "PVTF_lADOC1gbws4Aw4QyzgnFEDE";
 
             const prId = context.payload.pull_request.node_id;
-            console.log("PR Node ID:", prId); // PR Node ID 로그 추가
+            console.log("PR Node ID:", prId); 
 
-            // PR이 프로젝트에 추가된 아이템 가져오기
             const projectItems = await github.graphql(`
               query {
                 node(id: "${prId}") {
                   ... on PullRequest {
-                    projectItems(first: 10) {  // first 값을 10으로 늘려서 가져오기
+                    projectItems(first: 10) {  
                       nodes { id }
                     }
                   }
@@ -68,14 +67,13 @@ jobs:
           github-token: ${{ secrets.GH_PAT }}
           script: |
             const prNumber = context.payload.pull_request.number;
-            console.log("PR Number:", prNumber); // PR 번호 확인
+            console.log("PR Number:", prNumber);
 
-            // PR과 연결된 이슈 찾기
             const { data: linkedIssues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: "open",
-              labels: [`pr-${prNumber}`]  // PR에 연결된 이슈 찾기
+              labels: [`pr-${prNumber}`]  
             });
 
             console.log("Fetched Linked Issues:", JSON.stringify(linkedIssues, null, 2));
