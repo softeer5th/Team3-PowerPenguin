@@ -33,7 +33,7 @@ public class StudentClassroomService {
     }
 
     private Course getCourse(Long courseId) {
-        return courseRepository.findCourseById(courseId)
+        return courseRepository.findById(courseId)
                 .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
     }
 

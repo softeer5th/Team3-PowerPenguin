@@ -26,8 +26,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "ELSE 8 END")
     List<Course> findCoursesWithSchedulesByProfessor(@Param("professor") Professor professor);
 
-    Optional<Course> findCourseById(Long id);
-
     Optional<Course> findByAccessCode(int accessCode);
 
     boolean existsByAccessCode(int accessCode);
