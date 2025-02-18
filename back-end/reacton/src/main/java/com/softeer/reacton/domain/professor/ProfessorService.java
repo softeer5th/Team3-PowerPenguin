@@ -161,13 +161,13 @@ public class ProfessorService {
 
     private void validateProfileImage(Long fileSize, String fileName) {
         if (fileSize > MAX_IMAGE_FILE_SIZE) {
-            throw new BaseException(FileErrorCode.FILE_SIZE_EXCEEDED);
+            throw new BaseException(FileErrorCode.IMAGE_FILE_SIZE_EXCEEDED);
         }
 
         if (fileName != null) {
             String fileExtension = getFileExtension(fileName);
             if (!ALLOWED_IMAGE_FILE_EXTENSIONS.contains(fileExtension.toLowerCase())) {
-                throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
+                throw new BaseException(FileErrorCode.INVALID_IMAGE_FILE_TYPE);
             }
         }
     }
