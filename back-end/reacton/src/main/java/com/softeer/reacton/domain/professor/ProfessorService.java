@@ -114,8 +114,7 @@ public class ProfessorService {
             return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
         });
 
-        // TODO: S3 도입 후 imageUrl을 리턴하도록 수정 필요
-        return Map.of("imageUrl", professor.getProfileImageFilename());
+        return Map.of("imageFilename", professor.getProfileImageFilename());
     }
 
     public Map<String, String> updateName(String oauthId, String newName) {
