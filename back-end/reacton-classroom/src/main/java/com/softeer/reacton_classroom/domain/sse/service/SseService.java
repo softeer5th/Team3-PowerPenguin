@@ -104,7 +104,10 @@ public class SseService {
     }
 
     private void closeStudentConnection(String studentId, String courseId) {
-        courseStudentMap.get(courseId).remove(studentId);
+        Set<String> students = courseStudentMap.get(courseId);
+        if (students != null) {
+            students.remove(studentId);
+        }
         closeConnection(courseSinks.get(studentId), studentId);
     }
 
