@@ -81,8 +81,8 @@ public class ProfessorCourseController {
             description = "courseId에 해당하는 수업의 상세 정보를 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회에 성공했습니다."),
-                    @ApiResponse(responseCode = "404", description = "정보를 찾을 수 없습니다."),
-                    @ApiResponse(responseCode = "409", description = "해당 수업에 접근할 권한이 없습니다.")
+                    @ApiResponse(responseCode = "403", description = "해당 수업에 접근할 권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "정보를 찾을 수 없습니다.")
             }
     )
     public ResponseEntity<SuccessResponse<CourseDetailResponse>> getCourseDetail(
