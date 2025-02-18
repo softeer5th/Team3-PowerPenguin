@@ -98,8 +98,8 @@ const ProfessorClassroom = () => {
   useEffect(() => {
     async function fetchPDF() {
       const pdfUrl = await professorRepository.getProfessorPDF(courseId);
-      // setPDF(pdfUrl);
-      // loadPdf(pdfUrl);
+      setPDF(pdfUrl);
+      loadPdf(pdfUrl);
     }
     fetchPDF();
   }, [courseId, courseInfo]);
