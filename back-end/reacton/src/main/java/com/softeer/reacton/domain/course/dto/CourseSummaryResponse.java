@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@JsonPropertyOrder({"name", "courseCode", "capacity", "university", "type", "accessCode", "schedules"})
+@JsonPropertyOrder({"id", "name", "courseCode", "capacity", "university", "type", "accessCode", "schedules"})
 public class CourseSummaryResponse {
     private Long id;
     private String name;
