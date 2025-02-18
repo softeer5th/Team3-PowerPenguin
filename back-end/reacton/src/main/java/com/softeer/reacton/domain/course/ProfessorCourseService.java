@@ -38,11 +38,12 @@ public class ProfessorCourseService {
     private final RequestRepository requestRepository;
     private final ProfessorCourseTransactionService professorCourseTransactionService;
     private final S3Service s3Service;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     private static final int MAX_RETRIES = 10;
     private static final String FILE_DIRECTORY = "course-files/";
     private static final long MAX_FILE_SIZE = 100L * 1024 * 1024;
-    private final SecureRandom secureRandom = new SecureRandom();
+    private static final int PRESIGNED_URL_EXPIRATION_MINUTES = 1;
 
     public Map<String, String> getActiveCourseByUser(String oauthId) {
         log.debug("활성화된 수업을 조회합니다.");
@@ -182,7 +183,7 @@ public class ProfessorCourseService {
     public Map<String, String> getCourseFileUrl(String oauthId, long courseId) {
         Course course = getCourseByProfessor(oauthId, courseId);
         if (isFileExists(course)) {
-            String s3Url = s3Service.generatePresignedUrl(course.getFileS3Key(), 1).toString();
+            String s3Url = s3Service.generatePresignedUrl(course.getFileS3Key(), PRESIGNED_URL_EXPIRATION_MINUTES).toString();
             return Map.of("fileUrl", s3Url);
         }
         return Map.of("fileUrl", "");

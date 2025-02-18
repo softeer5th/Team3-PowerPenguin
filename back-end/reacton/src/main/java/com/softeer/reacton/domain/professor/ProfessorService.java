@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -36,6 +35,7 @@ public class ProfessorService {
     private static final Set<String> ALLOWED_IMAGE_FILE_EXTENSIONS = Set.of("png", "jpg", "jpeg");
     private static final long MAX_IMAGE_FILE_SIZE = 5L * 1024 * 1024;
     private static final String PROFILE_DIRECTORY = "profiles/";
+    private static final int PRESIGNED_URL_EXPIRATION_MINUTES = 1;
 
     public String signUp(String name, MultipartFile profileImageFile, String oauthId, String email, Boolean isSignedUp) {
         log.debug("회원가입 처리를 시작합니다.");
@@ -100,7 +100,7 @@ public class ProfessorService {
             return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
         });
 
-        URL profileImageUrl = s3Service.generatePresignedUrl(professor.getProfileImageS3Key(), 1);
+        URL profileImageUrl = s3Service.generatePresignedUrl(professor.getProfileImageS3Key(), PRESIGNED_URL_EXPIRATION_MINUTES);
         return new ProfessorInfoResponse(professor.getName(), professor.getEmail(), String.valueOf(profileImageUrl));
     }
 
@@ -143,7 +143,7 @@ public class ProfessorService {
             profileImageFilename = profileImageFile.getOriginalFilename();
             profileImageS3Key = s3Service.uploadFile(profileImageFile, PROFILE_DIRECTORY);
             validateProfileImage(profileImageFile.getSize(), profileImageFilename);
-            imageUrl = s3Service.generatePresignedUrl(profileImageS3Key, 1);
+            imageUrl = s3Service.generatePresignedUrl(profileImageS3Key, PRESIGNED_URL_EXPIRATION_MINUTES);
         } else {
             log.debug("새로운 프로필 이미지가 제공되지 않았으므로 기존 이미지 삭제.");
         }
