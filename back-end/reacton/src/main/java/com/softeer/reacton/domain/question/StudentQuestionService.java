@@ -1,11 +1,9 @@
-package com.softeer.reacton.domain.classroom;
+package com.softeer.reacton.domain.question;
 
-import com.softeer.reacton.domain.classroom.dto.ClassroomQuestionResponse;
 import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.domain.course.CourseRepository;
 import com.softeer.reacton.domain.course.dto.CourseQuestionResponse;
-import com.softeer.reacton.domain.question.Question;
-import com.softeer.reacton.domain.question.QuestionRepository;
+import com.softeer.reacton.domain.question.dto.QuestionResponse;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +17,19 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StudentClassroomService {
+public class StudentQuestionService {
 
     private final QuestionRepository questionRepository;
     private final CourseRepository courseRepository;
 
     @Transactional(readOnly = true)
-    public ClassroomQuestionResponse getQuestionsByStudentId(String studentId, Long courseId) {
+    public QuestionResponse getQuestionsByStudentId(String studentId, Long courseId) {
         log.debug("이전에 질문했던 목록을 조회합니다. : studentId = {}, courseId = {}", studentId, courseId);
 
         Course course = getCourse(courseId);
         List<CourseQuestionResponse> questions = findQuestions(studentId, course);
 
-        return ClassroomQuestionResponse.of(questions);
+        return QuestionResponse.of(questions);
     }
 
     private Course getCourse(Long courseId) {

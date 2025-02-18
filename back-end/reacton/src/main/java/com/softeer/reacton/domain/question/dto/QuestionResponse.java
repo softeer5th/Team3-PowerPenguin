@@ -1,4 +1,4 @@
-package com.softeer.reacton.domain.classroom.dto;
+package com.softeer.reacton.domain.question.dto;
 
 import com.softeer.reacton.domain.course.dto.CourseQuestionResponse;
 import lombok.Builder;
@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 @Builder
-public class ClassroomQuestionResponse {
+public class QuestionResponse {
     List<CourseQuestionResponse> questions;
 
-    public static ClassroomQuestionResponse of(List<CourseQuestionResponse> questions) {
-        return ClassroomQuestionResponse.builder()
+    public static QuestionResponse of(List<CourseQuestionResponse> questions) {
+        return QuestionResponse.builder()
                 .questions(questions)
                 .build();
     }

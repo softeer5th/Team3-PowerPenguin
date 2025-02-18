@@ -1,6 +1,6 @@
-package com.softeer.reacton.domain.classroom;
+package com.softeer.reacton.domain.question;
 
-import com.softeer.reacton.domain.classroom.dto.ClassroomQuestionResponse;
+import com.softeer.reacton.domain.question.dto.QuestionResponse;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,17 +11,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/students/questions")
 @Tag(name = "Student Classroom API", description = "학생 강의실 관련 API")
-public class StudentClassroomController {
+@RequiredArgsConstructor
+public class StudentQuestionController {
 
-    private final StudentClassroomService studentClassroomService;
+    private final StudentQuestionService studentQuestionService;
 
-    @GetMapping("/{accessCode}/summary")
+    @GetMapping
     @Operation(
             summary = "학생 질문 목록 조회",
             description = "학생이 이전에 질문했던 목록을 조회합니다.",
@@ -32,13 +34,13 @@ public class StudentClassroomController {
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
-    public ResponseEntity<SuccessResponse<ClassroomQuestionResponse>> getQuestions(HttpServletRequest request) {
+    public ResponseEntity<SuccessResponse<QuestionResponse>> getQuestions(HttpServletRequest request) {
         log.debug("학생 사용자가 이전에 질문했던 목록을 요청합니다.");
 
         String studentId = (String) request.getAttribute("studentId");
         Long courseId = (Long) request.getAttribute("courseId");
 
-        ClassroomQuestionResponse response = studentClassroomService.getQuestionsByStudentId(studentId, courseId);
+        QuestionResponse response = studentQuestionService.getQuestionsByStudentId(studentId, courseId);
 
         log.info("질문 목록을 성공적으로 조회했습니다.");
 
