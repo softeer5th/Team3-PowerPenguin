@@ -19,32 +19,32 @@ import java.util.concurrent.TimeoutException;
 @Service
 public class SseService {
 
-    private final Map<String, Sinks.Many<MessageResponse>> courseSinks = new ConcurrentHashMap<>();
+    private final Map<String, Sinks.Many<MessageResponse<?>>> courseSinks = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> courseStudentMap = new ConcurrentHashMap<>();
     private final int MAX_CONNECTION_TIMEOUT_MINUTES = 10;
 
-    public Flux<ServerSentEvent<MessageResponse>> subscribeCourseMessages(String courseId) {
-        Sinks.Many<MessageResponse> sink = courseSinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
+    public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourseMessages(String courseId) {
+        Sinks.Many<MessageResponse<?>> sink = courseSinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.computeIfAbsent(courseId, k -> ConcurrentHashMap.newKeySet());
 
         log.debug("교수와 연결 가능한 SSE 통신을 찾았습니다.");
         return openCourseConnection(sink, courseId);
     }
 
-    public Flux<ServerSentEvent<MessageResponse>> subscribeStudentMessages(String studentId, String courseId) {
+    public Flux<ServerSentEvent<MessageResponse<?>>> subscribeStudentMessages(String studentId, String courseId) {
         if (!courseStudentMap.containsKey(courseId)) {
             log.debug("courseId와 일치하는 수업을 찾을 수 없습니다.");
             return Flux.empty();
         }
-        Sinks.Many<MessageResponse> sink = courseSinks.computeIfAbsent(studentId, k -> Sinks.many().multicast().onBackpressureBuffer());
+        Sinks.Many<MessageResponse<?>> sink = courseSinks.computeIfAbsent(studentId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.get(courseId).add(studentId);
 
         log.debug("학생과 연결 가능한 SSE 통신을 찾았습니다.");
         return openStudentConnection(sink, studentId, courseId);
     }
 
-    public void sendMessage(String courseId, MessageResponse message) {
-        Sinks.Many<MessageResponse> sink = courseSinks.get(courseId);
+    public void sendMessage(String courseId, MessageResponse<?> message) {
+        Sinks.Many<MessageResponse<?>> sink = courseSinks.get(courseId);
         if (sink == null) {
             log.debug("전송 대상을 찾지 못했습니다. : Receiver not found.");
             throw new BaseException(SseErrorCode.USER_NOT_FOUND);
@@ -58,9 +58,9 @@ public class SseService {
         log.info("메시지 전송에 성공했습니다.");
     }
 
-    private Flux<ServerSentEvent<MessageResponse>> openCourseConnection(Sinks.Many<MessageResponse> sink, String courseId) {
+    private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
         return sink.asFlux()
-                .map(data -> ServerSentEvent.builder(data).build())
+                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
                     // TODO: 프론트 측에서 자동 재연결 요청 기능 추가 필요
@@ -74,9 +74,9 @@ public class SseService {
                 });
     }
 
-    private Flux<ServerSentEvent<MessageResponse>> openStudentConnection(Sinks.Many<MessageResponse> sink, String studentId, String courseId) {
+    private Flux<ServerSentEvent<MessageResponse<?>>> openStudentConnection(Sinks.Many<MessageResponse<?>> sink, String studentId, String courseId) {
         return sink.asFlux()
-                .map(data -> ServerSentEvent.builder(data).build())
+                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
                     // TODO: 프론트 측에서 자동 재연결 요청 기능 추가 필요
@@ -110,7 +110,7 @@ public class SseService {
         closeConnection(courseSinks.get(studentId), studentId);
     }
 
-    private void closeConnection(Sinks.Many<MessageResponse> sink, String courseId) {
+    private void closeConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
         courseSinks.remove(courseId);
         sink.tryEmitComplete();
     }
