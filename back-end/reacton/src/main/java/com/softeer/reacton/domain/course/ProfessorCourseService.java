@@ -166,7 +166,7 @@ public class ProfessorCourseService {
         if (validateFile(file)) {
             fileName = file.getOriginalFilename();
             s3Key = s3Service.uploadFile(file, FILE_DIRECTORY);
-        }else {
+        } else {
             log.debug("요청에 파일이 존재하지 않으므로 기존에 저장된 파일만 삭제합니다.");
         }
 
@@ -343,17 +343,15 @@ public class ProfessorCourseService {
         return true;
     }
 
-    private void deleteExistingFileIfExists(Course course) {
-        if (course.getFileName() != null && !course.getFileName().isEmpty() &&
-                course.getFileS3Key() != null && !course.getFileS3Key().isEmpty()) {
-
-            s3Service.deleteFile(course.getFileS3Key());
-            log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
-        }
-    }
-
     private boolean isFileExists(Course course) {
         return course.getFileName() != null && !course.getFileName().isEmpty() &&
                 course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
+    }
+
+    private void deleteExistingFileIfExists(Course course) {
+        if (isFileExists(course)) {
+            s3Service.deleteFile(course.getFileS3Key());
+            log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
+        }
     }
 }
