@@ -33,7 +33,7 @@ public class ProfessorService {
     private final RequestRepository requestRepository;
     private final S3Service s3Service;
 
-    private static final Set<String> ALLOWED_IMAGE_FILE_EXTENSIONS = Set.of("png", "jpg", "jpeg", "heic");
+    private static final Set<String> ALLOWED_IMAGE_FILE_EXTENSIONS = Set.of("png", "jpg", "jpeg");
     private static final long MAX_IMAGE_FILE_SIZE = 5L * 1024 * 1024;
     private static final String PROFILE_DIRECTORY = "profiles/";
 
@@ -178,21 +178,6 @@ public class ProfessorService {
             return ""; // 확장자가 없는 경우
         }
         return filename.substring(lastDotIndex + 1);
-    }
-
-    private byte[] getImageBytes(MultipartFile profileImageFile) {
-        byte[] imageBytes = null;
-        if (profileImageFile != null && !profileImageFile.isEmpty()) {
-            validateProfileImage(profileImageFile.getSize(), profileImageFile.getOriginalFilename());
-            try {
-                imageBytes = profileImageFile.getBytes();
-            } catch (IOException e) {
-                log.debug("회원가입 처리 과정에서 발생한 에러입니다. : {}", e.getMessage());
-                throw new BaseException(ProfessorErrorCode.IMAGE_PROCESSING_FAILURE);
-            }
-        }
-
-        return imageBytes;
     }
 
     private void updateUserProfileImage(String oauthId, String profileImageFilename, String profileImageS3Key) {
