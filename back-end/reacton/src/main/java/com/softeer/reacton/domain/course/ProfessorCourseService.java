@@ -11,6 +11,7 @@ import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
+import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.s3.S3Service;
 import com.softeer.reacton.global.util.TimeUtil;
@@ -40,6 +41,7 @@ public class ProfessorCourseService {
 
     private static final int MAX_RETRIES = 10;
     private static final String FILE_DIRECTORY = "course-files/";
+    private static final long MAX_FILE_SIZE = 100L * 1024 * 1024;
     private final SecureRandom secureRandom = new SecureRandom();
 
     public Map<String, String> getActiveCourseByUser(String oauthId) {
@@ -325,16 +327,19 @@ public class ProfessorCourseService {
         if (file.isEmpty()) {
             return false;
         }
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new BaseException(FileErrorCode.FILE_SIZE_EXCEEDED);
+        }
 
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.toLowerCase().endsWith(".pdf")) {
-            return false;
+            throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
         }
 
         try {
             String mimeType = file.getContentType();
             if (mimeType == null || !mimeType.equals("application/pdf")) {
-                return false;
+                throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
             }
         } catch (Exception e) {
             return false;
