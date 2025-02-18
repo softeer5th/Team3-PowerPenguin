@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 type loginProvider = 'google';
 
 class AuthRepository {
@@ -5,15 +7,9 @@ class AuthRepository {
    * @param provider {'google'} 로그인 서비스 제공자
    */
   async login(provider: loginProvider): Promise<void> {
-    // API: GET /auth/google/login
+    // API: GET /auth/{provider}/url
 
-    console.log('login:', provider);
-  }
-
-  async logout(): Promise<void> {
-    // API: POST /auth/logout
-
-    console.log('logout');
+    window.location.href = `${API_URL}/auth/${provider}/url`;
   }
 }
 
