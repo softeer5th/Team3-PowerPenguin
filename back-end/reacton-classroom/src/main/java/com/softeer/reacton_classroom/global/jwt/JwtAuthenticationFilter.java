@@ -1,8 +1,8 @@
-package com.softeer.reacton.global.jwt;
+package com.softeer.reacton_classroom.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.dto.ExceptionResponse;
+import com.softeer.reacton_classroom.global.exception.BaseException;
+import com.softeer.reacton_classroom.global.dto.ExceptionResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -23,27 +23,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    // Todo: JWT 토큰 검증을 하지 않아도 되는 페이지에 대해 filter 미적용 기능 추가
-
     private final JwtTokenUtil jwtTokenUtil;
 
     private static final String TOKEN_COOKIE_NAME = "access_token";
-
+    private static final String STUDENT_ACCESS_URL = "/sse/connection/student";
     private static final List<String> WHITE_LIST_URLS = List.of(
-            "/auth/google/url",
-            "/auth/google/callback",
-            "/swagger-ui",
-            "/swagger-ui/**",
-            "/v3/api-docs",
-            "/v3/api-docs/**",
-            "/students/courses"
-    );
-
-    private static final List<String> STUDENT_ACCESS_URLS = List.of(
-            "/students/classroom",
-            "/students/question",
-            "/students/request",
-            "/students/reaction"
+            "/sse/message"
     );
 
     @Override
@@ -52,8 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.debug("JWT 토큰 관련 필터 작업을 수행합니다.");
 
         String requestUri = request.getRequestURI();
-        log.debug("URL : " + requestUri);
-        if (isWhiteListed("/v3/api-docs/swagger-config")) log.debug("/v3/api-docs 있음");
         if (isWhiteListed(requestUri)) {
             log.debug("필터를 적용하지 않는 URL 주소입니다. : requestUri = {}", requestUri);
             chain.doFilter(request, response);
@@ -61,10 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
+            String token = getJwtFromCookie(request);
+            jwtTokenUtil.validateToken(token);
+
             if ((isStudentRequest(requestUri))) {
-                filterStudent(request);
-            } else {
-                filterProfessor(request);
+                filterStudent(request, token);
             }
 
             chain.doFilter(request, response);
@@ -73,27 +57,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void filterStudent(HttpServletRequest request) {
-        String token = getJwtFromCookie(request);
-        jwtTokenUtil.validateToken(token);
+    private void filterStudent(HttpServletRequest request, String token) {
         Map<String, Object> userInfo = jwtTokenUtil.getStudentInfoFromToken(token);
 
         request.setAttribute("studentId", userInfo.get("studentId"));
         request.setAttribute("courseId", userInfo.get("courseId"));
 
         log.debug("JWT 검증에 성공했습니다. : studentId = {}", userInfo.get("studentId"));
-    }
-
-    private void filterProfessor(HttpServletRequest request) {
-        String token = getJwtFromCookie(request);
-        jwtTokenUtil.validateToken(token);
-        Map<String, Object> userInfo = jwtTokenUtil.getProfessorInfoFromToken(token);
-
-        request.setAttribute("oauthId", userInfo.get("oauthId"));
-        request.setAttribute("email", userInfo.get("email"));
-        request.setAttribute("isSignedUp", userInfo.get("isSignedUp"));
-
-        log.debug("JWT 검증에 성공했습니다. : email = {}", userInfo.get("email"));
     }
 
     private boolean isWhiteListed(String requestUri) {
@@ -114,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isStudentRequest(String requestUri) {
-        return STUDENT_ACCESS_URLS.stream().anyMatch(requestUri::startsWith);
+        return requestUri.startsWith(STUDENT_ACCESS_URL);
     }
 
     private void setErrorResponse(HttpServletResponse response, BaseException e) throws IOException {
