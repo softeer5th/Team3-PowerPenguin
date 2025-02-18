@@ -11,6 +11,7 @@ public class ReactonApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ReactonApplication.class, args);
+		// PR 생성시 자동으로 Assignees 추가하는 워크플로우 테스트 용
 	}
 
 }
