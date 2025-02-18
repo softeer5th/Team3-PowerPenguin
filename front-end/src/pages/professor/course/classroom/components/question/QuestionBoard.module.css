@@ -32,8 +32,8 @@
   color: var(--gray-700);
 }
 .icon {
-  width: '7px';
-  height: '14px';
+  width: 7px;
+  height: 14px;
   fill: none;
   color: white;
 }
