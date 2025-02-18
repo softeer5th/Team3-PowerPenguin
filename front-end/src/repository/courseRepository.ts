@@ -13,7 +13,7 @@ import {
 
 // Mock data
 const course1: CourseMeta = {
-  id: 1,
+  id: '1',
   name: '학문의 생성과 발전',
   code: '3290-110',
   capacity: 300,
@@ -25,7 +25,7 @@ const course1: CourseMeta = {
 };
 
 const course2: CourseMeta = {
-  id: 2,
+  id: '2',
   name: '학문의 생성과 발전',
   code: '3290-001',
   capacity: 300,
@@ -40,7 +40,7 @@ const course2: CourseMeta = {
 };
 
 const course3: CourseMeta = {
-  id: 3,
+  id: '3',
   name: '심리학과 학문의 연관',
   code: '3290-002',
   capacity: 300,
@@ -52,7 +52,7 @@ const course3: CourseMeta = {
 };
 
 const course4: CourseMeta = {
-  id: 4,
+  id: '4',
   name: '행복학개론',
   code: '20200494',
   capacity: 300,
@@ -64,7 +64,7 @@ const course4: CourseMeta = {
 };
 
 const course5: CourseMeta = {
-  id: 5,
+  id: '5',
   name: '학문의 생성과 발전',
   code: '3290-001',
   capacity: 300,
@@ -76,7 +76,7 @@ const course5: CourseMeta = {
 };
 
 const course6: CourseMeta = {
-  id: 6,
+  id: '6',
   name: '학문의 생성과 발전',
   code: '3290-001',
   capacity: 300,
@@ -88,7 +88,7 @@ const course6: CourseMeta = {
 };
 
 const course7: CourseMeta = {
-  id: 7,
+  id: '7',
   name: '정신건강의 이해',
   code: '2570-301',
   capacity: 300,
@@ -100,7 +100,7 @@ const course7: CourseMeta = {
 };
 
 const course8: CourseMeta = {
-  id: 8,
+  id: '8',
   name: 'UI 디자인',
   code: '3590-041',
   capacity: 300,
@@ -175,8 +175,8 @@ class CourseRepository {
         { type: RequestSound, count: 20 },
       ],
       questions: [
-        { id: 1, content: '이 강의는 어떤 내용을 다루나요?' },
-        { id: 2, content: 'a'.repeat(200) },
+        { id: '1', time: '', content: '이 강의는 어떤 내용을 다루나요?' },
+        { id: '2', time: '', content: 'a'.repeat(200) },
       ],
     };
   }

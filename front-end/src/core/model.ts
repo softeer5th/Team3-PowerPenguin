@@ -12,6 +12,11 @@ export type Schedule = {
 
 export type Reaction = 'okay' | 'clap' | 'thumb' | 'scream' | 'cry' | 'like';
 
+export type ReactionType = {
+  id: string;
+  type: Reaction;
+};
+
 export const RequestHard = {
   kind: 'hard',
   title: '어려워요 🥲',
@@ -72,7 +77,7 @@ export type Question = {
 };
 
 export type Course = {
-  id: number;
+  id: string;
   name: string;
   code: string;
   capacity: number;
