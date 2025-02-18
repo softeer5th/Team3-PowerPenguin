@@ -3,8 +3,9 @@ package com.softeer.reacton.global.dto;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.softeer.reacton.domain.course.dto.CourseAllResponse;
 import com.softeer.reacton.domain.course.dto.CourseDetailResponse;
+import com.softeer.reacton.domain.course.dto.CourseQuestionResponse;
 import com.softeer.reacton.domain.course.dto.CourseSummaryResponse;
-import com.softeer.reacton.domain.question.dto.QuestionResponse;
+import com.softeer.reacton.domain.question.dto.QuestionAllResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -44,6 +45,13 @@ public class SuccessResponse<T> {
                 .data(data)
                 .build();
     }
+
+    public static SuccessResponse<CourseQuestionResponse> of(String message, CourseQuestionResponse data) {
+        return SuccessResponse.<CourseQuestionResponse>builder()
+                .message(message)
+                .data(data)
+                .build();
+    }
   
     public static SuccessResponse<CourseAllResponse> of(String message, CourseAllResponse data) {
         return SuccessResponse.<CourseAllResponse>builder()
@@ -52,8 +60,8 @@ public class SuccessResponse<T> {
                 .build();
     }
 
-    public static SuccessResponse<QuestionResponse> of(String message, QuestionResponse data) {
-        return SuccessResponse.<QuestionResponse>builder()
+    public static SuccessResponse<QuestionAllResponse> of(String message, QuestionAllResponse data) {
+        return SuccessResponse.<QuestionAllResponse>builder()
                 .message(message)
                 .data(data)
                 .build();
