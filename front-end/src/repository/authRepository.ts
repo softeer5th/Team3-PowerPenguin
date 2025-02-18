@@ -6,7 +6,7 @@ class AuthRepository {
   /**
    * @param provider {'google'} 로그인 서비스 제공자
    */
-  async login(provider: loginProvider): Promise<void> {
+  login(provider: loginProvider): void {
     // API: GET /auth/{provider}/url
 
     window.location.href = `${API_URL}/auth/${provider}/url`;
