@@ -22,12 +22,14 @@ jobs:
             const endDateFieldId = "PVTF_lADOC1gbws4Aw4QyzgnFEDE";
 
             const prId = context.payload.pull_request.node_id;
+            console.log("PR Node ID:", prId); // PR Node ID 로그 추가
 
+            // PR이 프로젝트에 추가된 아이템 가져오기
             const projectItems = await github.graphql(`
               query {
                 node(id: "${prId}") {
                   ... on PullRequest {
-                    projectItems(first: 1) {
+                    projectItems(first: 10) {  // first 값을 10으로 늘려서 가져오기
                       nodes { id }
                     }
                   }
@@ -35,9 +37,14 @@ jobs:
               }
             `);
 
+            console.log("Fetched Project Items:", JSON.stringify(projectItems, null, 2));
+
             if (projectItems.node.projectItems.nodes.length > 0) {
               const itemId = projectItems.node.projectItems.nodes[0].id;
               const endDate = new Date().toISOString();
+
+              console.log("Updating Project Item:", itemId);
+              console.log("Setting End Date:", endDate);
 
               await github.graphql(`
                 mutation {
@@ -51,6 +58,8 @@ jobs:
                   }
                 }
               `);
+            } else {
+              console.log("No project items found for this PR.");
             }
 
       - name: Close Linked Issues
@@ -59,18 +68,29 @@ jobs:
           github-token: ${{ secrets.GH_PAT }}
           script: |
             const prNumber = context.payload.pull_request.number;
+            console.log("PR Number:", prNumber); // PR 번호 확인
+
+            // PR과 연결된 이슈 찾기
             const { data: linkedIssues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: "open",
-              labels: [`pr-${prNumber}`]
+              labels: [`pr-${prNumber}`]  // PR에 연결된 이슈 찾기
             });
 
-            for (const issue of linkedIssues) {
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                state: "closed"
-              });
+            console.log("Fetched Linked Issues:", JSON.stringify(linkedIssues, null, 2));
+
+            if (linkedIssues.length === 0) {
+              console.log("No linked issues found for this PR.");
+            } else {
+              for (const issue of linkedIssues) {
+                console.log("Closing Issue:", issue.number);
+                
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: "closed"
+                });
+              }
             }
