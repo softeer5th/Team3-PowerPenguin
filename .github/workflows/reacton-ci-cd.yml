@@ -35,15 +35,17 @@ jobs:
 
       - name: Make application.properties (without sensitive data)
         run: |
-          mkdir -p back-end/reacton/src/main/resources
-          touch application.properties
-          echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > application.properties
-        shell: bash
-      - name: Verify application.properties
-        run: |
-          ls -lh back-end/reacton/src/main/resources/ || echo "❌ application.properties not found!"
+          echo "🔍 Ensuring the resources directory exists..."
+          mkdir -p back-end/reacton/src/main/resources 
+          echo "🔍 Creating application.properties..."
+          rm -f back-end/reacton/src/main/resources/application.properties
+          touch back-end/reacton/src/main/resources/application.properties
+          echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > back-end/reacton/src/main/resources/application.properties
+          echo "📂 Listing resources directory content:"
+          ls -lh back-end/reacton/src/main/resources/
+          echo "📄 application.properties content:"
           cat back-end/reacton/src/main/resources/application.properties || echo "❌ application.properties is empty!"
-
+      
       - name: Grant execute permission for gradlew
         run: chmod +x back-end/reacton/gradlew
 
