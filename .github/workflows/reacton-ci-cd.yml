@@ -39,6 +39,10 @@ jobs:
           touch application.properties
           echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > application.properties
         shell: bash
+      - name: Verify application.properties
+        run: |
+          ls -lh back-end/reacton/src/main/resources/ || echo "❌ application.properties not found!"
+          cat back-end/reacton/src/main/resources/application.properties || echo "❌ application.properties is empty!"
 
       - name: Grant execute permission for gradlew
         run: chmod +x back-end/reacton/gradlew
