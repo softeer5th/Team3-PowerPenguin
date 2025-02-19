@@ -17,11 +17,11 @@ type AlertModalProps = {
 function getIcon(type: 'caution' | 'success' | 'ask') {
   let icon = null;
   if (type === 'caution') {
-    icon = <WarningIcon width="2.4375rem" height="2.1875rem" />;
+    icon = <WarningIcon width="39px" height="35px" />;
   } else if (type === 'success') {
-    icon = <CheckIcon width="2.875rem" height="2.875rem" />;
+    icon = <CheckIcon width="46px" height="46px" />;
   } else if (type === 'ask') {
-    icon = <QuestionIcon width="2.5rem" height="2.5rem" />;
+    icon = <QuestionIcon width="40px" height="40px" />;
   }
 
   const color = type === 'caution' ? S.redIcon : S.blueIcon;
@@ -41,11 +41,7 @@ const AlertModal = ({
     <div className={S.modal} onClick={(e) => e.stopPropagation()}>
       {onClickCloseButton && (
         <button className={S.closeButton} onClick={onClickCloseButton}>
-          <CloseIcon
-            width="1.1875rem"
-            height="1.1875rem"
-            color="var(--gray-600)"
-          />
+          <CloseIcon width="19px" height="19px" color="var(--gray-600)" />
         </button>
       )}
       <div className={S.modalContent}>
@@ -59,7 +55,7 @@ const AlertModal = ({
             <TextButton
               color={type === 'caution' ? 'red' : 'blue'}
               size="web4"
-              height="3.75rem"
+              height="60px"
               text={buttonText}
               onClick={onClickModalButton}
             />

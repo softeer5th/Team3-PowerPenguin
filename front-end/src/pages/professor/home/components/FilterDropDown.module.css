@@ -9,7 +9,7 @@
   width: fit-content;
   min-height: 53px;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
   background-color: white;
   outline: 1px solid var(--gray-400);
   border-radius: var(--small);
