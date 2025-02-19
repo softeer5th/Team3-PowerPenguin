@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -61,7 +62,7 @@ public class StudentQuestionController {
             }
     )
     public ResponseEntity<SuccessResponse<CourseQuestionResponse>> sendQuestion(
-            @RequestBody QuestionSendRequest questionSendRequest,
+            @Valid @RequestBody QuestionSendRequest questionSendRequest,
             HttpServletRequest request) {
         log.debug("학생 사용자가 질문 등록 및 전송을 요청합니다.");
 
