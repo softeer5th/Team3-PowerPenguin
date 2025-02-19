@@ -100,6 +100,16 @@ public class ProfessorCourseService {
         return CourseAllResponse.of(todayCoursesResponse, allCoursesResponse);
     }
 
+    public List<CourseSummaryResponse> searchCourses(String oauthId, String keyword) {
+        log.debug("검색 결과를 조회합니다.");
+
+        Professor professor = getProfessorByOauthId(oauthId);
+        String searchKeyword = "%" + keyword.toLowerCase() + "%";
+        List<Course> searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
+
+        return getAllCoursesResponse(searchCourses);
+    }
+
     @Transactional
     public void updateCourse(String oauthId, long courseId, CourseRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
