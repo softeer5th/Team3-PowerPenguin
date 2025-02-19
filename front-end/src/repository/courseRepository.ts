@@ -201,16 +201,6 @@ class CourseRepository {
         throw new ClientError(data as ResponseError);
       }
     }
-
-    // return {
-    //   name: course1.name,
-    //   code: course1.code,
-    //   schedule: course1.schedule,
-    //   capacity: course1.capacity,
-    //   university: course1.university,
-    //   classType: course1.classType,
-    // };
-    return data;
   }
 
   async getCourseFile(courseId: string): Promise<File> {

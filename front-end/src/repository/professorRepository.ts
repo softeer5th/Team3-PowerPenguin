@@ -162,6 +162,12 @@ class ProfessorRepository {
     }
   }
 
+  async getProfessorPDF(courseId: number): Promise<string> {
+    // API:  GET /professors/courses/{courseId}/file
+
+    return 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
+  }
+
   /**
    *
    * @param name {string} 새 교수 이름

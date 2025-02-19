@@ -6,7 +6,7 @@ import StudentMessage from './components/StudentMessage';
 import { classroomRepository } from '@/di';
 import { Question } from '@/core/model';
 
-const StudentQuestion = ({ courseId }: { courseId: string }) => {
+const StudentQuestion = ({ courseId }: { courseId: number }) => {
   const [successPopup, setSuccessPopup] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [inputValue, setInputValue] = useState('');

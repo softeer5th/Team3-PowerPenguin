@@ -71,13 +71,13 @@ const StudentCourse = () => {
           }}
         >
           <div className={S.tabLayout}>
-            <StudentRequest courseId={courseId ?? ''} />
+            <StudentRequest courseId={Number(courseId)} />
           </div>
           <div className={S.tabLayout}>
-            <StudentReact courseId={courseId ?? ''} />
+            <StudentReact courseId={Number(courseId)} />
           </div>
           <div className={S.tabLayout}>
-            <StudentQuestion courseId={courseId ?? ''} />
+            <StudentQuestion courseId={Number(courseId)} />
           </div>
         </div>
       </div>

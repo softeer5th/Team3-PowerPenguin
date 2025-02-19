@@ -3,7 +3,7 @@ import LiveIcon from '@/assets/icons/live.svg?react';
 import CloseIcon from '@/assets/icons/close.svg?react';
 
 type AccessCodeModalProps = {
-  accessCode: string;
+  accessCode: number;
   onClose: () => void;
 };
 
