@@ -3,6 +3,7 @@ package com.softeer.reacton_classroom.domain.sse.controller;
 import com.softeer.reacton_classroom.domain.sse.dto.MessageResponse;
 import com.softeer.reacton_classroom.domain.sse.service.SseService;
 import com.softeer.reacton_classroom.global.dto.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,10 @@ public class SseMessageController {
 
     private final SseService sseService;
 
+    @Operation(
+            summary = "SSE 메시지 전송 요청",
+            description = "SSE로 메시지 전송을 요청합니다."
+    )
     @PostMapping("/course/{courseId}")
     public ResponseEntity<SuccessResponse> sendMessage(@PathVariable String courseId, @RequestBody MessageResponse<?> message) {
         log.debug("메시지 전송을 요청합니다. : courseId = {}, type = {}", courseId, message.getMessageType());
