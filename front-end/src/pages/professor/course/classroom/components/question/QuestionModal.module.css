@@ -82,6 +82,7 @@
   font: var(--web-body-list24-medium);
   margin-bottom: 47px;
   scrollbar-width: none;
+  word-wrap: break-word;
 }
 
 .resolveButton {

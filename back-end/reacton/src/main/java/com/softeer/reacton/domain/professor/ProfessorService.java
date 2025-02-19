@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URL;
 import java.util.*;
 
 @Slf4j
@@ -99,7 +98,10 @@ public class ProfessorService {
             return new BaseException(ProfessorErrorCode.USER_NOT_FOUND);
         });
 
-        URL profileImageUrl = s3Service.generatePresignedUrl(professor.getProfileImageS3Key(), PRESIGNED_URL_EXPIRATION_MINUTES);
+        String profileImageUrl = "";
+        if (isFileExists(professor)) {
+            profileImageUrl = s3Service.generatePresignedUrl(professor.getProfileImageS3Key(), PRESIGNED_URL_EXPIRATION_MINUTES).toString();
+        }
         return new ProfessorInfoResponse(professor.getName(), professor.getEmail(), String.valueOf(profileImageUrl));
     }
 

@@ -82,12 +82,17 @@ function usePDF() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const renderTaskRef = useRef<pdfjsLib.RenderTask | null>(null);
 
-  const loadPdf = async (pdfFile: File) => {
+  const loadPdf = async (pdfSource: File | string) => {
     try {
-      const arrayBuffer = await pdfFile.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({
-        data: new Uint8Array(arrayBuffer),
-      });
+      let loadingTask;
+      if (typeof pdfSource === 'string') {
+        loadingTask = pdfjsLib.getDocument(pdfSource);
+      } else {
+        const arrayBuffer = await pdfSource.arrayBuffer();
+        loadingTask = pdfjsLib.getDocument({
+          data: new Uint8Array(arrayBuffer),
+        });
+      }
       const pdfDoc = await loadingTask.promise;
       setPdf(pdfDoc);
       setCurrentPage(1);
@@ -138,6 +143,7 @@ function usePDF() {
   };
 
   return {
+    scale,
     loadPdf,
     prevPage,
     nextPage,

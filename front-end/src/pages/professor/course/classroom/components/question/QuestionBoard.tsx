@@ -1,15 +1,15 @@
 import S from './QuestionBoard.module.css';
 
-import { ProfessorQuestion } from '@/core/model';
+import { Question } from '@/core/model';
 import usePagination from '@/hooks/usePagination';
 import PrevIcon from '@/assets/icons/back-vector.svg?react';
 import NextIcon from '@/assets/icons/next-vector.svg?react';
 import QuestionCard from './QuestionCard';
 
 type QuestionBoardProps = {
-  questions: ProfessorQuestion[];
-  handleResolveClick: (id: ProfessorQuestion['id']) => void;
-  handleModalOpen: (id: ProfessorQuestion['id'], page: number) => void;
+  questions: Question[];
+  handleResolveClick: (id: Question['id']) => void;
+  handleModalOpen: (page: number) => void;
 };
 
 const QuestionBoard = ({
@@ -54,7 +54,7 @@ const QuestionBoard = ({
             {questions.map((question) => (
               <QuestionCard
                 key={question.id}
-                onModalOpen={() => handleModalOpen(question.id, page)}
+                onModalOpen={() => handleModalOpen(page)}
                 onResolveClick={() => handleResolveClick(question.id)}
                 question={question.content}
               />

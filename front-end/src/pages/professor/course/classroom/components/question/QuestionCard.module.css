@@ -19,6 +19,7 @@
   font-weight: 500;
   line-height: 26px;
   color: var(--gray-800);
+  word-wrap: break-word;
   overflow: auto;
   scrollbar-width: none;
 }

@@ -51,7 +51,7 @@ const CARD_CONTENT = [
   },
 ] as const;
 
-const StudentRequest = ({ courseId }: { courseId: string }) => {
+const StudentRequest = ({ courseId }: { courseId: number }) => {
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
 
   const handleCardClick = async (type: CardType) => {
