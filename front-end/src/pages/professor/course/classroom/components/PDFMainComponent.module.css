@@ -1,0 +1,86 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.mainHeader {
+  width: 100%;
+  height: 155px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px 0 48px;
+  justify-content: space-between;
+}
+
+.accessCodeContainer {
+  display: flex;
+  gap: 5px;
+}
+
+.accessCode {
+  width: 206px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-color: var(--gray-800);
+  border-radius: 12px;
+  font: var(--web-title5-medium);
+}
+
+.expandCode {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+
+.expandSvg {
+  width: 23px;
+  height: 23px;
+  color: var(--gray-300);
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.noPdfContainer {
+  width: 1370px;
+  height: 770px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.noPdfDesc {
+  font: var(--web-header1-bold);
+  color: white;
+  margin-bottom: 38px;
+}
+
+.mainFooter {
+  width: 100%;
+  height: 155px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px 0 48px;
+  justify-content: space-between;
+}
+
+.fileButton {
+  width: 201px;
+  height: 61px;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  color: white;
+  font: var(--web-button3-bold);
+}
