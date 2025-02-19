@@ -1,5 +1,5 @@
-import { ClientError, ServerError } from '@/core/errorType';
-import { Professor, ResponseError } from '@/core/model';
+import { Professor } from '@/core/model';
+import { throwError } from './throwError';
 
 class ProfessorRepository {
   /**
@@ -22,26 +22,7 @@ class ProfessorRepository {
       body: form,
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     if (response.redirected) {
       window.location.href = response.url;
@@ -59,26 +40,7 @@ class ProfessorRepository {
       method: 'GET',
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     const json = await response.json();
 
@@ -98,26 +60,7 @@ class ProfessorRepository {
       method: 'GET',
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     const json = await response.json();
 
@@ -136,26 +79,7 @@ class ProfessorRepository {
       method: 'POST',
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     if (response.redirected) {
       window.location.href = response.url;
@@ -182,26 +106,7 @@ class ProfessorRepository {
       body: JSON.stringify(requestBody),
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     const json = await response.json();
 
@@ -224,26 +129,7 @@ class ProfessorRepository {
       body: form,
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     const json = await response.json();
 
@@ -258,26 +144,7 @@ class ProfessorRepository {
       redirect: 'follow',
     });
 
-    if (!response.ok) {
-      if (response.status >= 500) {
-        if (response.status === 502) {
-          throw new ServerError({
-            success: false,
-            errorCode: 'BAD_GATEWAY',
-            message: 'Server Error',
-          });
-        }
-
-        const json = await response.json();
-        throw new ServerError(json as ResponseError);
-      } else if (response.status >= 400) {
-        const json = await response.json();
-
-        throw new ClientError(json as ResponseError);
-      } else {
-        throw new Error('Unknown Error');
-      }
-    }
+    await throwError(response);
 
     if (response.redirected) {
       window.location.href = response.url;
