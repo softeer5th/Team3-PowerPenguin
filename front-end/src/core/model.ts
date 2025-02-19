@@ -101,7 +101,7 @@ export type ProfessorQuestion = Omit<Question, 'time'>;
 
 export type CourseMeta = Omit<Course, 'requests' | 'questions'>;
 
-export type CourseSummary = Omit<CourseMeta, 'id' | 'accessCode' | 'fileURL'>;
+export type CourseSummary = Omit<CourseMeta, 'id' | 'accessCode' | 'fileName'>;
 
 export type ResponseError = {
   success: boolean;
