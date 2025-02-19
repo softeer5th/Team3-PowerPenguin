@@ -3,19 +3,18 @@ import Logo from '@/assets/icons/logo.svg?react';
 import { useState } from 'react';
 import useModal from '@/hooks/useModal';
 import ClassModal from './components/ClassModal';
-import StudentPopup from '../components/StudentPopup';
-import { useNavigate } from 'react-router';
-import { courseRepository } from '@/di';
+import { classroomRepository, courseRepository } from '@/di';
 import { CourseSummary } from '@/core/model';
 import { getDayString } from '@/utils/util';
-import { ClientError, ServerError } from '@/core/errorType';
+import {
+  getStudentPopup,
+  handleStudentError,
+  PopupType,
+} from '@/utils/studentPopupUtils';
 
 const StudentHome = () => {
-  const navigate = useNavigate();
   const [admissionCode, setAdmissionCode] = useState<string>('');
-  const [modalType, setModalType] = useState<
-    'classModal' | 'notFound' | 'notStart' | null
-  >(null);
+  const [modalType, setModalType] = useState<PopupType | null>(null);
   const [classInfo, setClassInfo] = useState<CourseSummary | null>(null);
 
   const { openModal, closeModal, Modal } = useModal();
@@ -25,6 +24,10 @@ const StudentHome = () => {
     if (/^\d*$/.test(inputValue)) {
       setAdmissionCode(inputValue);
     }
+  };
+
+  const handleHomeError = (error: unknown) => {
+    handleStudentError({ error, setModalType, openModal });
   };
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,24 +40,17 @@ const StudentHome = () => {
       setModalType('classModal');
       openModal();
     } catch (error) {
-      if (error instanceof ClientError) {
-        if (error.errorCode === 'COURSE_NOT_FOUND') {
-          setModalType('notFound');
-          openModal();
-        } else if (error.errorCode === 'COURSE_NOT_OPENED') {
-          setModalType('notStart');
-          openModal();
-        }
-      } else if (error instanceof ServerError) {
-        alert('서버에러')!;
-      }
+      handleHomeError(error);
     }
   };
 
-  const handleCheckClick = () => {
-    closeModal();
-
-    navigate('/student/course');
+  const handleCheckClick = async () => {
+    try {
+      closeModal();
+      await classroomRepository.enterCourse(Number(admissionCode));
+    } catch (error) {
+      handleHomeError(error);
+    }
   };
 
   const renderModal = () => {
@@ -64,7 +60,6 @@ const StudentHome = () => {
         const currentSchedule = classInfo.schedule?.find(
           (schedule) => schedule.day === getDayString(new Date().getDay())
         );
-
         return (
           <ClassModal
             closeModal={closeModal}
@@ -82,27 +77,16 @@ const StudentHome = () => {
       }
 
       case 'notFound':
-        return (
-          <StudentPopup
-            closeModal={closeModal}
-            checkModal={closeModal}
-            title="존재하지 않는 코드입니다"
-            content="다시 한번 코드를 확인해주세요"
-          />
-        );
+        return getStudentPopup('notfound', closeModal, closeModal);
 
       case 'notStart':
-        return (
-          <StudentPopup
-            closeModal={closeModal}
-            checkModal={closeModal}
-            title="아직 수업이 시작하지 않았습니다"
-            content="잠시만 기다려주세요"
-          />
-        );
+        return getStudentPopup('notStart', closeModal, closeModal);
+
+      case 'server':
+        return getStudentPopup('server', closeModal, closeModal);
 
       default:
-        return null;
+        return getStudentPopup('unknown', closeModal, closeModal);
     }
   };
 
