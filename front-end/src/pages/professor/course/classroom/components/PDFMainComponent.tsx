@@ -14,7 +14,7 @@ type PDFMainComponentProps = {
   courseInfo: Course;
   setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
   setModal: React.Dispatch<React.SetStateAction<ReactNode>>;
-  courseId: string;
+  courseId: number;
   closeModal: () => void;
   openModal: () => void;
   reactions: ReactionType[];

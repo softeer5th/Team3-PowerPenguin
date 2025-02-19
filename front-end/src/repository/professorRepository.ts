@@ -35,7 +35,7 @@ class ProfessorRepository {
     return 'https://avatars.githubusercontent.com/u/11627623?v=4';
   }
 
-  async getProfessorPDF(courseId: string): Promise<string> {
+  async getProfessorPDF(courseId: number): Promise<string> {
     // API:  GET /professors/courses/{courseId}/file
 
     return 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';

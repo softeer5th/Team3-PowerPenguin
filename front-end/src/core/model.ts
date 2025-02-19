@@ -71,13 +71,13 @@ export type Requests = [
 ];
 
 export type Question = {
-  id: string;
+  id: number;
   time: string;
   content: string;
 };
 
 export type Course = {
-  id: string;
+  id: number;
   name: string;
   code: string;
   capacity: number;

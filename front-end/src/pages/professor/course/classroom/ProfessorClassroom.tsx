@@ -68,7 +68,7 @@ const ProfessorClassroom = () => {
   // 가장 처음 course 정보 받아오기
   useEffect(() => {
     async function fetchCourse() {
-      const course = await courseRepository.getCourseById(courseId);
+      const course = await courseRepository.getCourseById(Number(courseId));
       setCourseInfo(course);
       setQuestions(course.questions);
     }
@@ -163,7 +163,7 @@ const ProfessorClassroom = () => {
             courseInfo={courseInfo}
             setIsUploading={setIsUploading}
             setModal={setModal}
-            courseId={courseId ?? ''}
+            courseId={Number(courseId)}
             closeModal={closeModal}
             reactionsCount={reactionsCount}
             reactions={reactions}
