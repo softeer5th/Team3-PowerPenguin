@@ -8,6 +8,7 @@ import FilterDropDown from '../components/FilterDropDown';
 import TotalCourses from '../components/TotalCourses';
 import useModal from '@/hooks/useModal';
 import courseActions from '@/utils/courseAction';
+import ProfessorError from '@/utils/professorError';
 
 const ProfessorSearch = () => {
   const [courses, setCourses] = useState<CourseMeta[]>([]);
@@ -42,11 +43,24 @@ const ProfessorSearch = () => {
   }, [keyword, navigate]);
 
   useEffect(() => {
-    try {
-      courseRepository.searchCourses(keyword || '').then(setCourses);
-    } catch (error) {
-      console.error(error);
+    async function searchCourses() {
+      try {
+        const searchedCourses = await courseRepository.searchCourses(
+          keyword || ''
+        );
+        setCourses(searchedCourses);
+      } catch (error) {
+        ProfessorError({
+          error,
+          setModal,
+          openModal,
+          closeModal,
+          navigate,
+        });
+      }
     }
+
+    searchCourses();
   }, [keyword]);
 
   return (

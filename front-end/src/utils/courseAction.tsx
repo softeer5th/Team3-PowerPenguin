@@ -5,19 +5,23 @@ import CourseModal from '../pages/professor/home/modal/CourseModal';
 import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
 import ClassStartModal from '../components/modal/ClassStartModal';
 import { courseRepository } from '@/di';
+import ProfessorError from './professorError';
+import { NavigateFunction } from 'react-router';
 
 type courseActionsProps = {
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>;
   openModal: () => void;
   closeModal: () => void;
-  navigate: (url: string) => void;
+  navigate: NavigateFunction;
 };
 
 const fileSuccessModal = (
   courseId: string,
   file: File,
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
-  offModal: () => void
+  openModal: () => void,
+  closeModal: () => void,
+  navigate: NavigateFunction
 ) => {
   setModal(
     <AlertModal
@@ -25,15 +29,23 @@ const fileSuccessModal = (
       message="파일이 성공적으로 업로드되었습니다."
       buttonText="확인"
       onClickCloseButton={() => {
-        offModal();
+        closeModal();
+        setModal(null);
       }}
       onClickModalButton={async () => {
         try {
-          offModal();
+          closeModal();
+          setModal(null);
           console.log('Save file:', file);
           await courseRepository.uploadCourseFile(courseId, file);
         } catch (error) {
-          console.error('Failed to upload file:', error);
+          ProfessorError({
+            error,
+            setModal,
+            openModal,
+            closeModal,
+            navigate,
+          });
         }
       }}
     />
@@ -67,7 +79,13 @@ const courseActions = ({
             offModal();
             await courseRepository.deleteCourse(course.id);
           } catch (error) {
-            console.error('Failed to delete course:', error);
+            ProfessorError({
+              error,
+              setModal,
+              openModal,
+              closeModal,
+              navigate,
+            });
           }
         }}
       />
@@ -89,7 +107,13 @@ const courseActions = ({
             offModal();
             await courseRepository.updateCourse(course);
           } catch (error) {
-            console.error('Failed to update course:', error);
+            ProfessorError({
+              error,
+              setModal,
+              openModal,
+              closeModal,
+              navigate,
+            });
           }
         }}
       />
@@ -133,7 +157,14 @@ const courseActions = ({
             description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
             buttonText="새 파일 저장"
             onClickModalButton={() => {
-              fileSuccessModal(course.id.toString(), file, setModal, offModal);
+              fileSuccessModal(
+                course.id.toString(),
+                file,
+                setModal,
+                openModal,
+                closeModal,
+                navigate
+              );
             }}
             onClickCloseButton={() => {
               offModal();
@@ -141,7 +172,14 @@ const courseActions = ({
           />
         );
       } else {
-        fileSuccessModal(course.id.toString(), file, setModal, offModal);
+        fileSuccessModal(
+          course.id.toString(),
+          file,
+          setModal,
+          openModal,
+          closeModal,
+          navigate
+        );
       }
     };
 

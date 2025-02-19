@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router';
 import CourseQuestion from './components/CourseQuestion';
 import CourseRequest from './components/CourseRequest';
 import CategoryChip from '@/components/chip/CategoryChip';
+import ProfessorError from '@/utils/professorError';
 
 const ProfessorCourse = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -36,15 +37,26 @@ const ProfessorCourse = () => {
     async function getCourse() {
       try {
         if (!courseId) {
-          navigate('/professor');
+          ProfessorError({
+            error: new Error('COURSE_NOT_FOUND'),
+            setModal,
+            openModal,
+            closeModal,
+            navigate,
+          });
           return;
         }
 
         const course = await courseRepository.getCourseById(courseId);
         setCourse(course);
       } catch (error) {
-        console.error(error);
-        // navigate('/professor');
+        ProfessorError({
+          error,
+          setModal,
+          openModal,
+          closeModal,
+          navigate,
+        });
       }
     }
 
