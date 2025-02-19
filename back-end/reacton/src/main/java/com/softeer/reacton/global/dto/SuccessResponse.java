@@ -25,6 +25,11 @@ public class SuccessResponse<T> {
         this.data = data;
     }
 
+    public static SuccessResponse<Void> of(String message) {
+        return SuccessResponse.<Void>builder()
+                .message(message).build();
+    }
+
     public static SuccessResponse<Map<String, String>> of(String message, Map<String, String> data) {
         return SuccessResponse.<Map<String, String>>builder()
                 .message(message)
