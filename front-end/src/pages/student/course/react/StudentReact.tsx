@@ -20,7 +20,7 @@ const CARD_List = [
   { type: 'like', icon: HeartSvg },
 ] as const;
 
-const StudentReact = ({ courseId }: { courseId: string }) => {
+const StudentReact = ({ courseId }: { courseId: number }) => {
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
 
   const handleCardClick = async (reaction: Reaction) => {

@@ -10,7 +10,7 @@ type QuestionModalProps = {
   questions: ProfessorQuestion[];
   handleResolveClick: (id: ProfessorQuestion['id']) => void;
   closeModal: () => void;
-  initialPage: number;
+  initialPage?: number;
 };
 
 const QuestionModal = ({

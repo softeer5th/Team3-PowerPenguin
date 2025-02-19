@@ -1,0 +1,6 @@
+.professorClassroom {
+  width: 1920px;
+  display: flex;
+  user-select: none;
+  background-color: black;
+}

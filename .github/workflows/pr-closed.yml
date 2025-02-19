@@ -1,0 +1,94 @@
+name: PR Closed - Set End Date & Close Issues
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  repository-projects: write
+
+jobs:
+  pr-closed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set End Date in Project
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const projectId = "PVT_kwDOC1gbws4Aw4Qy";
+            const endDateFieldId = "PVTF_lADOC1gbws4Aw4QyzgnFEDE";
+
+            const prId = context.payload.pull_request.node_id;
+            console.log("PR Node ID:", prId); 
+
+            const projectItems = await github.graphql(`
+              query {
+                node(id: "${prId}") {
+                  ... on PullRequest {
+                    projectItems(first: 10) {  
+                      nodes { id }
+                    }
+                  }
+                }
+              }
+            `);
+
+            console.log("Fetched Project Items:", JSON.stringify(projectItems, null, 2));
+
+            if (projectItems.node.projectItems.nodes.length > 0) {
+              const itemId = projectItems.node.projectItems.nodes[0].id;
+              const endDate = new Date().toISOString();
+
+              console.log("Updating Project Item:", itemId);
+              console.log("Setting End Date:", endDate);
+
+              await github.graphql(`
+                mutation {
+                  updateProjectV2ItemFieldValue(input: { 
+                    projectId: "${projectId}", 
+                    itemId: "${itemId}", 
+                    fieldId: "${endDateFieldId}", 
+                    value: { date: "${endDate}" }
+                  }) {
+                    clientMutationId
+                  }
+                }
+              `);
+            } else {
+              console.log("No project items found for this PR.");
+            }
+
+      - name: Close Linked Issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            console.log("PR Number:", prNumber);
+
+            const { data: linkedIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: [`pr-${prNumber}`]  
+            });
+
+            console.log("Fetched Linked Issues:", JSON.stringify(linkedIssues, null, 2));
+
+            if (linkedIssues.length === 0) {
+              console.log("No linked issues found for this PR.");
+            } else {
+              for (const issue of linkedIssues) {
+                console.log("Closing Issue:", issue.number);
+                
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: "closed"
+                });
+              }
+            }

@@ -26,11 +26,7 @@ const FileUploadPopupModal = ({
   return (
     <div className={S.modal} onClick={(e) => e.stopPropagation()}>
       <button className={S.closeButton} onClick={onClickCloseButton}>
-        <CloseIcon
-          width="1.1875rem"
-          height="1.1875rem"
-          color="var(--gray-600)"
-        />
+        <CloseIcon width="19px" height="19px" color="var(--gray-600)" />
       </button>
       <div className={S.modalContent}>
         <div className={S.modalText}>
@@ -53,7 +49,7 @@ const FileUploadPopupModal = ({
                 if (fileInputRef.current) fileInputRef.current.value = '';
               }}
             >
-              <CloseIcon width="1rem" height="1rem" color="white" />
+              <CloseIcon width="16px" height="16px" color="white" />
             </button>
           </div>
         )}
@@ -68,7 +64,7 @@ const FileUploadPopupModal = ({
           <TextButton
             color="white"
             size="web4"
-            height="5rem"
+            height="80px"
             text="내 PC에서 업로드하기"
             onClick={() => fileInputRef.current?.click()}
             isActive={true}
@@ -76,7 +72,7 @@ const FileUploadPopupModal = ({
           <TextButton
             color="blue"
             size="web4"
-            height="5rem"
+            height="80px"
             text="저장하기"
             onClick={() => file && onClickSaveButton(file)}
             isActive={!!file}

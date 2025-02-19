@@ -12,35 +12,47 @@ export type Schedule = {
 
 export type Reaction = 'okay' | 'clap' | 'thumb' | 'scream' | 'cry' | 'like';
 
+export type ReactionType = {
+  id: string;
+  type: Reaction;
+};
+
 export const RequestHard = {
-  kind: 'hard',
+  kind: 'DIFFICULT',
   title: '어려워요 🥲',
   description: '한번만 더 설명해주세요!',
 } as const;
 
 export const RequestFast = {
-  kind: 'fast',
+  kind: 'TOO_FAST',
   title: '너무 빨라요 😣',
   description: '조금만 더 천천히 부탁드려요!',
 } as const;
 
 export const RequestQuestion = {
-  kind: 'question',
+  kind: 'HAVE_QUESTION',
   title: '질문 있어요 🥺',
   description: '질문창 한번 봐주세요!',
 } as const;
 
 export const RequestSize = {
-  kind: 'size',
+  kind: 'SCREEN_ISSUE',
   title: '화면이 잘 안 보여요 🧐',
   description: '확대 부탁드려요!',
 } as const;
 
 export const RequestSound = {
-  kind: 'sound',
+  kind: 'SOUND_ISSUE',
   title: '소리가 잘 안 들려요 😕',
   description: '조금만 더 크게 부탁드려요!',
 } as const;
+
+export type RequestType =
+  | (typeof RequestHard)['kind']
+  | (typeof RequestFast)['kind']
+  | (typeof RequestQuestion)['kind']
+  | (typeof RequestSize)['kind']
+  | (typeof RequestSound)['kind'];
 
 export type Requests = [
   {
@@ -66,13 +78,13 @@ export type Requests = [
 ];
 
 export type Question = {
-  id: string;
+  id: number;
   time: string;
   content: string;
 };
 
 export type Course = {
-  id: number;
+  id: string;
   name: string;
   code: string;
   capacity: number;
@@ -80,7 +92,7 @@ export type Course = {
   classType: '전공' | '교양' | '기타';
   schedule: Schedule[];
   accessCode: number;
-  fileURL: string;
+  fileName: string;
   requests: Requests;
   questions: Question[];
 };
@@ -89,7 +101,7 @@ export type ProfessorQuestion = Omit<Question, 'time'>;
 
 export type CourseMeta = Omit<Course, 'requests' | 'questions'>;
 
-export type CourseSummary = Omit<CourseMeta, 'id' | 'accessCode' | 'fileURL'>;
+export type CourseSummary = Omit<CourseMeta, 'id' | 'accessCode' | 'fileName'>;
 
 export type ResponseError = {
   success: boolean;

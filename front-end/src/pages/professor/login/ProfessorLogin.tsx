@@ -16,13 +16,8 @@ const ProfessorLogin = () => {
     openModal();
   };
 
-  const handleLoginGoogle = async () => {
-    try {
-      const redirectURL = await authRepository.login('google');
-      console.log(redirectURL);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleLoginGoogle = () => {
+    authRepository.login('google');
   };
 
   return (

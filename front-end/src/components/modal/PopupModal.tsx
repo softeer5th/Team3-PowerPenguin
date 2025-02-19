@@ -11,7 +11,7 @@ type PopupModalProps = {
 function getIcon(type: PopupModalProps['type']) {
   const icon =
     type === 'loading' ? (
-      <LoadingIcon width="3.125rem" height="3.125rem" />
+      <LoadingIcon width="50px" height="50px" />
     ) : (
       <WarningIcon />
     );

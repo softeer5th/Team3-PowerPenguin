@@ -8,7 +8,7 @@ import ProfessorLogin from './pages/professor/login/ProfessorLogin';
 import ProfessorRegister from './pages/professor/register/ProfessorRegister';
 import ProfessorProfile from './pages/professor/home/profile/ProfessorProfile';
 import ProfessorCourse from './pages/professor/course/ProfessorCourse';
-import ProfessorClassRoom from './pages/professor/course/classroom';
+import ProfessorClassRoom from './pages/professor/course/classroom/ProfessorClassroom';
 import StudentHome from './pages/student/home/StudentHome';
 import StudentCourse from './pages/student/course/StudentCourse';
 import ProfessorLayout from './pages/professor/ProfessorLayout';

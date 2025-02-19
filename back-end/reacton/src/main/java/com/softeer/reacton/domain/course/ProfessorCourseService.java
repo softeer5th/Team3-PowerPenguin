@@ -11,14 +11,18 @@ import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
+import com.softeer.reacton.global.exception.Handler.S3ExceptionHandler;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
+import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
+import com.softeer.reacton.global.s3.S3Service;
 import com.softeer.reacton.global.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.SecureRandom;
 import java.time.LocalTime;
@@ -35,9 +39,13 @@ public class ProfessorCourseService {
     private final QuestionRepository questionRepository;
     private final RequestRepository requestRepository;
     private final ProfessorCourseTransactionService professorCourseTransactionService;
+    private final S3Service s3Service;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     private static final int MAX_RETRIES = 10;
-    private final SecureRandom secureRandom = new SecureRandom();
+    private static final String FILE_DIRECTORY = "course-files/";
+    private static final long MAX_FILE_SIZE = 100L * 1024 * 1024;
+    private static final int PRESIGNED_URL_EXPIRATION_MINUTES = 1;
 
     public Map<String, String> getActiveCourseByUser(String oauthId) {
         log.debug("활성화된 수업을 조회합니다.");
@@ -149,6 +157,36 @@ public class ProfessorCourseService {
         course.deactivate();
 
         log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
+    }
+
+    @Transactional
+    public Map<String, String> uploadFile(String oauthId, long courseId, MultipartFile file) {
+        Course course = getCourseByProfessor(oauthId, courseId);
+        deleteExistingFileIfExists(course);
+
+        String fileName = null;
+        String s3Key = null;
+        if (validateFile(file)) {
+            fileName = file.getOriginalFilename();
+            s3Key = s3Service.uploadFile(file, FILE_DIRECTORY);
+        } else {
+            log.debug("요청에 파일이 존재하지 않으므로 기존에 저장된 파일만 삭제합니다.");
+        }
+
+        course.setFileName(fileName);
+        course.setFileS3Key(s3Key);
+        courseRepository.save(course);
+
+        return Map.of("fileName", fileName != null ? fileName : "");
+    }
+
+    public Map<String, String> getCourseFileUrl(String oauthId, long courseId) {
+        Course course = getCourseByProfessor(oauthId, courseId);
+        if (isFileExists(course)) {
+            String s3Url = s3Service.generatePresignedUrl(course.getFileS3Key(), PRESIGNED_URL_EXPIRATION_MINUTES).toString();
+            return Map.of("fileUrl", s3Url);
+        }
+        return Map.of("fileUrl", "");
     }
 
     private Professor getProfessorByOauthId(String oauthId) {
@@ -294,5 +332,38 @@ public class ProfessorCourseService {
     private int generateUniqueAccessCode() {
         return 100000 + secureRandom.nextInt(1000000); // 100000~999999
     }
-}
 
+    private boolean validateFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return false;
+        }
+
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new BaseException(FileErrorCode.FILE_SIZE_EXCEEDED);
+        }
+
+        String fileName = file.getOriginalFilename();
+        if (fileName == null || !fileName.toLowerCase().endsWith(".pdf")) {
+            throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
+        }
+
+        String mimeType = file.getContentType();
+        if (mimeType == null || !mimeType.equals("application/pdf")) {
+            throw new BaseException(FileErrorCode.INVALID_FILE_TYPE);
+        }
+
+        return true;
+    }
+
+    private boolean isFileExists(Course course) {
+        return course.getFileName() != null && !course.getFileName().isEmpty() &&
+                course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
+    }
+
+    private void deleteExistingFileIfExists(Course course) {
+        if (isFileExists(course)) {
+            s3Service.deleteFile(course.getFileS3Key());
+            log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
+        }
+    }
+}

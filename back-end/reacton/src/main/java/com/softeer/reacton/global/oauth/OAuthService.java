@@ -40,6 +40,7 @@ public class OAuthService {
         urlBuilder.append("?scope=").append(URLEncoder.encode(provider.getScope(), StandardCharsets.UTF_8))
                 .append("&client_id=").append(provider.getClientId())
                 .append("&redirect_uri=").append(URLEncoder.encode(provider.getRedirectUri(), StandardCharsets.UTF_8))
+                .append("&prompt=").append(provider.getPrompt())
                 .append("&response_type=code");
 
         return urlBuilder.toString();

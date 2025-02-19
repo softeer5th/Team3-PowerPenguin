@@ -134,15 +134,15 @@ const ProfessorCourse = () => {
               <TextButton
                 color="black"
                 size="web2"
-                width="20.5rem"
-                height="5.0625rem"
+                width="328px"
+                height="81px"
                 text={course?.fileURL ? '파일 업로드 상태 수정' : '자료 업로드'}
                 onClick={() => handleFileCourse(course as CourseMeta)}
               />
               <TextButton
                 color="blue"
                 size="web2"
-                height="5.0625rem"
+                height="81px"
                 text="오늘 수업 시작하기"
                 onClick={() => handleStartCourse(course as CourseMeta)}
               />
