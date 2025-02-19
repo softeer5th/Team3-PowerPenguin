@@ -4,6 +4,7 @@ import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,11 +24,18 @@ public class Question extends BaseEntity {
     @Column(nullable = false, length = 600)
     private String content;
 
-    @Column(nullable = false, length = 20)
-    private String status;
+    @Column(nullable = false)
+    private Boolean isComplete;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course; // 수업 정보 (외래 키)
 
+    @Builder
+    public Question(String studentId, String content, Course course) {
+        this.studentId = studentId;
+        this.content = content;
+        this.isComplete = false;
+        this.course = course;
+    }
 }

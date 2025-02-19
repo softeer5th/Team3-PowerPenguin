@@ -40,22 +40,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     );
 
     private static final List<String> STUDENT_ACCESS_URLS = List.of(
-            "/students/classroom",
-            "/students/question",
-            "/students/request",
-            "/students/reaction"
+            "/students/questions",
+            "/students/requests",
+            "/students/reactions"
     );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        log.debug("JWT 토큰 관련 필터 작업을 수행합니다.");
-
         String requestUri = request.getRequestURI();
-        log.debug("URL : " + requestUri);
-        if (isWhiteListed("/v3/api-docs/swagger-config")) log.debug("/v3/api-docs 있음");
+        log.debug("JWT 토큰 관련 필터 작업을 수행합니다. : requestUri = {}", requestUri);
+
         if (isWhiteListed(requestUri)) {
-            log.debug("필터를 적용하지 않는 URL 주소입니다. : requestUri = {}", requestUri);
+            log.debug("필터를 적용하지 않는 URL 주소입니다.");
             chain.doFilter(request, response);
             return;
         }

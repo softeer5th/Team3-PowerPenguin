@@ -22,13 +22,13 @@ public class SseConnectionController {
     private final SseService sseService;
 
     @GetMapping(path = "/course/{courseId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<MessageResponse>> subscribeCourse(@PathVariable String courseId) {
+    public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourse(@PathVariable String courseId) {
         log.debug("교수 SSE 연결을 요청합니다. : courseId = {}", courseId);
         return sseService.subscribeCourseMessages(courseId);
     }
 
     @GetMapping(path = "/student", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<MessageResponse>> subscribeStudent(HttpServletRequest request) {
+    public Flux<ServerSentEvent<MessageResponse<?>>> subscribeStudent(HttpServletRequest request) {
         String studentId = (String) request.getAttribute("studentId");
         Long courseId = (Long) request.getAttribute("courseId");
 
