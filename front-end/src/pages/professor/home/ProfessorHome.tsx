@@ -9,16 +9,17 @@ import TodayCourses from './components/TodayCourses';
 import TotalCourses from './components/TotalCourses';
 import FilterDropDown from './components/FilterDropDown';
 import { CourseDay, CourseType } from '@/utils/util';
-import useCourseActions from '@/hooks/useCourseAction';
+import courseActions from '@/utils/courseAction';
 import CourseModal from './modal/CourseModal';
+import { useNavigate } from 'react-router';
 
 const ProfessorHome = () => {
   const [todayCourses, setTodayCourses] = useState<CourseMeta[]>([]);
   const [courses, setCourses] = useState<CourseMeta[]>([]);
   const [courseDay, setCourseDay] = useState<string>('수업 요일');
   const [courseType, setCourseType] = useState<string>('수업 종류');
-
   const [modal, setModal] = useState<ReactNode | null>(null);
+  const navigate = useNavigate();
   const { openModal, closeModal, Modal } = useModal();
   const {
     handleDeleteCourse,
@@ -26,7 +27,7 @@ const ProfessorHome = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = useCourseActions({ setModal, openModal, closeModal });
+  } = courseActions({ setModal, openModal, closeModal, navigate });
 
   const filteredCourses = courses.filter(
     (course) =>

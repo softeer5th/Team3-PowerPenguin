@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router';
 import { CourseMeta } from '@/core/model';
 import AlertModal from '../components/modal/AlertModal';
 import CourseModal from '../pages/professor/home/modal/CourseModal';
@@ -7,10 +6,11 @@ import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
 import ClassStartModal from '../components/modal/ClassStartModal';
 import { courseRepository } from '@/di';
 
-type UseCourseActionsProps = {
+type courseActionsProps = {
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>;
   openModal: () => void;
   closeModal: () => void;
+  navigate: (url: string) => void;
 };
 
 const fileSuccessModal = (
@@ -40,16 +40,16 @@ const fileSuccessModal = (
   );
 };
 
-const useCourseActions = ({
+const courseActions = ({
   setModal,
   openModal,
   closeModal,
-}: UseCourseActionsProps) => {
+  navigate,
+}: courseActionsProps) => {
   const offModal = () => {
     setModal(null);
     closeModal();
   };
-  const navigate = useNavigate();
 
   const handleDeleteCourse = (course: CourseMeta) => {
     setModal(
@@ -125,7 +125,7 @@ const useCourseActions = ({
     console.log('File course:', course.id);
 
     const handleFileSave = (file: File) => {
-      if (course?.fileURL) {
+      if (course?.fileName) {
         setModal(
           <AlertModal
             type="caution"
@@ -167,4 +167,4 @@ const useCourseActions = ({
   };
 };
 
-export default useCourseActions;
+export default courseActions;

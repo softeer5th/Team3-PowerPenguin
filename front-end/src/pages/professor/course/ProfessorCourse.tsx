@@ -2,7 +2,7 @@ import CircleBackButton from '@/components/button/icon/CircleBackButton';
 import S from './ProfessorCourse.module.css';
 import RecIconButton from '@/components/button/icon/RecIconButton';
 import TextButton from '@/components/button/text/TextButton';
-import useCourseActions from '@/hooks/useCourseAction';
+import courseActions from '@/utils/courseAction';
 import useModal from '@/hooks/useModal';
 import { useEffect, useState } from 'react';
 import { Course, CourseMeta } from '@/core/model';
@@ -20,13 +20,13 @@ const ProfessorCourse = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [modal, setModal] = useState<React.ReactNode | null>(null);
   const { openModal, closeModal, Modal } = useModal();
+  const navigate = useNavigate();
   const {
     handleDeleteCourse,
     handleEditCourse,
     handleStartCourse,
     handleFileCourse,
-  } = useCourseActions({ setModal, openModal, closeModal });
-  const navigate = useNavigate();
+  } = courseActions({ setModal, openModal, closeModal, navigate });
 
   const handleClickBack = () => {
     navigate('/professor');
@@ -40,11 +40,11 @@ const ProfessorCourse = () => {
           return;
         }
 
-        const course = await courseRepository.getCourseById(parseInt(courseId));
+        const course = await courseRepository.getCourseById(courseId);
         setCourse(course);
       } catch (error) {
-        alert(error);
-        navigate('/professor');
+        console.error(error);
+        // navigate('/professor');
       }
     }
 
@@ -136,7 +136,9 @@ const ProfessorCourse = () => {
                 size="web2"
                 width="328px"
                 height="81px"
-                text={course?.fileURL ? '파일 업로드 상태 수정' : '자료 업로드'}
+                text={
+                  course?.fileName ? '파일 업로드 상태 수정' : '자료 업로드'
+                }
                 onClick={() => handleFileCourse(course as CourseMeta)}
               />
               <TextButton
