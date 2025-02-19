@@ -1,4 +1,3 @@
-import { ClientError, ServerError } from '@/core/errorType';
 import {
   Course,
   CourseMeta,
@@ -8,107 +7,56 @@ import {
   RequestQuestion,
   RequestSize,
   RequestSound,
-  ResponseError,
 } from '@/core/model';
+import { throwError } from './throwError';
 
-// Mock data
-const course1: CourseMeta = {
-  id: 1,
-  name: '학문의 생성과 발전',
-  code: '3290-110',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '전공',
-  schedule: [{ day: '월', start: '08:00', end: '10:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
+type BackendSchedule = {
+  day: '월' | '화' | '수' | '목' | '금' | '토' | '일';
+  startTime: string;
+  endTime: string;
 };
 
-const course2: CourseMeta = {
-  id: 2,
-  name: '학문의 생성과 발전',
-  code: '3290-001',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '교양',
-  schedule: [
-    { day: '월', start: '08:00', end: '10:00' },
-    { day: '수', start: '10:00', end: '12:00' },
-  ],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
+type BackendQuestion = {
+  id: number | string;
+  time: string;
+  content: string;
 };
 
-const course3: CourseMeta = {
-  id: 3,
-  name: '심리학과 학문의 연관',
-  code: '3290-002',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '전공',
-  schedule: [{ day: '월', start: '17:00', end: '18:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
-};
+type BackendRequests = [
+  {
+    type: 'SCREEN_ISSUE';
+    count: number | string;
+  },
+  {
+    type: 'HAVE_QUESTION';
+    count: number | string;
+  },
+  {
+    type: 'DIFFICULT';
+    count: number | string;
+  },
+  {
+    type: 'SOUND_ISSUE';
+    count: number | string;
+  },
+  {
+    type: 'TOO_FAST';
+    count: number | string;
+  },
+];
 
-const course4: CourseMeta = {
-  id: 4,
-  name: '행복학개론',
-  code: '20200494',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '교양',
-  schedule: [{ day: '월', start: '19:00', end: '21:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
-};
-
-const course5: CourseMeta = {
-  id: 5,
-  name: '학문의 생성과 발전',
-  code: '3290-001',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '교양',
-  schedule: [{ day: '월', start: '08:00', end: '10:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
-};
-
-const course6: CourseMeta = {
-  id: 6,
-  name: '학문의 생성과 발전',
-  code: '3290-001',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '교양',
-  schedule: [{ day: '월', start: '08:00', end: '10:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
-};
-
-const course7: CourseMeta = {
-  id: 7,
-  name: '정신건강의 이해',
-  code: '2570-301',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '교양',
-  schedule: [{ day: '월', start: '08:00', end: '10:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
-};
-
-const course8: CourseMeta = {
-  id: 8,
-  name: 'UI 디자인',
-  code: '3590-041',
-  capacity: 300,
-  university: '소프대학교',
-  classType: '전공',
-  schedule: [{ day: '수', start: '10:00', end: '12:00' }],
-  accessCode: 382294,
-  fileURL: 'https://avatars.githubusercontent.com/u/11627623?v=4',
+type BackendCourse = {
+  id: string | number;
+  name: string;
+  courseCode: string;
+  capacity: number | string;
+  university: string;
+  type: 'MAJOR' | 'GENERAL' | 'OTHER';
+  schedules: BackendSchedule[];
+  accessCode: string | number;
+  fileName: string;
+  questions: BackendQuestion[];
+  request: BackendRequests;
 };
 
 class CourseRepository {
@@ -116,15 +64,33 @@ class CourseRepository {
     // API: POST /professors/courses
     // Request body: course: CourseMeta
 
-    console.log('create course:', course);
-  }
+    const body = {
+      name: course.name,
+      courseCode: course.code,
+      capacity: course.capacity,
+      university: course.university,
+      type:
+        course.classType === '전공'
+          ? 'MAJOR'
+          : course.classType === '교양'
+            ? 'GENERAL'
+            : 'OTHER',
+      schedules: course.schedule.map((schedule) => ({
+        day: schedule.day,
+        startTime: schedule.start,
+        endTime: schedule.end,
+      })),
+    };
 
-  async uploadCourseFile(courseId: string, file: File): Promise<string> {
-    // API: POST /professors/courses/{courseId}/file
-    // Request body: FormData { key: 'courseFile', value: file }
+    const response = await fetch('/api/professors/courses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
 
-    console.log('upload course file:', courseId, file);
-    return 'https://avatars.githubusercontent.com/u/11627623?v=4';
+    await throwError(response);
   }
 
   async getHomeCourses(): Promise<{
@@ -133,104 +99,313 @@ class CourseRepository {
   }> {
     // API: GET /professors/courses/home
 
-    return {
-      todayCourse: [course1, course2, course3, course4],
-      totalCourse: [
-        course1,
-        course2,
-        course3,
-        course4,
-        course5,
-        course6,
-        course7,
-        course8,
-      ],
-    };
+    const response = await fetch('/api/professors/courses/home', {
+      method: 'GET',
+    });
+
+    await throwError(response);
+
+    const json = await response.json();
+
+    const todayCourse: CourseMeta[] =
+      json.data.today.map(
+        (course: BackendCourse) =>
+          ({
+            id: course.id,
+            name: course.name,
+            code: course.courseCode,
+            capacity: Number(course.capacity),
+            university: course.university,
+            classType:
+              course.type === 'MAJOR'
+                ? '전공'
+                : course.type === 'GENERAL'
+                  ? '교양'
+                  : '기타',
+            schedule: course.schedules.map((schedule) => ({
+              day: schedule.day,
+              start: schedule.startTime,
+              end: schedule.endTime,
+            })),
+            accessCode: Number(course.accessCode),
+            fileName: course.fileName,
+          }) as CourseMeta
+      ) || ([] as CourseMeta[]);
+
+    const totalCourse: CourseMeta[] =
+      json.data.all.map((course: BackendCourse) => {
+        return {
+          id: course.id,
+          name: course.name,
+          code: course.courseCode,
+          capacity: course.capacity,
+          university: course.university,
+          classType:
+            course.type === 'MAJOR'
+              ? '전공'
+              : course.type === 'GENERAL'
+                ? '교양'
+                : '기타',
+          schedule: course.schedules.map((schedule) => ({
+            day: schedule.day,
+            start: schedule.startTime,
+            end: schedule.endTime,
+          })),
+          accessCode: Number(course.accessCode),
+          fileName: course.fileName,
+        } as CourseMeta;
+      }) || ([] as CourseMeta[]);
+
+    return { todayCourse: todayCourse, totalCourse: totalCourse };
   }
 
   async getOpenedCourse(): Promise<CourseMeta> {
     // API: GET /professor/courses/active
 
-    return course1;
+    // TODO: 서버 수정되면 구현
+    return {
+      id: '1',
+      name: '컴퓨터공학',
+      code: 'CSE101',
+      capacity: 100,
+      university: '서울대학교',
+      classType: '전공',
+      schedule: [
+        { day: '월', start: '10:00', end: '12:00' },
+        { day: '수', start: '10:00', end: '12:00' },
+      ],
+      accessCode: 1234,
+      fileName: 'course-file',
+    };
   }
 
   async searchCourses(keyword: string): Promise<CourseMeta[]> {
     // API: GET /professors/courses?keyword={keyword}
 
+    // TODO: 서버 수정되면 구현
     console.log('search course:', keyword);
-    return [course1, course2, course3, course4];
+    return [
+      {
+        id: '1',
+        name: '컴퓨터공학',
+        code: 'CSE101',
+        capacity: 100,
+        university: '서울대학교',
+        classType: '전공',
+        schedule: [
+          { day: '월', start: '10:00', end: '12:00' },
+          { day: '수', start: '10:00', end: '12:00' },
+        ],
+        accessCode: 1234,
+        fileName: 'course-file',
+      },
+      {
+        id: '2',
+        name: '데이터베이스',
+        code: 'DB101',
+        capacity: 100,
+        university: '서울대학교',
+        classType: '전공',
+        schedule: [
+          { day: '화', start: '10:00', end: '12:00' },
+          { day: '목', start: '10:00', end: '12:00' },
+        ],
+        accessCode: 1234,
+        fileName: 'course-file',
+      },
+    ];
   }
 
-  async getCourseById(courseId: number): Promise<Course> {
+  async getCourseById(courseId: Course['id']): Promise<Course> {
     // API: GET /professors/courses/{courseId}
 
-    console.log('get course:', courseId);
-    return {
-      ...course1,
+    const response = await fetch(`/api/professors/courses/${courseId}`, {
+      method: 'GET',
+    });
+
+    await throwError(response);
+
+    const json = await response.json();
+    const data = json.data as BackendCourse;
+
+    const course: Course = {
+      id: data.id.toString(),
+      name: data.name,
+      code: data.courseCode,
+      capacity: Number(data.capacity),
+      university: data.university,
+      classType:
+        data.type === 'MAJOR'
+          ? '전공'
+          : data.type === 'GENERAL'
+            ? '교양'
+            : '기타',
+      schedule: data.schedules.map((schedule) => ({
+        day: schedule.day,
+        start: schedule.startTime,
+        end: schedule.endTime,
+      })),
+      accessCode: Number(data.accessCode),
+      fileName: data.fileName,
+      questions: data.questions.map((question) => ({
+        id: question.id.toString(),
+        time: question.time,
+        content: question.content,
+      })),
       requests: [
-        { type: RequestHard, count: 30 },
-        { type: RequestFast, count: 0 },
-        { type: RequestQuestion, count: 40 },
-        { type: RequestSize, count: 50 },
-        { type: RequestSound, count: 20 },
-      ],
-      questions: [
-        { id: 1, content: '이 강의는 어떤 내용을 다루나요?' },
-        { id: 2, content: 'a'.repeat(200) },
+        {
+          type: RequestHard,
+          count: Number(
+            data.request?.find((req) => req.type === RequestHard.kind)?.count ||
+              0
+          ),
+        },
+        {
+          type: RequestFast,
+          count: Number(
+            data.request?.find((req) => req.type === RequestFast.kind)?.count ||
+              0
+          ),
+        },
+        {
+          type: RequestQuestion,
+          count: Number(
+            data.request?.find((req) => req.type === RequestQuestion.kind)
+              ?.count || 0
+          ),
+        },
+        {
+          type: RequestSize,
+          count: Number(
+            data.request?.find((req) => req.type === RequestSize.kind)?.count ||
+              0
+          ),
+        },
+        {
+          type: RequestSound,
+          count: Number(
+            data.request?.find((req) => req.type === RequestSound.kind)
+              ?.count || 0
+          ),
+        },
       ],
     };
+
+    return course;
   }
 
-  async getCourseSummary(accessCode: number): Promise<CourseSummary> {
+  async getCourseFileUrl(courseId: Course['id']): Promise<string> {
+    // API: GET /professors/courses/{courseId}/file
+
+    const response = await fetch(`/api/professors/courses/${courseId}/file`, {
+      method: 'GET',
+    });
+
+    await throwError(response);
+
+    const json = await response.json();
+    return json.data.fileUrl;
+  }
+
+  async getCourseSummary(
+    accessCode: Course['accessCode']
+  ): Promise<CourseSummary> {
     // API: GET /students/courses/${accessCode}/summary
 
     const response = await fetch(
       `/api/students/courses/${accessCode}/summary`,
       {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       }
     );
-    const data = await response.json();
 
-    if (!response.ok) {
-      if (response.status >= 500) throw new ServerError(data as ResponseError);
-      else {
-        throw new ClientError(data as ResponseError);
-      }
-    }
+    await throwError(response);
 
-    // return {
-    //   name: course1.name,
-    //   code: course1.code,
-    //   schedule: course1.schedule,
-    //   capacity: course1.capacity,
-    //   university: course1.university,
-    //   classType: course1.classType,
-    // };
-    return data;
-  }
+    const json = await response.json();
 
-  async getCourseFile(courseId: string): Promise<File> {
-    // API: GET /professors/courses/{courseId}/file
+    const courseSummary: CourseSummary = {
+      name: json.data.name,
+      code: json.data.courseCode,
+      capacity: Number(json.data.capacity),
+      university: json.data.university,
+      classType:
+        json.data.type === 'MAJOR'
+          ? '전공'
+          : json.data.type === 'GENERAL'
+            ? '교양'
+            : '기타',
+      schedule: json.data.schedules.map((schedule: BackendSchedule) => ({
+        day: schedule.day,
+        start: schedule.startTime,
+        end: schedule.endTime,
+      })),
+    };
 
-    console.log('get course file:', courseId);
-    return new File([''], 'course-file');
+    return courseSummary;
   }
 
   async updateCourse(course: CourseMeta): Promise<void> {
     // API: PUT /professors/courses/{course.id}
     // Request body: Omit<CourseMeta, 'id'>
 
-    console.log('update course:', course);
+    const body: Omit<
+      BackendCourse,
+      'id' | 'accessCode' | 'fileName' | 'questions' | 'request'
+    > = {
+      name: course.name,
+      courseCode: course.code,
+      capacity: course.capacity,
+      university: course.university,
+      type:
+        course.classType === '전공'
+          ? 'MAJOR'
+          : course.classType === '교양'
+            ? 'GENERAL'
+            : 'OTHER',
+      schedules: course.schedule.map((schedule) => ({
+        day: schedule.day,
+        startTime: schedule.start,
+        endTime: schedule.end,
+      })),
+    };
+
+    const response = await fetch(`/api/professors/courses/${course.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    await throwError(response);
+  }
+
+  async uploadCourseFile(courseId: string, file: File): Promise<string> {
+    // API: POST /professors/courses/{courseId}/file
+    // Request body: FormData { key: 'file', value: file }
+
+    const form = new FormData();
+    form.append('file', file);
+
+    const response = await fetch(`/api/professors/courses/${courseId}/file`, {
+      method: 'POST',
+      body: form,
+    });
+
+    await throwError(response);
+
+    const json = await response.json();
+    return json.data.filename;
   }
 
   async deleteCourse(courseId: number): Promise<void> {
     // API: DELETE /professors/courses/{courseId}
 
-    console.log('delete course:', courseId);
+    const response = await fetch(`/api/professors/courses/${courseId}`, {
+      method: 'DELETE',
+    });
+
+    await throwError(response);
   }
 }
 
