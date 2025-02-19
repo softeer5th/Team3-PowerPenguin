@@ -1,5 +1,7 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.request.Request;
+import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ public class ProfessorCourseTransactionService {
 
     private final CourseRepository courseRepository;
     private final ScheduleRepository scheduleRepository;
+    private final RequestRepository requestRepository;
 
     @Transactional
     public long saveCourse(Course course) {
@@ -22,6 +25,11 @@ public class ProfessorCourseTransactionService {
         for (Schedule schedule : course.getSchedules()) {
             schedule.setCourse(course);
             scheduleRepository.save(schedule);
+        }
+
+        for (Request request : course.getRequests()) {
+            request.setCourse(course);
+            requestRepository.save(request);
         }
 
         return course.getId();

@@ -6,6 +6,7 @@ import com.softeer.reacton.domain.professor.ProfessorRepository;
 import com.softeer.reacton.domain.question.Question;
 import com.softeer.reacton.domain.question.QuestionRepository;
 import com.softeer.reacton.domain.request.Request;
+import com.softeer.reacton.domain.request.RequestConstants;
 import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
@@ -61,6 +62,8 @@ public class ProfessorCourseService {
         Course course = Course.create(request, professor);
         List<Schedule> schedules = createSchedules(request, course);
         course.setSchedules(schedules);
+        List<Request> requests = createRequests(course);
+        course.setRequests(requests);
 
         return generateAccessCodeAndSave(course);
     }
@@ -259,6 +262,15 @@ public class ProfessorCourseService {
             schedules.add(schedule);
         }
         return schedules;
+    }
+
+    private List<Request> createRequests(Course course) {
+        List<Request> requests = new ArrayList<>();
+        for (String requestType : RequestConstants.REQUEST_TYPES) {
+            Request request = Request.create(requestType, course);
+            requests.add(request);
+        }
+        return requests;
     }
 
     private long generateAccessCodeAndSave(Course course) {
