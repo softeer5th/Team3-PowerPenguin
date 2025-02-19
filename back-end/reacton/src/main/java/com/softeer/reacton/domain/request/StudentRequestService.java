@@ -30,7 +30,7 @@ public class StudentRequestService {
         checkIfOpen(course);
 
         log.debug("요청을 저장합니다.");
-        int updatedRows = requestRepository.incrementCount(courseId, content);
+        int updatedRows = requestRepository.incrementCount(course, content);
         if (updatedRows == 0) {
             log.debug("요청 데이터를 처리하는 과정에서 발생한 에러입니다. : Request does not exist.");
             throw new BaseException(RequestErrorCode.REQUEST_NOT_FOUND);
