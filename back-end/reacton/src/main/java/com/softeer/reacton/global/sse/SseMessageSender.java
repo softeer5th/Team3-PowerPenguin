@@ -5,6 +5,7 @@ import com.softeer.reacton.global.exception.code.SseErrorCode;
 import com.softeer.reacton.global.sse.dto.SseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
@@ -18,13 +19,12 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class SseMessageSender {
 
+    @Value("${sse.message.base-url}")
+    private String sseMessageBaseUrl;
     private final WebClient webClient;
 
-    // TODO : 실제 배포 환경에 맞게 도메인 주소 변경
-    private final String sseMessageBaseUrl = "http://localhost:8081/sse/message";
-
     public void sendMessageToProfessor(Long courseId, SseMessage<?> message) {
-        String url = sseMessageBaseUrl + "/course/" + courseId;
+        String url = sseMessageBaseUrl + "course/" + courseId;
         try {
             webClient.post()
                     .uri(url, courseId)
