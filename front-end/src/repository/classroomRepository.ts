@@ -52,7 +52,7 @@ class ClassroomRepository {
       }
     );
     await throwError(response);
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 
@@ -60,7 +60,7 @@ class ClassroomRepository {
     // API: POST /students/questions/
 
     const requestBody = { content: question };
-    const response = await fetch('/api/students/reactions', {
+    const response = await fetch('/api/students/questions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,8 +68,8 @@ class ClassroomRepository {
       body: JSON.stringify(requestBody),
     });
     await throwError(response);
-    const data = response.json();
-    return data;
+    const data = await response.json();
+    return data.data;
   }
 
   async sendRequest(request: string): Promise<void> {
@@ -84,7 +84,6 @@ class ClassroomRepository {
       body: JSON.stringify(requestBody),
     });
     await throwError(response);
-    return response.json();
   }
 
   async sendReaction(reaction: Reaction): Promise<void> {

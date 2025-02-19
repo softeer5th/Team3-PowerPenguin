@@ -15,7 +15,7 @@
   font: var(--mobile-button1-medium);
   background-color: #010515;
   opacity: 0.8;
-  animation: move 2s ease-in-out;
+  animation: move 2s ease-in-out forwards;
 }
 
 @keyframes move {

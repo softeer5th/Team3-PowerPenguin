@@ -10,26 +10,46 @@ import { useState } from 'react';
 import ReactCard from './components/ReactCard';
 import { classroomRepository } from '@/di';
 import { Reaction } from '@/core/model';
+import { ClientError, ServerError } from '@/core/errorType';
 
 const CARD_List = [
-  { type: 'okay', icon: OkaySvg },
-  { type: 'clap', icon: ClapSvg },
-  { type: 'thumb', icon: ThumbUpSvg },
-  { type: 'scream', icon: ScreamSvg },
-  { type: 'cry', icon: CrySvg },
-  { type: 'like', icon: HeartSvg },
+  { type: 'OKAY', icon: OkaySvg },
+  { type: 'CLAP', icon: ClapSvg },
+  { type: 'THUMBS_UP', icon: ThumbUpSvg },
+  { type: 'SURPRISED', icon: ScreamSvg },
+  { type: 'CRYING', icon: CrySvg },
+  { type: 'HEART_EYES', icon: HeartSvg },
 ] as const;
 
-const StudentReact = ({ courseId }: { courseId: number }) => {
+type StudentReactProps = {
+  setModalType: React.Dispatch<React.SetStateAction<string | null>>;
+  openModal: () => void;
+};
+
+const StudentReact = ({ setModalType, openModal }: StudentReactProps) => {
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
 
   const handleCardClick = async (reaction: Reaction) => {
     try {
-      await classroomRepository.sendReaction(courseId, reaction);
+      await classroomRepository.sendReaction(reaction);
       setSuccessPopup(true);
       return true;
     } catch (error) {
-      console.error(error);
+      if (error instanceof ClientError) {
+        if (error.errorCode === 'COURSE_NOT_FOUND') {
+          setModalType('notFound');
+          openModal();
+        } else if (error.errorCode === 'COURSE_NOT_ACTIVE') {
+          setModalType('notStart');
+          openModal();
+        }
+      } else if (error instanceof ServerError) {
+        setModalType('server');
+        openModal();
+      } else {
+        setModalType('unknown');
+        openModal();
+      }
       return false;
     }
   };
