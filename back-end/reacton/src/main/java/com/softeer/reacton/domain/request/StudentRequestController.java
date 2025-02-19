@@ -41,7 +41,6 @@ public class StudentRequestController {
             HttpServletRequest request) {
         log.debug("학생 사용자가 요청 등록 및 전송을 요청합니다.");
 
-        String studentId = (String) request.getAttribute("studentId");
         Long courseId = (Long) request.getAttribute("courseId");
         String content = requestSendRequest.getContent();
 
