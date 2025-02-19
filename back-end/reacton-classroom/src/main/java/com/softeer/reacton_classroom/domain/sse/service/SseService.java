@@ -43,8 +43,8 @@ public class SseService {
         return openStudentConnection(sink, studentId, courseId);
     }
 
-    public void sendMessage(String courseId, MessageResponse<?> message) {
-        Sinks.Many<MessageResponse<?>> sink = sinks.get(courseId);
+    public void sendMessage(String id, MessageResponse<?> message) {
+        Sinks.Many<MessageResponse<?>> sink = sinks.get(id);
         if (sink == null) {
             log.debug("전송 대상을 찾지 못했습니다. : Receiver not found.");
             throw new BaseException(SseErrorCode.USER_NOT_FOUND);

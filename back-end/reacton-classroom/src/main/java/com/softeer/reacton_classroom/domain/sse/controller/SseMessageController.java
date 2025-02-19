@@ -18,9 +18,18 @@ public class SseMessageController {
     private final SseService sseService;
 
     @PostMapping("/course/{courseId}")
-    public ResponseEntity<SuccessResponse> sendMessage(@PathVariable String courseId, @RequestBody MessageResponse<?> message) {
-        log.debug("메시지 전송을 요청합니다. : courseId = {}, type = {}", courseId, message.getMessageType());
+    public ResponseEntity<SuccessResponse> sendMessageToCourse(@PathVariable String courseId, @RequestBody MessageResponse<?> message) {
+        log.debug("교수에게 메시지 전송을 요청합니다. : courseId = {}, type = {}", courseId, message.getMessageType());
         sseService.sendMessage(courseId, message);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 전송했습니다."));
+    }
+
+    @PostMapping("/student/{studentId}")
+    public ResponseEntity<SuccessResponse> sendMessageToStudent(@PathVariable String studentId, @RequestBody MessageResponse<?> message) {
+        log.debug("학생에게 메시지 전송을 요청합니다. : studentId = {}, type = {}", studentId, message.getMessageType());
+        sseService.sendMessage(studentId, message);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessResponse.of("성공적으로 전송했습니다."));
