@@ -32,19 +32,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-            
+
       - name: Generate application.properties from GitHub Secrets
         run: |
-           echo "🔍 Ensuring the resources directory exists..."
-           mkdir -p back-end/reacton/src/main/resources
-           echo "🔍 Creating application.properties from secrets..."
-           rm -f back-end/reacton/src/main/resources/application.properties
-           touch back-end/reacton/src/main/resources/application.properties
-           echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > back-end/reacton/src/main/resources/application.properties
-           echo "📂 Listing resources directory content:"
-           ls -lh back-end/reacton/src/main/resources/
-           echo "📄 application.properties content:"
-           cat back-end/reacton/src/main/resources/application.properties || echo "❌ application.properties is empty!"
+          mkdir -p back-end/reacton/src/main/resources
+          rm -f back-end/reacton/src/main/resources/application.properties
+          touch back-end/reacton/src/main/resources/application.properties
+          echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > back-end/reacton/src/main/resources/application.properties
+          ls -lh back-end/reacton/src/main/resources/
 
       - name: Grant execute permission for gradlew
         run: chmod +x back-end/reacton/gradlew
@@ -64,6 +59,23 @@ jobs:
             -t ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest back-end/reacton
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest
 
+      - name: Create .env file
+        run: |
+          echo "SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}" > .env
+          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }}" >> .env
+          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "SPRING_JPA_HIBERNATE_DDL_AUTO=${{ secrets.SPRING_JPA_HIBERNATE_DDL_AUTO }}" >> .env
+          echo "OAUTH_GOOGLE_CLIENT_ID=${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}" >> .env
+          echo "OAUTH_GOOGLE_CLIENT_SECRET=${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
+          echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+
+      - name: Upload .env file to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i <(echo "${{ secrets.PRIVATE_KEY }}") .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton/.env
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -71,16 +83,12 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            set -e  # 🔥 오류 발생 시 즉시 종료
+            set -e
             cd ~/app/back-end/reacton
-
             echo "🔄 Pulling latest Docker images..."
-            sudo docker-compose pull || { echo "❌ Failed to pull Docker images"; exit 1; }
-
+            sudo docker-compose pull --quiet || { echo "❌ Failed to pull Docker images"; exit 1; }
             echo "🚀 Running Docker containers..."
             sudo docker-compose up -d --remove-orphans || { echo "❌ Failed to start containers"; exit 1; }
-
             echo "🧹 Cleaning up unused images..."
             sudo docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
-
             echo "✅ Deployment completed successfully!"
