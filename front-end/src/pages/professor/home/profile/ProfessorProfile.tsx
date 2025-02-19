@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import { useOutletContext } from 'react-router';
 import S from './ProfessorProfile.module.css';
-import { authRepository, professorRepository } from '@/di';
+import { professorRepository } from '@/di';
 import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import TextButton from '@/components/button/text/TextButton';
 import { validateImage } from '@/utils/util';
-import useModal from '@/hooks/useModal';
 import AlertModal from '@/components/modal/AlertModal';
+import { ClientError, ServerError } from '@/core/errorType';
+import PopupModal from '@/components/modal/PopupModal';
+import { OutletContext } from '../layout/ProfessorHomeLayout';
 
 const createEditButton = ({
   onEdit,
@@ -38,65 +41,151 @@ const createEditButton = ({
 
 const ProfessorProfile = () => {
   const [profile, setProfile] = useState<{
-    profileImage: string;
+    profileImage: HTMLImageElement | null;
     name: string;
   }>({
-    profileImage: '',
+    profileImage: null,
     name: '',
   });
   const [isEdit, setIsEdit] = useState({
-    profile: false,
+    profileImage: false,
     name: false,
   });
-  const [modal, setModal] = useState<React.ReactNode | null>(null);
+  const [selectedProfileFile, setSelectedProfileFile] = useState<File | null>(
+    null
+  );
 
+  const profileImageRef = useRef<HTMLImageElement | null>(null);
+  const userName = useRef('');
   const userEmail = useRef('');
   const profileInputRef = useRef<HTMLInputElement>(null);
-  const { openModal, closeModal, Modal } = useModal();
+  const { openModal, closeModal, setModal, navigate } =
+    useOutletContext<OutletContext>();
 
   useEffect(() => {
     async function getProfessor() {
       try {
         const response = await professorRepository.getProfessor();
+        let img: HTMLImageElement | null = null;
+        if (response.profileURL && response.profileURL !== '') {
+          img = new Image();
+          img.src = response.profileURL;
+          profileImageRef.current = img;
+        }
         setProfile({
-          profileImage: response.profileURL,
+          profileImage: img,
           name: response.name,
         });
+        userName.current = response.name;
         userEmail.current = response.email;
       } catch (error) {
         console.error(error);
       }
     }
-
     getProfessor();
   }, []);
 
-  const handleClickEdit = async (type: 'profile' | 'name') => {
-    try {
-      if (type === 'profile') {
-        if (!profile.profileImage) {
-          alert('프로필 사진을 선택해 주세요.');
-          return;
-        }
-        const response = await fetch(profile.profileImage);
-        const blob = await response.blob();
-        const file = new File([blob], 'profile.jpg', { type: blob.type });
-        await professorRepository.updateProfessorProfile(file);
-        setIsEdit({ ...isEdit, profile: false });
-      } else if (type === 'name') {
-        await professorRepository.updateProfessorName(profile.name);
-        setIsEdit({ ...isEdit, name: false });
+  useEffect(() => {
+    return () => {
+      if (profile.profileImage?.src.startsWith('blob:')) {
+        URL.revokeObjectURL(profile.profileImage.src);
       }
+    };
+  }, [profile.profileImage]);
+
+  const handleEditProfile = async () => {
+    try {
+      const newProfileURL =
+        await professorRepository.updateProfessorProfile(selectedProfileFile);
+      if (profileImageRef.current) {
+        profileImageRef.current.src = newProfileURL;
+      } else {
+        const img = new Image();
+        img.src = newProfileURL;
+        profileImageRef.current = img;
+      }
+      setSelectedProfileFile(null);
+      setProfile({
+        ...profile,
+        profileImage: profileImageRef.current,
+      });
+      setIsEdit({ ...isEdit, profileImage: false });
     } catch (error) {
-      console.error(error);
+      if (error instanceof ClientError || error instanceof ServerError) {
+        if (error.errorCode === 'USER_NOT_FOUND') {
+          setModal(
+            <AlertModal
+              type="caution"
+              message={error.message}
+              description="로그인 페이지로 이동합니다."
+              buttonText="확인"
+              onClickModalButton={() => navigate('/professor/login')}
+            />
+          );
+          openModal();
+        } else {
+          setModal(
+            <PopupModal
+              type="caution"
+              title="오류가 발생했습니다."
+              description="다시 시도해주세요."
+            />
+          );
+          openModal();
+
+          setTimeout(() => {
+            closeModal();
+            setModal(null);
+          }, 2000);
+        }
+      } else {
+        setModal(
+          <PopupModal
+            type="caution"
+            title="오류가 발생했습니다."
+            description="다시 시도해주세요."
+          />
+        );
+        openModal();
+
+        setTimeout(() => {
+          closeModal();
+          setModal(null);
+        }, 2000);
+      }
+    }
+  };
+
+  const handleEditName = async () => {
+    try {
+      const newName = await professorRepository.updateProfessorName(
+        profile.name
+      );
+      userName.current = newName;
+      setProfile({ ...profile, name: userName.current });
+      setIsEdit({ ...isEdit, name: false });
+    } catch (error) {
+      if (error instanceof ClientError) {
+        alert(error.message);
+      } else if (error instanceof ServerError) {
+        alert(error.message);
+      } else {
+        console.error(error);
+      }
     }
   };
 
   const handleClickCancel = (type: 'profile' | 'name') => {
     if (type === 'profile') {
-      setIsEdit({ ...isEdit, profile: false });
+      setIsEdit({ ...isEdit, profileImage: false });
+      setProfile({
+        ...profile,
+        profileImage: profileImageRef.current,
+      });
+      setSelectedProfileFile(null);
     } else if (type === 'name') {
       setIsEdit({ ...isEdit, name: false });
+      setProfile({ ...profile, name: userName.current });
     }
   };
 
@@ -104,27 +193,21 @@ const ProfessorProfile = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const files = event.target.files;
-    if (files) {
-      if (validateImage(files[0])) {
-        if (profile.profileImage.startsWith('blob:')) {
-          URL.revokeObjectURL(profile.profileImage);
-        }
-        setProfile({ ...profile, profileImage: URL.createObjectURL(files[0]) });
+    if (files && files[0] && validateImage(files[0])) {
+      if (profile.profileImage?.src.startsWith('blob:')) {
+        URL.revokeObjectURL(profile.profileImage.src);
       }
+      const file = files[0];
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      setProfile({ ...profile, profileImage: img });
+      setSelectedProfileFile(file);
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if (profile.profileImage.startsWith('blob:')) {
-        URL.revokeObjectURL(profile.profileImage);
-      }
-    };
-  }, [profile.profileImage]);
-
   const offModal = () => {
-    setModal(null);
     closeModal();
+    setModal(null);
   };
 
   const handleClickLogoutButton = () => {
@@ -136,7 +219,7 @@ const ProfessorProfile = () => {
         buttonText="로그아웃 하기"
         onClickModalButton={async () => {
           try {
-            await authRepository.logout();
+            await professorRepository.logout();
           } catch (error) {
             console.error(error);
           }
@@ -144,6 +227,7 @@ const ProfessorProfile = () => {
         onClickCloseButton={offModal}
       />
     );
+
     openModal();
   };
 
@@ -164,154 +248,165 @@ const ProfessorProfile = () => {
         onClickCloseButton={offModal}
       />
     );
+
     openModal();
   };
 
   return (
-    <>
-      <div className={S.background}>
-        <div className={S.container}>
-          <div className={S.contentContainer}>
-            <h2 className={S.title}>계정 정보</h2>
-            <div className={S.content}>
-              <div className={S.profileContent}>
-                <h3 className={S.subTitle}>프로필 사진</h3>
-                <div className={S.profileWrapper}>
-                  <div className={S.profileImageContainer}>
-                    <div className={S.profileImage}>
-                      {profile.profileImage ? (
-                        <img src={profile.profileImage} alt="profile" />
-                      ) : (
-                        <BasicProfile />
-                      )}
-                    </div>
-                    {isEdit.profile && (
-                      <>
-                        <input
-                          className={S.profileInput}
-                          type="file"
-                          accept="image/*"
-                          ref={profileInputRef}
-                          onChange={(event) => handleUpdateProfileImage(event)}
-                        />
-                        <TextButton
-                          color="white"
-                          size="web3"
-                          width="182px"
-                          height="53px"
-                          text="다시 고르기"
-                          onClick={(event: React.MouseEvent) => {
-                            event.preventDefault();
-                            profileInputRef.current?.click();
-                          }}
-                        />
-                      </>
+    <div className={S.background}>
+      <div className={S.container}>
+        <div className={S.contentContainer}>
+          <h2 className={S.title}>계정 정보</h2>
+          <div className={S.content}>
+            <div className={S.profileContent}>
+              <h3 className={S.subTitle}>프로필 사진</h3>
+              <div className={S.profileWrapper}>
+                <div className={S.profileImageContainer}>
+                  <div className={S.profileImage}>
+                    {profile.profileImage && profile.profileImage.src !== '' ? (
+                      <img src={profile.profileImage.src} alt="profile" />
+                    ) : (
+                      <BasicProfile />
                     )}
                   </div>
-                  <div className={S.profileButtonContainer}>
-                    {isEdit.profile ? (
-                      createEditButton({
-                        onEdit: () => handleClickEdit('profile'),
-                        onCancel: () => handleClickCancel('profile'),
-                      })
-                    ) : (
+                  {isEdit.profileImage && (
+                    <>
+                      <input
+                        className={S.profileInput}
+                        type="file"
+                        accept="image/*"
+                        ref={profileInputRef}
+                        onChange={handleUpdateProfileImage}
+                      />
                       <TextButton
                         color="white"
                         size="web3"
-                        width="91px"
+                        width="182px"
                         height="53px"
-                        text="수정"
-                        onClick={() => setIsEdit({ ...isEdit, profile: true })}
+                        text="다시 고르기"
+                        onClick={(event: React.MouseEvent) => {
+                          event.preventDefault();
+                          profileInputRef.current?.click();
+                        }}
                       />
-                    )}
-                  </div>
+                      <TextButton
+                        color="red"
+                        size="web3"
+                        width="93px"
+                        height="53px"
+                        text="삭제"
+                        onClick={() => {
+                          setProfile({ ...profile, profileImage: null });
+                          setSelectedProfileFile(null);
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
-              </div>
-              <div className={S.profileContent}>
-                <h3 className={S.subTitle}>사용자 이름</h3>
-                <div className={S.profileWrapper}>
-                  {isEdit.name ? (
-                    <input
-                      className={S.text}
-                      type="text"
-                      value={profile.name}
-                      onChange={(event) =>
-                        setProfile({ ...profile, name: event.target.value })
+                <div className={S.profileButtonContainer}>
+                  {isEdit.profileImage ? (
+                    createEditButton({
+                      onEdit: () => handleEditProfile(),
+                      onCancel: () => handleClickCancel('profile'),
+                    })
+                  ) : (
+                    <TextButton
+                      color="white"
+                      size="web3"
+                      width="91px"
+                      height="53px"
+                      text="수정"
+                      onClick={() =>
+                        setIsEdit({ ...isEdit, profileImage: true })
                       }
                     />
-                  ) : (
-                    <span className={S.text}>{profile.name}</span>
                   )}
-                  <div className={S.profileButtonContainer}>
-                    {isEdit.name ? (
-                      createEditButton({
-                        onEdit: () => handleClickEdit('name'),
-                        onCancel: () => handleClickCancel('name'),
-                      })
-                    ) : (
-                      <TextButton
-                        color="white"
-                        size="web3"
-                        width="91px"
-                        height="53px"
-                        text="수정"
-                        onClick={() => setIsEdit({ ...isEdit, name: true })}
-                      />
-                    )}
-                  </div>
                 </div>
-              </div>
-              <div className={S.profileContent}>
-                <h3 className={S.subTitle}>이메일 주소</h3>
-                <span className={S.text}>{userEmail.current}</span>
               </div>
             </div>
-          </div>
-          <div className={S.contentContainer}>
-            <h2 className={S.title}>계정 관리</h2>
-            <div className={S.content}>
-              <div className={S.profileContent}>
-                <div className={S.profileWrapper}>
-                  <div className={S.accountContentText}>
-                    <h3 className={S.subTitle}>로그아웃</h3>
-                    <span className={S.subDescription}>
-                      언제든지 다시 이메일로 로그인 할 수 있습니다
-                    </span>
-                  </div>
-                  <TextButton
-                    color="white"
-                    size="web3"
-                    width="185px"
-                    height="53px"
-                    text="로그아웃"
-                    onClick={handleClickLogoutButton}
+            <div className={S.profileContent}>
+              <h3 className={S.subTitle}>사용자 이름</h3>
+              <div className={S.profileWrapper}>
+                {isEdit.name ? (
+                  <input
+                    className={S.text}
+                    type="text"
+                    value={profile.name}
+                    onChange={(event) =>
+                      setProfile({ ...profile, name: event.target.value })
+                    }
                   />
+                ) : (
+                  <span className={S.text}>{profile.name}</span>
+                )}
+                <div className={S.profileButtonContainer}>
+                  {isEdit.name ? (
+                    createEditButton({
+                      onEdit: () => handleEditName(),
+                      onCancel: () => handleClickCancel('name'),
+                    })
+                  ) : (
+                    <TextButton
+                      color="white"
+                      size="web3"
+                      width="91px"
+                      height="53px"
+                      text="수정"
+                      onClick={() => setIsEdit({ ...isEdit, name: true })}
+                    />
+                  )}
                 </div>
               </div>
-              <div className={S.profileContent}>
-                <div className={S.profileWrapper}>
-                  <div className={S.accountContentText}>
-                    <h3 className={S.subTitle}>회원탈퇴</h3>
-                    <span className={S.subDescription}>
-                      탈퇴시 모든 데이터가 삭제되며 취소할 수 없습니다
-                    </span>
-                  </div>
-                  <TextButton
-                    color="red"
-                    size="web3"
-                    width="185px"
-                    height="53px"
-                    text="회원탈퇴"
-                    onClick={handleClickDeleteAccountButton}
-                  />
+            </div>
+            <div className={S.profileContent}>
+              <h3 className={S.subTitle}>이메일 주소</h3>
+              <span className={S.text}>{userEmail.current}</span>
+            </div>
+          </div>
+        </div>
+        <div className={S.contentContainer}>
+          <h2 className={S.title}>계정 관리</h2>
+          <div className={S.content}>
+            <div className={S.profileContent}>
+              <div className={S.profileWrapper}>
+                <div className={S.accountContentText}>
+                  <h3 className={S.subTitle}>로그아웃</h3>
+                  <span className={S.subDescription}>
+                    언제든지 다시 이메일로 로그인 할 수 있습니다
+                  </span>
                 </div>
+                <TextButton
+                  color="white"
+                  size="web3"
+                  width="185px"
+                  height="53px"
+                  text="로그아웃"
+                  onClick={handleClickLogoutButton}
+                />
+              </div>
+            </div>
+            <div className={S.profileContent}>
+              <div className={S.profileWrapper}>
+                <div className={S.accountContentText}>
+                  <h3 className={S.subTitle}>회원탈퇴</h3>
+                  <span className={S.subDescription}>
+                    탈퇴시 모든 데이터가 삭제되며 취소할 수 없습니다
+                  </span>
+                </div>
+                <TextButton
+                  color="red"
+                  size="web3"
+                  width="185px"
+                  height="53px"
+                  text="회원탈퇴"
+                  onClick={handleClickDeleteAccountButton}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-      {modal && <Modal>{modal}</Modal>}
-    </>
+    </div>
   );
 };
 

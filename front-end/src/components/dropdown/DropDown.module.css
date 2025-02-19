@@ -12,7 +12,7 @@
   min-height: 50px;
   max-height: 259px;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 1px;
   background-color: var(--gray-200);
   outline: 1px solid var(--gray-300);
   border-radius: var(--small);

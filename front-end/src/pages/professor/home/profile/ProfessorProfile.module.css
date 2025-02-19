@@ -57,6 +57,7 @@
 }
 
 .profileImageContainer {
+  width: 464px;
   display: flex;
   align-items: center;
   gap: 37px;
@@ -71,6 +72,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .profileImage > img {

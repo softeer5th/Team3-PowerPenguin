@@ -4,12 +4,18 @@ import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import TextButton from '@/components/button/text/TextButton';
 import { validateImage, validateName } from '@/utils/util';
 import { professorRepository } from '@/di';
+import { ClientError, ServerError } from '@/core/errorType';
+import AlertModal from '@/components/modal/AlertModal';
+import PopupModal from '@/components/modal/PopupModal';
+import useModal from '@/hooks/useModal';
 
 const ProfessorRegister = () => {
   const [profile, setProfile] = useState<File | null>(null);
   const [name, setName] = useState('');
+  const [modal, setModal] = useState<React.ReactNode | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const profileInputRef = useRef<HTMLInputElement>(null);
+  const { openModal, closeModal, Modal } = useModal();
 
   const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -31,95 +37,145 @@ const ProfessorRegister = () => {
       return;
     }
 
-    if (!profile) {
-      alert('프로필 사진을 선택해 주세요.');
+    if (name.length === 0) {
+      setModal(
+        <AlertModal
+          type="caution"
+          message="이름을 입력해 주세요."
+          buttonText="확인"
+          onClickModalButton={() => {
+            closeModal();
+            setModal(null);
+          }}
+        />
+      );
+
+      openModal();
       return;
     }
-    if (name.length === 0) {
-      alert('사용자 이름을 입력해 주세요.');
+
+    if (!validateName(name)) {
+      setModal(
+        <AlertModal
+          type="caution"
+          message="입력한 이름이 올바르지 않습니다."
+          description="한글 또는 영문으로만 입력해 주세요."
+          buttonText="확인"
+          onClickModalButton={() => {
+            closeModal();
+            setModal(null);
+          }}
+        />
+      );
+
+      openModal();
       return;
     }
 
     try {
       setIsSubmitting(true);
-      console.log('회원가입하기');
-      console.log('이름:', name);
-      console.log('프로필 사진:', profile);
-      if (!validateName(name)) {
-        return;
-      }
-      alert('회원가입에 성공했습니다.');
       await professorRepository.createProfessor(name, profile);
     } catch (error) {
-      console.error(error);
-      alert('회원가입에 실패했습니다.');
+      if (error instanceof ClientError || error instanceof ServerError) {
+        setModal(
+          <AlertModal
+            type="caution"
+            message="회원가입에 실패했습니다."
+            description="다시 시도해 주세요."
+            buttonText="확인"
+            onClickModalButton={() => {
+              closeModal();
+              setModal(null);
+            }}
+          />
+        );
+
+        openModal();
+      } else {
+        setModal(
+          <PopupModal
+            type="caution"
+            title="오류가 발생했습니다."
+            description="다시 시도해주세요."
+          />
+        );
+
+        openModal();
+        setTimeout(() => {
+          closeModal();
+          setModal(null);
+        }, 2000);
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className={S.frame}>
-      <div className={S.container}>
-        <form className={S.content} onSubmit={handleSubmit}>
-          <h1 className={S.title}>회원가입 정보 입력</h1>
-          <div className={S.inputContainer}>
-            <label className={S.label}>프로필 사진</label>
-            <div className={S.profileContainer}>
-              {profile ? (
-                <div className={S.profileIcon}>
-                  <img src={URL.createObjectURL(profile)} alt="profile" />
-                </div>
-              ) : (
-                <div className={S.profileIcon}>
-                  <BasicProfile
-                    width="52px"
-                    height="52px"
-                    color="var(--blue-300)"
-                  />
-                </div>
-              )}
+    <>
+      <div className={S.frame}>
+        <div className={S.container}>
+          <form className={S.content} onSubmit={handleSubmit}>
+            <h1 className={S.title}>회원가입 정보 입력</h1>
+            <div className={S.inputContainer}>
+              <label className={S.label}>프로필 사진</label>
+              <div className={S.profileContainer}>
+                {profile ? (
+                  <div className={S.profileIcon}>
+                    <img src={URL.createObjectURL(profile)} alt="profile" />
+                  </div>
+                ) : (
+                  <div className={S.profileIcon}>
+                    <BasicProfile
+                      width="52px"
+                      height="52px"
+                      color="var(--blue-300)"
+                    />
+                  </div>
+                )}
+                <input
+                  className={S.profileInput}
+                  type="file"
+                  accept="image/*"
+                  ref={profileInputRef}
+                  onChange={handleProfileChange}
+                />
+                <TextButton
+                  text={profile ? '다시 고르기' : '사진 선택'}
+                  color="white"
+                  size="web3"
+                  width={profile ? '151px' : '136px'}
+                  height="53px"
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault();
+                    profileInputRef.current?.click();
+                  }}
+                />
+              </div>
+            </div>
+            <div className={S.inputContainer}>
+              <label className={S.label}>사용자 이름</label>
               <input
-                className={S.profileInput}
-                type="file"
-                accept="image/*"
-                ref={profileInputRef}
-                onChange={handleProfileChange}
-              />
-              <TextButton
-                text={profile ? '다시 고르기' : '사진 선택'}
-                color="white"
-                size="web3"
-                width={profile ? '151px' : '136px'}
-                height="53px"
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault();
-                  profileInputRef.current?.click();
-                }}
+                className={S.textInput}
+                type="text"
+                placeholder="이름을 입력해 주세요"
+                onChange={handleNameChange}
               />
             </div>
-          </div>
-          <div className={S.inputContainer}>
-            <label className={S.label}>사용자 이름</label>
-            <input
-              className={S.textInput}
-              type="text"
-              placeholder="이름을 입력해 주세요"
-              onChange={handleNameChange}
+            <TextButton
+              text="회원가입하기"
+              type="submit"
+              color="blue"
+              size="web4"
+              height="80px"
+              onClick={() => {}}
+              isActive={name.length > 0}
             />
-          </div>
-          <TextButton
-            text="회원가입하기"
-            type="submit"
-            color="blue"
-            size="web4"
-            height="80px"
-            onClick={() => {}}
-            isActive={name.length > 0 && profile !== null}
-          />
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+      {modal && <Modal>{modal}</Modal>}
+    </>
   );
 };
 
