@@ -5,8 +5,14 @@ import QuestionForm from './components/QuestionForm';
 import StudentMessage from './components/StudentMessage';
 import { classroomRepository } from '@/di';
 import { Question } from '@/core/model';
+import { handleStudentError } from '@/utils/studentPopupUtils';
 
-const StudentQuestion = ({ courseId }: { courseId: number }) => {
+type StudentQuestionProps = {
+  setModalType: React.Dispatch<React.SetStateAction<string | null>>;
+  openModal: () => void;
+};
+
+const StudentQuestion = ({ setModalType, openModal }: StudentQuestionProps) => {
   const [successPopup, setSuccessPopup] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -17,7 +23,7 @@ const StudentQuestion = ({ courseId }: { courseId: number }) => {
         const questionList = await classroomRepository.getQuestions();
         setQuestions(questionList);
       } catch (error) {
-        console.error('질문 목록을 불러오는 중 오류 발생:', error);
+        handleStudentError({ error, setModalType, openModal });
       }
     }
     fetchQuestions();
@@ -27,20 +33,18 @@ const StudentQuestion = ({ courseId }: { courseId: number }) => {
     e.preventDefault();
     if (inputValue.trim().length > 0) {
       try {
-        const { id, time, content } = await classroomRepository.sendQuestion(
-          courseId,
-          inputValue
-        );
+        const { id, createdAt, content } =
+          await classroomRepository.sendQuestion(inputValue);
         const newQuestion = {
           id,
           content,
-          time,
+          createdAt,
         };
         setQuestions((prev) => [...prev, newQuestion]);
         setInputValue('');
         setSuccessPopup(true);
       } catch (error) {
-        console.log(error);
+        handleStudentError({ error, setModalType, openModal });
       }
     }
   };
@@ -85,7 +89,7 @@ const StudentQuestion = ({ courseId }: { courseId: number }) => {
                 key={question.id}
                 deleteQuestion={() => deleteQuestion(question.id)}
                 message={question.content}
-                time={question.time}
+                time={question.createdAt}
                 onMessageClick={() => handleMessageClick(question.id)}
               />
             ))}
