@@ -74,4 +74,11 @@ public class SuccessResponse<T> {
                 .data(data)
                 .build();
     }
+
+    public static SuccessResponse<ClassroomQuestionResponse> of(String message, ClassroomQuestionResponse data) {
+        return SuccessResponse.<ClassroomQuestionResponse>builder()
+                .message(message)
+                .data(data)
+                .build();
+    }
 }
