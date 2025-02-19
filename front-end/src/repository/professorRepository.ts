@@ -23,12 +23,23 @@ class ProfessorRepository {
     });
 
     if (!response.ok) {
-      const data = await response.json();
-
       if (response.status >= 500) {
-        throw new ServerError(data as ResponseError);
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
+        throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
-        throw new ClientError(data as ResponseError);
+        const json = await response.json();
+
+        throw new ClientError(json as ResponseError);
+      } else {
+        throw new Error('Unknown Error');
       }
     }
 
@@ -48,22 +59,33 @@ class ProfessorRepository {
       method: 'GET',
     });
 
-    const json = await response.json();
-
     if (!response.ok) {
       if (response.status >= 500) {
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
         throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
+        const json = await response.json();
+
         throw new ClientError(json as ResponseError);
       } else {
         throw new Error('Unknown Error');
       }
     }
 
+    const json = await response.json();
+
     const profile: Professor = {
-      name: json.data.name,
-      email: json.data.email,
-      profileURL: json.data.imageUrl,
+      name: json.data.name.toString(),
+      email: json.data.email.toString(),
+      profileURL: json.data.imageUrl.toString(),
     };
 
     return profile;
@@ -76,19 +98,30 @@ class ProfessorRepository {
       method: 'GET',
     });
 
-    const json = await response.json();
-
     if (!response.ok) {
       if (response.status >= 500) {
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
         throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
+        const json = await response.json();
+
         throw new ClientError(json as ResponseError);
       } else {
         throw new Error('Unknown Error');
       }
     }
 
-    return json.data.imageFilename;
+    const json = await response.json();
+
+    return json.data.imageUrl.toString();
   }
 
   /**
@@ -104,12 +137,23 @@ class ProfessorRepository {
     });
 
     if (!response.ok) {
-      const data = await response.json();
-
       if (response.status >= 500) {
-        throw new ServerError(data as ResponseError);
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
+        throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
-        throw new ClientError(data as ResponseError);
+        const json = await response.json();
+
+        throw new ClientError(json as ResponseError);
+      } else {
+        throw new Error('Unknown Error');
       }
     }
 
@@ -138,17 +182,30 @@ class ProfessorRepository {
       body: JSON.stringify(requestBody),
     });
 
-    const json = await response.json();
-
     if (!response.ok) {
       if (response.status >= 500) {
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
         throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
+        const json = await response.json();
+
         throw new ClientError(json as ResponseError);
+      } else {
+        throw new Error('Unknown Error');
       }
     }
 
-    return json.data.name;
+    const json = await response.json();
+
+    return json.data.name.toString();
   }
 
   /**
@@ -156,7 +213,7 @@ class ProfessorRepository {
    * @param newProfile {File} 새 교수 프로필 이미지
    */
   async updateProfessorProfile(newProfile: File | null): Promise<string> {
-    // API: PATCH /professors/img
+    // API: PATCH /professors/image
     // Request Body: FormData { key: 'profileImage', value: newProfile }
 
     const form = new FormData();
@@ -167,17 +224,30 @@ class ProfessorRepository {
       body: form,
     });
 
-    const json = await response.json();
-
     if (!response.ok) {
       if (response.status >= 500) {
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
         throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
+        const json = await response.json();
+
         throw new ClientError(json as ResponseError);
+      } else {
+        throw new Error('Unknown Error');
       }
     }
 
-    return json.data.imageUrl;
+    const json = await response.json();
+
+    return json.data.imageUrl.toString();
   }
 
   async deleteProfessor(): Promise<void> {
@@ -189,12 +259,23 @@ class ProfessorRepository {
     });
 
     if (!response.ok) {
-      const data = await response.json();
-
       if (response.status >= 500) {
-        throw new ServerError(data as ResponseError);
+        if (response.status === 502) {
+          throw new ServerError({
+            success: false,
+            errorCode: 'BAD_GATEWAY',
+            message: 'Server Error',
+          });
+        }
+
+        const json = await response.json();
+        throw new ServerError(json as ResponseError);
       } else if (response.status >= 400) {
-        throw new ClientError(data as ResponseError);
+        const json = await response.json();
+
+        throw new ClientError(json as ResponseError);
+      } else {
+        throw new Error('Unknown Error');
       }
     }
 
