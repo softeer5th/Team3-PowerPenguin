@@ -11,7 +11,7 @@ type AlertModalProps = {
   description?: string;
   buttonText: string;
   onClickModalButton: () => void;
-  onClickCloseButton: () => void;
+  onClickCloseButton?: (() => void) | null;
 };
 
 function getIcon(type: 'caution' | 'success' | 'ask') {
@@ -35,17 +35,19 @@ const AlertModal = ({
   description,
   buttonText,
   onClickModalButton,
-  onClickCloseButton,
+  onClickCloseButton = null,
 }: AlertModalProps) => {
   return (
     <div className={S.modal} onClick={(e) => e.stopPropagation()}>
-      <button className={S.closeButton} onClick={onClickCloseButton}>
-        <CloseIcon
-          width="1.1875rem"
-          height="1.1875rem"
-          color="var(--gray-600)"
-        />
-      </button>
+      {onClickCloseButton && (
+        <button className={S.closeButton} onClick={onClickCloseButton}>
+          <CloseIcon
+            width="1.1875rem"
+            height="1.1875rem"
+            color="var(--gray-600)"
+          />
+        </button>
+      )}
       <div className={S.modalContent}>
         {getIcon(type)}
         <div className={S.modalBody}>
