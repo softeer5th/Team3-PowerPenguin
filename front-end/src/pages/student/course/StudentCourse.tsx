@@ -68,6 +68,7 @@ const StudentCourse = () => {
   };
   const handleErrorModalClick = () => {
     closeModal();
+    setModalType(null);
     navigate('/student');
   };
 
