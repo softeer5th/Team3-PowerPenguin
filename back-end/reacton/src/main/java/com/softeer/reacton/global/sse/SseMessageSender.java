@@ -23,16 +23,16 @@ public class SseMessageSender {
     private String sseMessageBaseUrl;
     private final WebClient webClient;
 
-    public void sendMessageToProfessor(Long courseId, SseMessage<?> message) {
-        String url = sseMessageBaseUrl + "course/" + courseId;
+    public void sendMessage(String id, SseMessage<?> message) {
+        String url = sseMessageBaseUrl + "course/" + id;
         try {
             webClient.post()
-                    .uri(url, courseId)
+                    .uri(url, id)
                     .bodyValue(message)
                     .retrieve()
                     .bodyToMono(Void.class)
                     .doOnSuccess(aVoid ->
-                            log.debug("SSE 메시지 전송에 성공했습니다. : courseId = {}", courseId))
+                            log.debug("SSE 메시지 전송에 성공했습니다. : courseId = {}", id))
                     .retryWhen(Retry.backoff(2, Duration.ofSeconds(1))
                             .filter(throwable -> {
                                 log.debug("재시도 중입니다.");
@@ -40,7 +40,7 @@ public class SseMessageSender {
                             }))
                     .onErrorResume(error -> {
                         log.warn("SSE 메시지 전송에 실패했습니다. : courseId = {}, messageType = {}, error = {}",
-                                courseId, message.getMessageType(), error.getMessage());
+                                id, message.getMessageType(), error.getMessage());
                         return Mono.empty();
                     })
                     .subscribe(); // 비동기적으로 처리

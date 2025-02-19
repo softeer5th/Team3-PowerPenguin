@@ -42,7 +42,7 @@ public class StudentRequestService {
 
         log.debug("SSE 서버에 요청 전송을 요청합니다.");
         SseMessage<RequestSseRequest> sseMessage = new SseMessage<>("REQUEST", requestSseRequest);
-        sseMessageSender.sendMessageToProfessor(courseId, sseMessage);
+        sseMessageSender.sendMessage(courseId.toString(), sseMessage);
     }
 
     private Course getCourse(Long courseId) {

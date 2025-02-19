@@ -31,7 +31,7 @@ public class StudentReactionService {
 
         log.debug("SSE 서버에 반응 전송을 요청합니다.");
         SseMessage<ReactionSseRequest> sseMessage = new SseMessage<>("REACTION", reactionSseRequest);
-        sseMessageSender.sendMessageToProfessor(courseId, sseMessage);
+        sseMessageSender.sendMessage(courseId.toString(), sseMessage);
     }
 
     private Course getCourse(Long courseId) {
