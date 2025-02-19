@@ -74,17 +74,13 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
 
       - name: Upload .env file using rsync
         run: |
           rsync -avz -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton/
-      
-      - name: Upload .env file to EC2
-        run: |
-          scp -o StrictHostKeyChecking=no -i <(echo "${{ secrets.EC2_PRIVATE_KEY }}") .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton/.env
-
+    
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
