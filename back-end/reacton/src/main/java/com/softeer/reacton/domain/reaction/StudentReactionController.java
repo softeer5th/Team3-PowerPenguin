@@ -42,9 +42,8 @@ public class StudentReactionController {
         log.debug("학생 사용자가 반응 등록 및 전송을 요청합니다.");
 
         Long courseId = (Long) request.getAttribute("courseId");
-        String content = reactionSendRequest.getContent();
 
-        studentReactionService.sendReaction(courseId, content);
+        studentReactionService.sendReaction(courseId, reactionSendRequest);
 
         log.info("반응을 성공적으로 등록했습니다.");
 

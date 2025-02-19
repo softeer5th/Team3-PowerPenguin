@@ -2,6 +2,7 @@ package com.softeer.reacton.domain.reaction;
 
 import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.domain.course.CourseRepository;
+import com.softeer.reacton.domain.reaction.dto.ReactionSendRequest;
 import com.softeer.reacton.domain.reaction.dto.ReactionSseRequest;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
@@ -19,16 +20,17 @@ public class StudentReactionService {
     private final CourseRepository courseRepository;
     private final SseMessageSender sseMessageSender;
 
-    public void sendReaction(Long courseId, String content) {
+    public void sendReaction(Long courseId, ReactionSendRequest reactionSendRequest) {
+        String content = reactionSendRequest.getContent();
         log.debug("반응 처리를 시작합니다. : content = {}", content);
 
         Course course = getCourse(courseId);
         checkIfOpen(course);
 
-        ReactionSseRequest reactionSseDto = new ReactionSseRequest(content);
+        ReactionSseRequest reactionSseRequest = new ReactionSseRequest(content);
 
         log.debug("SSE 서버에 반응 전송을 요청합니다.");
-        SseMessage<ReactionSseRequest> sseMessage = new SseMessage<>("REACTION", reactionSseDto);
+        SseMessage<ReactionSseRequest> sseMessage = new SseMessage<>("REACTION", reactionSseRequest);
         sseMessageSender.sendMessageToProfessor(courseId, sseMessage);
     }
 

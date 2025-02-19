@@ -4,6 +4,7 @@ import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.domain.course.CourseRepository;
 import com.softeer.reacton.domain.course.dto.CourseQuestionResponse;
 import com.softeer.reacton.domain.question.dto.QuestionAllResponse;
+import com.softeer.reacton.domain.question.dto.QuestionSendRequest;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.sse.SseMessageSender;
@@ -36,7 +37,8 @@ public class StudentQuestionService {
     }
 
     @Transactional
-    public CourseQuestionResponse sendQuestion(String studentId, Long courseId, String content) {
+    public CourseQuestionResponse sendQuestion(String studentId, Long courseId, QuestionSendRequest questionSendRequest) {
+        String content = questionSendRequest.getContent();
         log.debug("질문 처리를 시작합니다. : content = {}", content);
 
         Course course = getCourse(courseId);
@@ -51,18 +53,18 @@ public class StudentQuestionService {
         log.debug("질문을 저장합니다.");
         Question savedQuestion = questionRepository.save(question);
 
-        CourseQuestionResponse questionDto = new CourseQuestionResponse(
+        CourseQuestionResponse courseQuestionResponse = new CourseQuestionResponse(
                 savedQuestion.getId(),
                 savedQuestion.getCreatedAt(),
                 savedQuestion.getContent()
         );
 
         log.debug("SSE 서버에 질문 전송을 요청합니다.");
-        SseMessage<CourseQuestionResponse> sseMessage = new SseMessage<>("QUESTION", questionDto);
+        SseMessage<CourseQuestionResponse> sseMessage = new SseMessage<>("QUESTION", courseQuestionResponse);
         sseMessageSender.sendMessageToProfessor(courseId, sseMessage);
 
         log.debug("질문 처리가 완료되었습니다.");
-        return questionDto;
+        return courseQuestionResponse;
     }
 
     private Course getCourse(Long courseId) {

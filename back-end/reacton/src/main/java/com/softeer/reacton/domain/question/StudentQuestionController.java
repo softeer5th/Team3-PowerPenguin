@@ -68,9 +68,8 @@ public class StudentQuestionController {
 
         String studentId = (String) request.getAttribute("studentId");
         Long courseId = (Long) request.getAttribute("courseId");
-        String content = questionSendRequest.getContent();
 
-        CourseQuestionResponse response = studentQuestionService.sendQuestion(studentId, courseId, content);
+        CourseQuestionResponse response = studentQuestionService.sendQuestion(studentId, courseId, questionSendRequest);
 
         log.info("질문을 성공적으로 등록했습니다.");
 

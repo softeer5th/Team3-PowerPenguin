@@ -2,6 +2,7 @@ package com.softeer.reacton.domain.request;
 
 import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.domain.course.CourseRepository;
+import com.softeer.reacton.domain.request.dto.RequestSendRequest;
 import com.softeer.reacton.domain.request.dto.RequestSseRequest;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
@@ -23,7 +24,8 @@ public class StudentRequestService {
     private final SseMessageSender sseMessageSender;
 
     @Transactional
-    public void sendRequest(Long courseId, String content) {
+    public void sendRequest(Long courseId, RequestSendRequest requestSendRequest) {
+        String content = requestSendRequest.getContent();
         log.debug("요청 처리를 시작합니다. : content = {}", content);
 
         Course course = getCourse(courseId);
@@ -36,10 +38,10 @@ public class StudentRequestService {
             throw new BaseException(RequestErrorCode.REQUEST_NOT_FOUND);
         }
 
-        RequestSseRequest requestSseDto = new RequestSseRequest(content);
+        RequestSseRequest requestSseRequest = new RequestSseRequest(content);
 
         log.debug("SSE 서버에 요청 전송을 요청합니다.");
-        SseMessage<RequestSseRequest> sseMessage = new SseMessage<>("REQUEST", requestSseDto);
+        SseMessage<RequestSseRequest> sseMessage = new SseMessage<>("REQUEST", requestSseRequest);
         sseMessageSender.sendMessageToProfessor(courseId, sseMessage);
     }
 
