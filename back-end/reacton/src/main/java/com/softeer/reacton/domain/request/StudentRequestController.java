@@ -49,6 +49,6 @@ public class StudentRequestController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(SuccessResponse.of("요청을 성공적으로 동록했습니다."));
+                .body(SuccessResponse.of("요청을 성공적으로 등록했습니다."));
     }
 }
