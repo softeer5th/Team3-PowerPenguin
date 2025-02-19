@@ -36,7 +36,7 @@ public class StudentReactionController {
                     @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
             }
     )
-    public ResponseEntity<SuccessResponse<Void>> sendReaction(
+    public ResponseEntity<Void> sendReaction(
             @Valid @RequestBody ReactionSendRequest reactionSendRequest,
                     HttpServletRequest request) {
         log.debug("학생 사용자가 반응 등록 및 전송을 요청합니다.");
@@ -48,7 +48,7 @@ public class StudentReactionController {
         log.info("반응을 성공적으로 등록했습니다.");
 
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(SuccessResponse.of("반응을 성공적으로 등록했습니다."));
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }
