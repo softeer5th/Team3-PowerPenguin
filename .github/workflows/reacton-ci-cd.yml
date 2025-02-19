@@ -74,14 +74,14 @@ jobs:
 
       - name: Upload .env file to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i <(echo "${{ secrets.PRIVATE_KEY }}") .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton/.env
+          scp -o StrictHostKeyChecking=no -i <(echo "${{ secrets.EC2_PRIVATE_KEY }}") .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton/.env
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
-          key: ${{ secrets.PRIVATE_KEY }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             set -e
             cd ~/app/back-end/reacton
