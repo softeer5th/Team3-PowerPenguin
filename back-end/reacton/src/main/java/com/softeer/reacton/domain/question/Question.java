@@ -24,7 +24,7 @@ public class Question extends BaseEntity {
     @Column(nullable = false, length = 600)
     private String content;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private Boolean isComplete;
 
     @ManyToOne(fetch = FetchType.LAZY)
