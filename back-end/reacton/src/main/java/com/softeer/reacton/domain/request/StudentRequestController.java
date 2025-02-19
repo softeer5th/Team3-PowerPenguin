@@ -1,7 +1,6 @@
 package com.softeer.reacton.domain.request;
 
 import com.softeer.reacton.domain.request.dto.RequestSendRequest;
-import com.softeer.reacton.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
