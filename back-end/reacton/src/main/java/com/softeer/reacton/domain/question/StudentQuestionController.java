@@ -75,6 +75,6 @@ public class StudentQuestionController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(SuccessResponse.of("성공적으로 등록했습니다.", response));
+                .body(SuccessResponse.of("질문을 성공적으로 등록했습니다.", response));
     }
 }
