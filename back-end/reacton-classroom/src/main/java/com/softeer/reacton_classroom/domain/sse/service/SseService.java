@@ -58,6 +58,12 @@ public class SseService {
         log.info("메시지 전송에 성공했습니다.");
     }
 
+    public void sendMessageToStudents(String courseId, MessageResponse<?> message) {
+        for (String studentId : courseStudentMap.get(courseId)) {
+            sendMessage(studentId, message);
+        }
+    }
+
     private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
         return sink.asFlux()
                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
@@ -115,4 +121,3 @@ public class SseService {
         sink.tryEmitComplete();
     }
 }
-
