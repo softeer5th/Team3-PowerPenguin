@@ -219,7 +219,7 @@ class ProfessorRepository {
     const form = new FormData();
     if (newProfile) form.append('profileImage', newProfile);
 
-    const response = await fetch('/api/professors/img', {
+    const response = await fetch('/api/professors/image', {
       method: 'PATCH',
       body: form,
     });
