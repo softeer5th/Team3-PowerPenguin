@@ -26,6 +26,7 @@ public class SseService {
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourseMessages(String courseId) {
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.computeIfAbsent(courseId, k -> ConcurrentHashMap.newKeySet());
+        sendInitMessage(sink);
 
         log.debug("교수와 연결 가능한 SSE 통신을 찾았습니다.");
         return openCourseConnection(sink, courseId);
@@ -38,6 +39,7 @@ public class SseService {
         }
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(studentId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.get(courseId).add(studentId);
+        sendInitMessage(sink);
 
         log.debug("학생과 연결 가능한 SSE 통신을 찾았습니다.");
         return openStudentConnection(sink, studentId, courseId);
@@ -69,7 +71,6 @@ public class SseService {
                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
-                    // TODO: 프론트 측에서 자동 재연결 요청 기능 추가 필요
                     log.warn("SSE 연결 제한 시간이 초과되었습니다. : courseId={}", courseId);
                     closeConnection(sink, courseId);
                     return Flux.empty();
@@ -85,7 +86,6 @@ public class SseService {
                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
-                    // TODO: 프론트 측에서 자동 재연결 요청 기능 추가 필요
                     log.warn("학생 SSE 연결 제한 시간이 초과되었습니다. : studentId={}", studentId);
                     closeConnection(sink, studentId);
                     return Flux.empty();
@@ -119,5 +119,10 @@ public class SseService {
     private void closeConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
         sinks.remove(courseId);
         sink.tryEmitComplete();
+    }
+
+    private void sendInitMessage(Sinks.Many<MessageResponse<?>> sink) {
+        MessageResponse<?> initialMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
+        sink.tryEmitNext(initialMessage);
     }
 }
