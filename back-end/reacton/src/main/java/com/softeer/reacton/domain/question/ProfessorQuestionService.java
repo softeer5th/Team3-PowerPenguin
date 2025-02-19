@@ -46,15 +46,6 @@ public class ProfessorQuestionService {
                 .orElseThrow(() -> new BaseException(QuestionErrorCode.QUESTION_NOT_FOUND));
     }
 
-    private Course getCourseByQuestionId(Long questionId) {
-        Course course = questionRepository.getCourseById(questionId);
-        if (course == null) {
-            log.debug("질문 체크를 처리하는 과정에서 발생한 에러입니다. : Question does not exist.");
-            throw new BaseException(QuestionErrorCode.QUESTION_NOT_FOUND);
-        }
-        return course;
-    }
-
     private void checkIfOpen(Course course) {
         if (!course.isActive()) {
             throw new BaseException(CourseErrorCode.COURSE_NOT_ACTIVE);
