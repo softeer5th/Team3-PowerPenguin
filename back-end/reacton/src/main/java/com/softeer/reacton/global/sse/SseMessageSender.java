@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -35,7 +36,7 @@ public class SseMessageSender {
                     .retryWhen(Retry.backoff(2, Duration.ofSeconds(1))
                             .filter(throwable -> {
                                 log.debug("재시도 중입니다.");
-                                return throwable instanceof org.springframework.web.reactive.function.client.WebClientRequestException;
+                                return throwable instanceof WebClientRequestException;
                             }))
                     .onErrorResume(error -> {
                         log.warn("SSE 메시지 전송에 실패했습니다. : courseId = {}, messageType = {}, error = {}",
@@ -44,7 +45,7 @@ public class SseMessageSender {
                     })
                     .subscribe(); // 비동기적으로 처리
         } catch (Exception e) {
-            log.error("SSE 메시지 전송 중 예외 발생: {}", e.getMessage(), e);
+            log.error("SSE 메시지 전송 중 예외가 발생했습니다. : {}", e.getMessage());
             throw new BaseException(SseErrorCode.MESSAGE_SEND_FAILURE);
         }
     }
