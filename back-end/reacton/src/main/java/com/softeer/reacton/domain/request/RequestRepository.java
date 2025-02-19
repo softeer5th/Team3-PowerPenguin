@@ -5,13 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
     void deleteAllByCourse(Course course);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Request r " +
             "SET r.count = r.count + 1 " +
             "WHERE r.course = :course " +
