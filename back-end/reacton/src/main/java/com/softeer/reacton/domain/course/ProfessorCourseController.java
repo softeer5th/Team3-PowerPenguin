@@ -1,10 +1,7 @@
 package com.softeer.reacton.domain.course;
 
-import com.softeer.reacton.domain.course.dto.CourseDetailResponse;
-import com.softeer.reacton.domain.course.dto.CourseRequest;
-import com.softeer.reacton.domain.course.dto.CourseAllResponse;
+import com.softeer.reacton.domain.course.dto.*;
 import com.softeer.reacton.global.dto.SuccessResponse;
-import com.sun.net.httpserver.HttpsServer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,10 +41,10 @@ public class ProfessorCourseController {
     )
     public ResponseEntity<?> getActiveCourses(HttpServletRequest request) {
         String oauthId = (String) request.getAttribute("oauthId");
-        Map<String, String> activeCourse = professorCourseService.getActiveCourseByUser(oauthId);
+        ActiveCourseResponse activeCourse = professorCourseService.getActiveCourseByUser(oauthId);
 
-        if (!activeCourse.isEmpty()) {
-            log.debug("활성화된 수업이 존재합니다. : courseId = {}", activeCourse.get("courseId"));
+        if (activeCourse != null) {
+            log.debug("활성화된 수업이 존재합니다. : courseId = {}", activeCourse.getId());
             return ResponseEntity.status(HttpStatus.OK)
                     .body(SuccessResponse.of("활성화된 수업이 존재합니다.", activeCourse));
         } else {
