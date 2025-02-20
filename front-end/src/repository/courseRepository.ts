@@ -2,6 +2,7 @@ import {
   Course,
   CourseMeta,
   CourseSummary,
+  Question,
   RequestFast,
   RequestHard,
   RequestQuestion,
@@ -114,7 +115,7 @@ class CourseRepository {
             id: course.id,
             name: course.name,
             code: course.courseCode,
-            capacity: parseInt(course.capacity.toString()),
+            capacity: course.capacity,
             university: course.university,
             classType:
               course.type === 'MAJOR'
@@ -127,7 +128,7 @@ class CourseRepository {
               start: schedule.startTime,
               end: schedule.endTime,
             })),
-            accessCode: Number(course.accessCode),
+            accessCode: course.accessCode,
             fileName: course.fileName,
           }) as CourseMeta
       ) || ([] as CourseMeta[]);
@@ -138,7 +139,7 @@ class CourseRepository {
           id: course.id,
           name: course.name,
           code: course.courseCode,
-          capacity: parseInt(course.capacity.toString()),
+          capacity: course.capacity,
           university: course.university,
           classType:
             course.type === 'MAJOR'
@@ -151,7 +152,7 @@ class CourseRepository {
             start: schedule.startTime,
             end: schedule.endTime,
           })),
-          accessCode: parseInt(course.accessCode.toString()),
+          accessCode: course.accessCode,
           fileName: course.fileName,
         } as CourseMeta;
       }) || ([] as CourseMeta[]);
@@ -177,10 +178,10 @@ class CourseRepository {
     const data = json.data as BackendCourse;
 
     const course: CourseMeta = {
-      id: data.id.toString(),
+      id: data.id,
       name: data.name,
       code: data.courseCode,
-      capacity: parseInt(data.capacity.toString()),
+      capacity: data.capacity,
       university: data.university,
       classType:
         data.type === 'MAJOR'
@@ -193,9 +194,9 @@ class CourseRepository {
         start: schedule.startTime,
         end: schedule.endTime,
       })),
-      accessCode: parseInt(data.accessCode.toString()),
+      accessCode: data.accessCode,
       fileName: data.fileName,
-    };
+    } as CourseMeta;
 
     return course;
   }
@@ -212,26 +213,29 @@ class CourseRepository {
     const json = await response.json();
     const data = json.data as BackendCourse[];
 
-    const courses: CourseMeta[] = data.map((course) => ({
-      id: course.id.toString(),
-      name: course.name,
-      code: course.courseCode,
-      capacity: parseInt(course.capacity.toString()),
-      university: course.university,
-      classType:
-        course.type === 'MAJOR'
-          ? '전공'
-          : course.type === 'GENERAL'
-            ? '교양'
-            : '기타',
-      schedule: course.schedules.map((schedule) => ({
-        day: schedule.day,
-        start: schedule.startTime,
-        end: schedule.endTime,
-      })),
-      accessCode: parseInt(course.accessCode.toString()),
-      fileName: course.fileName,
-    }));
+    const courses: CourseMeta[] = data.map(
+      (course) =>
+        ({
+          id: course.id,
+          name: course.name,
+          code: course.courseCode,
+          capacity: course.capacity,
+          university: course.university,
+          classType:
+            course.type === 'MAJOR'
+              ? '전공'
+              : course.type === 'GENERAL'
+                ? '교양'
+                : '기타',
+          schedule: course.schedules.map((schedule) => ({
+            day: schedule.day,
+            start: schedule.startTime,
+            end: schedule.endTime,
+          })),
+          accessCode: course.accessCode,
+          fileName: course.fileName,
+        }) as CourseMeta
+    );
 
     return courses;
   }
@@ -249,10 +253,10 @@ class CourseRepository {
     const data = json.data as BackendCourse;
 
     const course: Course = {
-      id: data.id.toString(),
+      id: data.id,
       name: data.name,
       code: data.courseCode,
-      capacity: parseInt(data.capacity.toString()),
+      capacity: data.capacity,
       university: data.university,
       classType:
         data.type === 'MAJOR'
@@ -265,56 +269,49 @@ class CourseRepository {
         start: schedule.startTime,
         end: schedule.endTime,
       })),
-      accessCode: parseInt(data.accessCode.toString()),
+      accessCode: data.accessCode,
       fileName: data.fileName,
-      questions: data.questions.map((question) => ({
-        id: question.id.toString(),
-        createdAt: question.time,
-        content: question.content,
-      })),
+      questions: data.questions.map(
+        (question) =>
+          ({
+            id: question.id,
+            createdAt: question.time,
+            content: question.content,
+          }) as Question
+      ),
       requests: [
         {
           type: RequestHard,
-          count: parseInt(
-            data.request
-              ?.find((req) => req.type === RequestHard.kind)
-              ?.count.toString() || '0'
-          ),
+          count:
+            data.request?.find((req) => req.type === RequestHard.kind)?.count ||
+            0,
         },
         {
           type: RequestFast,
-          count: parseInt(
-            data.request
-              ?.find((req) => req.type === RequestFast.kind)
-              ?.count.toString() || '0'
-          ),
+          count:
+            data.request?.find((req) => req.type === RequestFast.kind)?.count ||
+            0,
         },
         {
           type: RequestQuestion,
-          count: parseInt(
-            data.request
-              ?.find((req) => req.type === RequestQuestion.kind)
-              ?.count.toString() || '0'
-          ),
+          count:
+            data.request?.find((req) => req.type === RequestQuestion.kind)
+              ?.count || 0,
         },
         {
           type: RequestSize,
-          count: parseInt(
-            data.request
-              ?.find((req) => req.type === RequestSize.kind)
-              ?.count.toString() || '0'
-          ),
+          count:
+            data.request?.find((req) => req.type === RequestSize.kind)?.count ||
+            0,
         },
         {
           type: RequestSound,
-          count: parseInt(
-            data.request
-              ?.find((req) => req.type === RequestSound.kind)
-              ?.count.toString() || '0'
-          ),
+          count:
+            data.request?.find((req) => req.type === RequestSound.kind)
+              ?.count || 0,
         },
       ],
-    };
+    } as Course;
 
     return course;
   }
@@ -352,7 +349,7 @@ class CourseRepository {
     const courseSummary: CourseSummary = {
       name: data.name,
       code: data.courseCode,
-      capacity: parseInt(data.capacity.toString()),
+      capacity: data.capacity,
       university: data.university,
       classType:
         data.type === 'MAJOR'
@@ -365,7 +362,7 @@ class CourseRepository {
         start: schedule.startTime,
         end: schedule.endTime,
       })),
-    };
+    } as CourseSummary;
 
     return courseSummary;
   }
