@@ -2,6 +2,7 @@ import {
   Course,
   CourseMeta,
   CourseSummary,
+  Question,
   RequestFast,
   RequestHard,
   RequestQuestion,
@@ -114,7 +115,7 @@ class CourseRepository {
             id: course.id,
             name: course.name,
             code: course.courseCode,
-            capacity: Number(course.capacity),
+            capacity: course.capacity,
             university: course.university,
             classType:
               course.type === 'MAJOR'
@@ -127,7 +128,7 @@ class CourseRepository {
               start: schedule.startTime,
               end: schedule.endTime,
             })),
-            accessCode: Number(course.accessCode),
+            accessCode: course.accessCode,
             fileName: course.fileName,
           }) as CourseMeta
       ) || ([] as CourseMeta[]);
@@ -151,7 +152,7 @@ class CourseRepository {
             start: schedule.startTime,
             end: schedule.endTime,
           })),
-          accessCode: Number(course.accessCode),
+          accessCode: course.accessCode,
           fileName: course.fileName,
         } as CourseMeta;
       }) || ([] as CourseMeta[]);
@@ -162,58 +163,81 @@ class CourseRepository {
   async getOpenedCourse(): Promise<CourseMeta> {
     // API: GET /professor/courses/active
 
-    // TODO: 서버 수정되면 구현
-    return {
-      id: '1',
-      name: '컴퓨터공학',
-      code: 'CSE101',
-      capacity: 100,
-      university: '서울대학교',
-      classType: '전공',
-      schedule: [
-        { day: '월', start: '10:00', end: '12:00' },
-        { day: '수', start: '10:00', end: '12:00' },
-      ],
-      accessCode: 1234,
-      fileName: 'course-file',
-    };
+    const response = await fetch('/api/professors/courses/active', {
+      method: 'GET',
+      redirect: 'follow',
+    });
+
+    await throwError(response);
+
+    if (response.redirected) {
+      window.location.href = response.url;
+    }
+
+    const json = await response.json();
+    const data = json.data as BackendCourse;
+
+    const course: CourseMeta = {
+      id: data.id,
+      name: data.name,
+      code: data.courseCode,
+      capacity: data.capacity,
+      university: data.university,
+      classType:
+        data.type === 'MAJOR'
+          ? '전공'
+          : data.type === 'GENERAL'
+            ? '교양'
+            : '기타',
+      schedule: data.schedules.map((schedule) => ({
+        day: schedule.day,
+        start: schedule.startTime,
+        end: schedule.endTime,
+      })),
+      accessCode: data.accessCode,
+      fileName: data.fileName,
+    } as CourseMeta;
+
+    return course;
   }
 
   async searchCourses(keyword: string): Promise<CourseMeta[]> {
     // API: GET /professors/courses?keyword={keyword}
 
-    // TODO: 서버 수정되면 구현
-    console.log('search course:', keyword);
-    return [
-      {
-        id: '1',
-        name: '컴퓨터공학',
-        code: 'CSE101',
-        capacity: 100,
-        university: '서울대학교',
-        classType: '전공',
-        schedule: [
-          { day: '월', start: '10:00', end: '12:00' },
-          { day: '수', start: '10:00', end: '12:00' },
-        ],
-        accessCode: 1234,
-        fileName: 'course-file',
-      },
-      {
-        id: '2',
-        name: '데이터베이스',
-        code: 'DB101',
-        capacity: 100,
-        university: '서울대학교',
-        classType: '전공',
-        schedule: [
-          { day: '화', start: '10:00', end: '12:00' },
-          { day: '목', start: '10:00', end: '12:00' },
-        ],
-        accessCode: 1234,
-        fileName: 'course-file',
-      },
-    ];
+    const response = await fetch(`/api/professors/courses?keyword=${keyword}`, {
+      method: 'GET',
+    });
+
+    await throwError(response);
+
+    const json = await response.json();
+    const data = json.data as BackendCourse[];
+
+    const courses: CourseMeta[] = data.map(
+      (course) =>
+        ({
+          id: course.id,
+          name: course.name,
+          code: course.courseCode,
+          capacity: course.capacity,
+          university: course.university,
+          classType:
+            course.type === 'MAJOR'
+              ? '전공'
+              : course.type === 'GENERAL'
+                ? '교양'
+                : '기타',
+          schedule: course.schedules.map((schedule) => ({
+            day: schedule.day,
+            start: schedule.startTime,
+            end: schedule.endTime,
+          })),
+          accessCode: course.accessCode,
+          fileName: course.fileName,
+        }) as CourseMeta
+    );
+
+    return courses;
   }
 
   async getCourseById(courseId: Course['id']): Promise<Course> {
@@ -229,10 +253,10 @@ class CourseRepository {
     const data = json.data as BackendCourse;
 
     const course: Course = {
-      id: data.id.toString(),
+      id: data.id,
       name: data.name,
       code: data.courseCode,
-      capacity: Number(data.capacity),
+      capacity: data.capacity,
       university: data.university,
       classType:
         data.type === 'MAJOR'
@@ -245,51 +269,49 @@ class CourseRepository {
         start: schedule.startTime,
         end: schedule.endTime,
       })),
-      accessCode: Number(data.accessCode),
+      accessCode: data.accessCode,
       fileName: data.fileName,
-      questions: data.questions.map((question) => ({
-        id: question.id.toString(),
-        time: question.time,
-        content: question.content,
-      })),
+      questions: data.questions.map(
+        (question) =>
+          ({
+            id: question.id,
+            createdAt: question.time,
+            content: question.content,
+          }) as Question
+      ),
       requests: [
         {
           type: RequestHard,
-          count: Number(
+          count:
             data.request?.find((req) => req.type === RequestHard.kind)?.count ||
-              0
-          ),
+            0,
         },
         {
           type: RequestFast,
-          count: Number(
+          count:
             data.request?.find((req) => req.type === RequestFast.kind)?.count ||
-              0
-          ),
+            0,
         },
         {
           type: RequestQuestion,
-          count: Number(
+          count:
             data.request?.find((req) => req.type === RequestQuestion.kind)
-              ?.count || 0
-          ),
+              ?.count || 0,
         },
         {
           type: RequestSize,
-          count: Number(
+          count:
             data.request?.find((req) => req.type === RequestSize.kind)?.count ||
-              0
-          ),
+            0,
         },
         {
           type: RequestSound,
-          count: Number(
+          count:
             data.request?.find((req) => req.type === RequestSound.kind)
-              ?.count || 0
-          ),
+              ?.count || 0,
         },
       ],
-    };
+    } as Course;
 
     return course;
   }
@@ -322,24 +344,25 @@ class CourseRepository {
     await throwError(response);
 
     const json = await response.json();
+    const data = json.data as BackendCourse;
 
     const courseSummary: CourseSummary = {
-      name: json.data.name,
-      code: json.data.courseCode,
-      capacity: Number(json.data.capacity),
-      university: json.data.university,
+      name: data.name,
+      code: data.courseCode,
+      capacity: data.capacity,
+      university: data.university,
       classType:
-        json.data.type === 'MAJOR'
+        data.type === 'MAJOR'
           ? '전공'
           : json.data.type === 'GENERAL'
             ? '교양'
             : '기타',
-      schedule: json.data.schedules.map((schedule: BackendSchedule) => ({
+      schedule: data.schedules.map((schedule: BackendSchedule) => ({
         day: schedule.day,
         start: schedule.startTime,
         end: schedule.endTime,
       })),
-    };
+    } as CourseSummary;
 
     return courseSummary;
   }
@@ -380,7 +403,7 @@ class CourseRepository {
     await throwError(response);
   }
 
-  async uploadCourseFile(courseId: string, file: File): Promise<string> {
+  async uploadCourseFile(courseId: Course['id'], file: File): Promise<string> {
     // API: POST /professors/courses/{courseId}/file
     // Request body: FormData { key: 'file', value: file }
 

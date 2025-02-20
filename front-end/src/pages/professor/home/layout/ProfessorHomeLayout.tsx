@@ -18,8 +18,9 @@ import ProfessorError from '@/utils/professorError';
 export type OutletContext = {
   openModal: () => void;
   closeModal: () => void;
-  setModal: (modal: React.ReactNode | null) => void;
+  setModal: React.Dispatch<React.SetStateAction<ReactNode>>;
   navigate: NavigateFunction;
+  popupError: (error: unknown) => void;
 };
 
 const ProfessorHomeLayout = () => {
@@ -31,6 +32,12 @@ const ProfessorHomeLayout = () => {
   const navigate = useNavigate();
   const [modal, setModal] = useState<ReactNode | null>(null);
   const { openModal, closeModal, Modal } = useModal();
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const handleClickLogo = () => {
     setSearch('');
@@ -78,13 +85,7 @@ const ProfessorHomeLayout = () => {
           };
         }
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
 
@@ -135,7 +136,9 @@ const ProfessorHomeLayout = () => {
         )}
       </div>
       <div className={S.container}>
-        <Outlet context={{ openModal, closeModal, setModal, navigate }} />
+        <Outlet
+          context={{ openModal, closeModal, setModal, navigate, popupError }}
+        />
       </div>
       {modal && <Modal>{modal}</Modal>}
     </>

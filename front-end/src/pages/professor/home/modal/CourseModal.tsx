@@ -9,6 +9,7 @@ import AddDeleteButton from '@/components/button/icon/AddDeleteButton';
 import TextButton from '@/components/button/text/TextButton';
 import { CourseError } from '@/core/errorType';
 import CloseIcon from '@/assets/icons/close.svg?react';
+import { CourseType, CourseDay, getCourseColor } from '@/utils/util';
 
 type CourseModalProps = {
   course?: CourseMeta;
@@ -28,22 +29,6 @@ type CourseForm = {
     end: string;
   }[];
 };
-
-const days = ['월', '화', '수', '목', '금', '토', '일'] as const;
-const courseTypes = [
-  {
-    color: 'green',
-    text: '교양',
-  },
-  {
-    color: 'purple',
-    text: '전공',
-  },
-  {
-    color: 'gray',
-    text: '기타',
-  },
-];
 
 const checkForm = (courseForm: CourseForm) => {
   if (courseForm.name === '') {
@@ -84,7 +69,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
     classType: course?.classType || '',
     schedule: course?.schedule || [
       {
-        day: days[0],
+        day: CourseDay[0],
         start: '00:00',
         end: '00:00',
       },
@@ -102,10 +87,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
     }
     onSubmit({
       ...courseForm,
-      id: course?.id || 0,
+      id: course?.id || '',
       capacity: parseInt(courseForm.capacity),
       accessCode: course?.accessCode || 0,
-      fileURL: course?.fileURL || '',
+      fileName: course?.fileName || '',
     } as CourseMeta);
   };
 
@@ -139,7 +124,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
       ...prev,
       schedule: [
         ...prev.schedule,
-        { day: days[0], start: '00:00', end: '00:00' },
+        { day: CourseDay[0], start: '00:00', end: '00:00' },
       ],
     }));
   };
@@ -200,19 +185,19 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
             <span>강의 유형</span>
           </div>
           <div className={S.categoryContainer}>
-            {courseTypes.map((type) => (
+            {CourseType.map((type) => (
               <button
-                key={type.text}
+                key={type}
                 className={S.categoryChip}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleInputChange('classType', type.text);
+                  handleInputChange('classType', type);
                 }}
               >
                 <CategoryChip
-                  color={type.color as 'green' | 'purple' | 'gray'}
-                  text={type.text}
-                  isActive={courseForm.classType === type.text}
+                  color={getCourseColor(type)}
+                  text={type}
+                  isActive={courseForm.classType === type}
                 />
               </button>
             ))}
@@ -228,7 +213,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
                 <DropDown
                   width="109px"
                   title={schedule.day}
-                  options={[...days]}
+                  options={[...CourseDay]}
                   setTitle={(value) =>
                     handleScheduleChange(index, 'day', value)
                   }

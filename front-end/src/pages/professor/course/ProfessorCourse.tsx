@@ -1,16 +1,16 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import CircleBackButton from '@/components/button/icon/CircleBackButton';
 import S from './ProfessorCourse.module.css';
 import RecIconButton from '@/components/button/icon/RecIconButton';
 import TextButton from '@/components/button/text/TextButton';
 import courseActions from '@/utils/courseAction';
 import useModal from '@/hooks/useModal';
-import { useEffect, useState } from 'react';
 import { Course, CourseMeta } from '@/core/model';
 import ClockIcon from '@/assets/icons/clock.svg?react';
 import PeopleIcon from '@/assets/icons/people.svg?react';
 import { formatSchedule, getCourseColor } from '@/utils/util';
 import { courseRepository } from '@/di';
-import { useNavigate, useParams } from 'react-router';
 import CourseQuestion from './components/CourseQuestion';
 import CourseRequest from './components/CourseRequest';
 import CategoryChip from '@/components/chip/CategoryChip';
@@ -28,6 +28,12 @@ const ProfessorCourse = () => {
     handleStartCourse,
     handleFileCourse,
   } = courseActions({ setModal, openModal, closeModal, navigate });
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const handleClickBack = () => {
     navigate('/professor');
@@ -37,26 +43,14 @@ const ProfessorCourse = () => {
     async function getCourse() {
       try {
         if (!courseId) {
-          ProfessorError({
-            error: new Error('COURSE_NOT_FOUND'),
-            setModal,
-            openModal,
-            closeModal,
-            navigate,
-          });
+          popupError(new Error('수업 정보를 불러올 수 없습니다.'));
           return;
         }
 
         const course = await courseRepository.getCourseById(courseId);
         setCourse(course);
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
 
