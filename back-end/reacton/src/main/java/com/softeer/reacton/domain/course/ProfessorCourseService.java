@@ -11,7 +11,6 @@ import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
 import com.softeer.reacton.domain.schedule.ScheduleRepository;
 import com.softeer.reacton.global.exception.BaseException;
-import com.softeer.reacton.global.exception.Handler.S3ExceptionHandler;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
@@ -50,14 +49,17 @@ public class ProfessorCourseService {
     private static final int PRESIGNED_URL_EXPIRATION_MINUTES = 1;
     private final SseMessageSender sseMessageSender;
 
-    public Map<String, String> getActiveCourseByUser(String oauthId) {
+    public ActiveCourseResponse getActiveCourseByUser(String oauthId) {
         log.debug("활성화된 수업을 조회합니다.");
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        return courseRepository.findByProfessorAndIsActiveTrue(professor)
-                .map(course -> Map.of("courseId", course.getId().toString()))
-                .orElse(Collections.emptyMap());
+        Course course = courseRepository.findByProfessorAndIsActiveTrue(professor).orElse(null);
+        if (course != null) {
+            List<CourseScheduleResponse> schedules = getSchedulesByCourseInOrder(course);
+            return ActiveCourseResponse.of(course, schedules);
+        }
+        return null;
     }
 
     public long createCourse(String oauthId, CourseRequest request) {
