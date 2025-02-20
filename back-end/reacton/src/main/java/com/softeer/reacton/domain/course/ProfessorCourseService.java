@@ -104,7 +104,8 @@ public class ProfessorCourseService {
         log.debug("검색 결과를 조회합니다.");
 
         Professor professor = getProfessorByOauthId(oauthId);
-        String searchKeyword = "%" + keyword.toLowerCase() + "%";
+        String escapedKeyword = escapeWildcard(keyword);
+        String searchKeyword = "%" + escapedKeyword + "%";
         List<Course> searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
 
         return getAllCoursesResponse(searchCourses);
@@ -375,5 +376,11 @@ public class ProfessorCourseService {
             s3Service.deleteFile(course.getFileS3Key());
             log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
         }
+    }
+
+    private String escapeWildcard(String keyword) {
+        return keyword.replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
     }
 }

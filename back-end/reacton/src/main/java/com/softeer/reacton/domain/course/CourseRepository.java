@@ -29,7 +29,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT DISTINCT c FROM Course c " +
             "LEFT JOIN FETCH c.schedules s " +
             "WHERE c.professor = :professor " +
-            "AND (LOWER(c.name) LIKE :keyword OR LOWER(c.courseCode) LIKE :keyword) " +
+            "AND (LOWER(c.name) LIKE :keyword ESCAPE '\\' OR LOWER(c.courseCode) LIKE :keyword ESCAPE '\\') " +
             "ORDER BY c.createdAt DESC, " +
             "CASE s.day " +
             "WHEN '월' THEN 1 " +
