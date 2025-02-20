@@ -79,19 +79,18 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
   const handleSubmit = () => {
     try {
       checkForm(courseForm);
+      onSubmit({
+        ...courseForm,
+        id: course?.id || '',
+        capacity: parseInt(courseForm.capacity),
+        accessCode: course?.accessCode || 0,
+        fileName: course?.fileName || '',
+      } as CourseMeta);
     } catch (error) {
       if (error instanceof CourseError) {
         alert(error.message);
       }
-      return;
     }
-    onSubmit({
-      ...courseForm,
-      id: course?.id || '',
-      capacity: parseInt(courseForm.capacity),
-      accessCode: course?.accessCode || 0,
-      fileName: course?.fileName || '',
-    } as CourseMeta);
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -159,26 +158,6 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
           placeholder="강의 이름을 입력해 주세요"
           value={courseForm.name}
           onInputChange={(value) => handleInputChange('name', value)}
-        />
-        <ModalInput
-          title="학수번호"
-          placeholder="학수번호를 입력해 주세요"
-          value={courseForm.code}
-          onInputChange={(value) => handleInputChange('code', value)}
-        />
-        <ModalInput
-          title="인원 수"
-          desc="숫자만 작성해 주세요"
-          placeholder="수업정원을 입력해 주세요"
-          value={courseForm.capacity}
-          onInputChange={(value) => handleInputChange('capacity', value)}
-        />
-        <ModalInput
-          title="대학교"
-          desc="'대학교' 텍스트를 포함해 작성해 주세요"
-          placeholder="대학이름을 입력해 주세요"
-          value={courseForm.university}
-          onInputChange={(value) => handleInputChange('university', value)}
         />
         <div className={S.inputContainer}>
           <div className={S.inputTitle}>
@@ -253,6 +232,26 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
             ))}
           </div>
         </div>
+        <ModalInput
+          title="학수번호"
+          placeholder="학수번호를 입력해 주세요"
+          value={courseForm.code}
+          onInputChange={(value) => handleInputChange('code', value)}
+        />
+        <ModalInput
+          title="인원 수"
+          desc="숫자만 작성해 주세요"
+          placeholder="수업정원을 입력해 주세요"
+          value={courseForm.capacity}
+          onInputChange={(value) => handleInputChange('capacity', value)}
+        />
+        <ModalInput
+          title="대학교"
+          desc="'대학교' 텍스트를 포함해 작성해 주세요"
+          placeholder="대학이름을 입력해 주세요"
+          value={courseForm.university}
+          onInputChange={(value) => handleInputChange('university', value)}
+        />
       </div>
       <div className={S.buttonContainer}>
         <TextButton
