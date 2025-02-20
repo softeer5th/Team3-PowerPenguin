@@ -2,6 +2,8 @@ import { Professor } from '@/core/model';
 import { throwError } from './throwError';
 
 class ProfessorRepository {
+  private ProfessorCache: Professor | null = null;
+
   /**
    *
    * @param name {string} 교수 이름
@@ -36,6 +38,10 @@ class ProfessorRepository {
   async getProfessor(): Promise<Professor> {
     // API: GET /professors
 
+    if (this.ProfessorCache) {
+      return this.ProfessorCache;
+    }
+
     const response = await fetch('/api/professors', {
       method: 'GET',
     });
@@ -50,11 +56,17 @@ class ProfessorRepository {
       profileURL: json.data.imageUrl.toString(),
     };
 
+    this.ProfessorCache = profile;
+
     return profile;
   }
 
   async getProfessorProfile(): Promise<string> {
     // API: GET /professors/image
+
+    if (this.ProfessorCache) {
+      return this.ProfessorCache.profileURL;
+    }
 
     const response = await fetch('/api/professors/image', {
       method: 'GET',
@@ -81,15 +93,11 @@ class ProfessorRepository {
 
     await throwError(response);
 
+    this.ProfessorCache = null;
+
     if (response.redirected) {
       window.location.href = response.url;
     }
-  }
-
-  async getProfessorPDF(courseId: number): Promise<string> {
-    // API:  GET /professors/courses/{courseId}/file
-
-    return 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
   }
 
   /**
@@ -116,6 +124,12 @@ class ProfessorRepository {
 
     const json = await response.json();
 
+    this.ProfessorCache = {
+      name: json.data.name.toString(),
+      email: this.ProfessorCache ? this.ProfessorCache.email : '',
+      profileURL: this.ProfessorCache ? this.ProfessorCache.profileURL : '',
+    };
+
     return json.data.name.toString();
   }
 
@@ -139,6 +153,12 @@ class ProfessorRepository {
 
     const json = await response.json();
 
+    this.ProfessorCache = {
+      name: this.ProfessorCache ? this.ProfessorCache.name : '',
+      email: this.ProfessorCache ? this.ProfessorCache.email : '',
+      profileURL: json.data.imageUrl.toString(),
+    };
+
     return json.data.imageUrl.toString();
   }
 
@@ -151,6 +171,8 @@ class ProfessorRepository {
     });
 
     await throwError(response);
+
+    this.ProfessorCache = null;
 
     if (response.redirected) {
       window.location.href = response.url;
