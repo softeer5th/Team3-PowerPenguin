@@ -7,13 +7,15 @@ import { CourseDay, CourseType } from '@/utils/util';
 import FilterDropDown from '../components/FilterDropDown';
 import TotalCourses from '../components/TotalCourses';
 import useModal from '@/hooks/useModal';
-import useCourseActions from '@/hooks/useCourseAction';
+import courseActions from '@/utils/courseAction';
+import ProfessorError from '@/utils/professorError';
 
 const ProfessorSearch = () => {
   const [courses, setCourses] = useState<CourseMeta[]>([]);
   const [courseDay, setCourseDay] = useState<string>('수업 요일');
   const [courseType, setCourseType] = useState<string>('수업 종류');
   const [modal, setModal] = useState<React.ReactNode | null>(null);
+  const navigate = useNavigate();
   const { openModal, closeModal, Modal } = useModal();
   const {
     handleDeleteCourse,
@@ -21,10 +23,9 @@ const ProfessorSearch = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = useCourseActions({ setModal, openModal, closeModal });
+  } = courseActions({ setModal, openModal, closeModal, navigate });
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') || '';
-  const navigate = useNavigate();
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -42,11 +43,24 @@ const ProfessorSearch = () => {
   }, [keyword, navigate]);
 
   useEffect(() => {
-    try {
-      courseRepository.searchCourses(keyword || '').then(setCourses);
-    } catch (error) {
-      console.error(error);
+    async function searchCourses() {
+      try {
+        const searchedCourses = await courseRepository.searchCourses(
+          keyword || ''
+        );
+        setCourses(searchedCourses);
+      } catch (error) {
+        ProfessorError({
+          error,
+          setModal,
+          openModal,
+          closeModal,
+          navigate,
+        });
+      }
     }
+
+    searchCourses();
   }, [keyword]);
 
   return (

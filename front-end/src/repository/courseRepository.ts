@@ -398,7 +398,7 @@ class CourseRepository {
     return json.data.filename;
   }
 
-  async deleteCourse(courseId: number): Promise<void> {
+  async deleteCourse(courseId: Course['id']): Promise<void> {
     // API: DELETE /professors/courses/{courseId}
 
     const response = await fetch(`/api/professors/courses/${courseId}`, {

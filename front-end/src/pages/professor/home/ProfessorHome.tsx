@@ -9,16 +9,18 @@ import TodayCourses from './components/TodayCourses';
 import TotalCourses from './components/TotalCourses';
 import FilterDropDown from './components/FilterDropDown';
 import { CourseDay, CourseType } from '@/utils/util';
-import useCourseActions from '@/hooks/useCourseAction';
+import courseActions from '@/utils/courseAction';
 import CourseModal from './modal/CourseModal';
+import { useNavigate } from 'react-router';
+import ProfessorError from '@/utils/professorError';
 
 const ProfessorHome = () => {
   const [todayCourses, setTodayCourses] = useState<CourseMeta[]>([]);
   const [courses, setCourses] = useState<CourseMeta[]>([]);
   const [courseDay, setCourseDay] = useState<string>('수업 요일');
   const [courseType, setCourseType] = useState<string>('수업 종류');
-
   const [modal, setModal] = useState<ReactNode | null>(null);
+  const navigate = useNavigate();
   const { openModal, closeModal, Modal } = useModal();
   const {
     handleDeleteCourse,
@@ -26,7 +28,7 @@ const ProfessorHome = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = useCourseActions({ setModal, openModal, closeModal });
+  } = courseActions({ setModal, openModal, closeModal, navigate });
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -44,7 +46,13 @@ const ProfessorHome = () => {
         setCourses(courses.totalCourse);
         setTodayCourses(courses.todayCourse);
       } catch (error) {
-        console.error('Error while fetching courses:', error);
+        ProfessorError({
+          error,
+          setModal,
+          openModal,
+          closeModal,
+          navigate,
+        });
       }
     }
 
@@ -66,7 +74,13 @@ const ProfessorHome = () => {
             closeModal();
             await courseRepository.createCourse(course);
           } catch (error) {
-            console.error('Error while creating course:', error);
+            ProfessorError({
+              error,
+              setModal,
+              openModal,
+              closeModal,
+              navigate,
+            });
           }
         }}
       />
