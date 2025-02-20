@@ -15,6 +15,10 @@ const popupConfigs: Record<string, PopupConfig> = {
     title: '아직 수업이 시작하지 않았습니다',
     content: '잠시만 기다려주세요',
   },
+  closedCourse: {
+    title: '교수님이 강의를 종료하셨어요',
+    content: '확인을 누르시면 처음화면으로 돌아갑니다',
+  },
   server: {
     title: '서버에 오류가 발생했습니다',
     content: '다시 한번 시도해주세요',
