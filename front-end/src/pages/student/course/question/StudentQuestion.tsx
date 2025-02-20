@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SuccessPopup from '../components/SuccessPopup';
 import S from './StudentQuestion.module.css';
 import QuestionForm from './components/QuestionForm';
@@ -10,24 +10,19 @@ import { handleStudentError } from '@/utils/studentPopupUtils';
 type StudentQuestionProps = {
   setModalType: React.Dispatch<React.SetStateAction<string | null>>;
   openModal: () => void;
+  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
+  questions: Question[];
 };
 
-const StudentQuestion = ({ setModalType, openModal }: StudentQuestionProps) => {
+const StudentQuestion = ({
+  setModalType,
+  openModal,
+  setQuestions,
+  questions,
+}: StudentQuestionProps) => {
   const [successPopup, setSuccessPopup] = useState(false);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [inputValue, setInputValue] = useState('');
 
-  useEffect(() => {
-    async function fetchQuestions() {
-      try {
-        const questionList = await classroomRepository.getQuestions();
-        setQuestions(questionList);
-      } catch (error) {
-        handleStudentError({ error, setModalType, openModal });
-      }
-    }
-    fetchQuestions();
-  }, []);
+  const [inputValue, setInputValue] = useState('');
 
   const handleInputSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
