@@ -18,8 +18,9 @@ import ProfessorError from '@/utils/professorError';
 export type OutletContext = {
   openModal: () => void;
   closeModal: () => void;
-  setModal: (modal: React.ReactNode | null) => void;
+  setModal: React.Dispatch<React.SetStateAction<ReactNode>>;
   navigate: NavigateFunction;
+  popupError: (error: unknown) => void;
 };
 
 const ProfessorHomeLayout = () => {
@@ -135,7 +136,9 @@ const ProfessorHomeLayout = () => {
         )}
       </div>
       <div className={S.container}>
-        <Outlet context={{ openModal, closeModal, setModal, navigate }} />
+        <Outlet
+          context={{ openModal, closeModal, setModal, navigate, popupError }}
+        />
       </div>
       {modal && <Modal>{modal}</Modal>}
     </>

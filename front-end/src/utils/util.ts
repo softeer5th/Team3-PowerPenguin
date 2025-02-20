@@ -131,3 +131,18 @@ export const CourseType = ['전공', '교양', '기타'];
 export const formatSchedule = (schedule: Schedule, isEnd: boolean) => {
   return `${schedule.day} ${schedule.start} - ${schedule.end}${isEnd ? '' : ', '}`;
 };
+
+export const filterCourse = (
+  courses: CourseMeta[],
+  courseDay: string,
+  courseType: string
+) => {
+  return courses.filter(
+    (course) =>
+      (courseDay === '수업 요일' ||
+        course.schedule.find(
+          (schedule) => schedule.day === courseDay.slice(0, 1)
+        )) &&
+      (courseType === '수업 종류' || courseType === course.classType)
+  );
+};

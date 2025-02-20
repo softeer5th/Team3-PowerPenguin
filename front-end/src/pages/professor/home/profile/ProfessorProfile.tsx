@@ -7,7 +7,6 @@ import TextButton from '@/components/button/text/TextButton';
 import { validateImage } from '@/utils/util';
 import AlertModal from '@/components/modal/AlertModal';
 import { OutletContext } from '../layout/ProfessorHomeLayout';
-import ProfessorError from '@/utils/professorError';
 
 const createEditButton = ({
   onEdit,
@@ -58,14 +57,8 @@ const ProfessorProfile = () => {
   const userName = useRef('');
   const userEmail = useRef('');
   const profileInputRef = useRef<HTMLInputElement>(null);
-  const { openModal, closeModal, setModal, navigate } =
+  const { openModal, closeModal, setModal, popupError } =
     useOutletContext<OutletContext>();
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
 
   useEffect(() => {
     async function getProfessor() {

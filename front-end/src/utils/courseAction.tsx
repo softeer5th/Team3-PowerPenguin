@@ -81,6 +81,7 @@ const courseActions = ({
             console.log('Delete course:', course.id);
             offModal();
             await courseRepository.deleteCourse(course.id);
+            navigate(0);
           } catch (error) {
             popupError(error);
           }
@@ -103,6 +104,7 @@ const courseActions = ({
             console.log('Submit course:', course);
             offModal();
             await courseRepository.updateCourse(course);
+            navigate(0);
           } catch (error) {
             popupError(error);
           }

@@ -1,16 +1,16 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import CircleBackButton from '@/components/button/icon/CircleBackButton';
 import S from './ProfessorCourse.module.css';
 import RecIconButton from '@/components/button/icon/RecIconButton';
 import TextButton from '@/components/button/text/TextButton';
 import courseActions from '@/utils/courseAction';
 import useModal from '@/hooks/useModal';
-import { useEffect, useState } from 'react';
 import { Course, CourseMeta } from '@/core/model';
 import ClockIcon from '@/assets/icons/clock.svg?react';
 import PeopleIcon from '@/assets/icons/people.svg?react';
 import { formatSchedule, getCourseColor } from '@/utils/util';
 import { courseRepository } from '@/di';
-import { useNavigate, useParams } from 'react-router';
 import CourseQuestion from './components/CourseQuestion';
 import CourseRequest from './components/CourseRequest';
 import CategoryChip from '@/components/chip/CategoryChip';
