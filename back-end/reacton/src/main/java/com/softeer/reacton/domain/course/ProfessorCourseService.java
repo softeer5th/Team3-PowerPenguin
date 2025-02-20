@@ -161,6 +161,7 @@ public class ProfessorCourseService {
 
         Course course = getCourseByProfessor(oauthId, courseId);
         course.activate();
+        questionRepository.deleteAllByCourse(course);
 
         log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
     }
@@ -171,6 +172,7 @@ public class ProfessorCourseService {
 
         Course course = getCourseByProfessor(oauthId, courseId);
         course.deactivate();
+        questionRepository.deleteCompleteByCourse(course);
 
         log.debug("SSE 서버에 수업 종료 메시지 전송을 요청합니다.");
         SseMessage<Void> sseMessage = new SseMessage<>("COURSE_CLOSED", null);
