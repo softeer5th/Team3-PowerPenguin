@@ -75,13 +75,19 @@ public class ProfessorService {
     public void delete(String oauthId) {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
-        s3Service.deleteFile(professor.getProfileImageS3Key());
+        if (isFileExists(professor)) {
+            s3Service.deleteFile(professor.getProfileImageS3Key());
+        }
+        List<Course> courses = courseRepository.findByProfessor(professor);
+        for (Course course : courses) {
+            if (isFileExists(course)) {
+                s3Service.deleteFile(course.getFileS3Key());
+            }
+            scheduleRepository.deleteAllByCourse(course);
+            questionRepository.deleteAllByCourse(course);
+            requestRepository.deleteAllByCourse(course);
+        }
 
-        courseRepository.findByProfessor(professor).forEach(course -> {
-            scheduleRepository.deleteAllByCourse((Course) course);
-            questionRepository.deleteAllByCourse((Course) course);
-            requestRepository.deleteAllByCourse((Course) course);
-        });
         courseRepository.deleteByProfessor(professor);
         professorRepository.delete(professor);
 
@@ -207,6 +213,10 @@ public class ProfessorService {
 
     private boolean isFileExists(Professor professor) {
         return professor.getProfileImageFileName() != null && !professor.getProfileImageFileName().isEmpty() && professor.getProfileImageS3Key() != null && !professor.getProfileImageS3Key().isEmpty();
+    }
+
+    private boolean isFileExists(Course course) {
+        return course.getFileName() != null && !course.getFileName().isEmpty() && course.getFileS3Key() != null && !course.getFileS3Key().isEmpty();
     }
 
     private void deleteExistingFileIfExists(Professor professor) {
