@@ -36,8 +36,6 @@ class ClassroomRepository {
       }
     );
     await throwError(response);
-    const data = response.json();
-    return data;
   }
 
   async checkQuestionByStudent(questionId: string): Promise<void> {
@@ -52,8 +50,6 @@ class ClassroomRepository {
       }
     );
     await throwError(response);
-    const data = await response.json();
-    return data;
   }
 
   async sendQuestion(question: string): Promise<Question> {
@@ -69,7 +65,11 @@ class ClassroomRepository {
     });
     await throwError(response);
     const data = await response.json();
-    return data.data;
+    return {
+      id: data.data.id,
+      createdAt: data.data.createdAt,
+      content: data.data.content,
+    };
   }
 
   async sendRequest(request: string): Promise<void> {
@@ -104,9 +104,18 @@ class ClassroomRepository {
     const response = await fetch('/api/students/questions', {
       method: 'GET',
     });
-    await throwError(response);
+
+    await throwError(response); // 오류 처리
+
     const data = await response.json();
-    return data.data.questions;
+    const questions: Question[] = data.data.questions.map(
+      (question: Question) => ({
+        id: question.id,
+        createdAt: question.createdAt,
+        content: question.content,
+      })
+    );
+    return questions;
   }
 }
 
