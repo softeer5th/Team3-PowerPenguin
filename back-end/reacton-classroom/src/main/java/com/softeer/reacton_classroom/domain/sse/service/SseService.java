@@ -131,9 +131,4 @@ public class SseService {
         sinks.remove(courseId);
         sink.tryEmitComplete();
     }
-
-    private void sendInitMessage(Sinks.Many<MessageResponse<?>> sink) {
-        MessageResponse<?> initialMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
-        sink.tryEmitNext(initialMessage);
-    }
 }
