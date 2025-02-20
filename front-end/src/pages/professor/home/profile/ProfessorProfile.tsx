@@ -7,7 +7,6 @@ import TextButton from '@/components/button/text/TextButton';
 import { validateImage } from '@/utils/util';
 import AlertModal from '@/components/modal/AlertModal';
 import { OutletContext } from '../layout/ProfessorHomeLayout';
-import ProfessorError from '@/utils/professorError';
 
 const createEditButton = ({
   onEdit,
@@ -58,7 +57,7 @@ const ProfessorProfile = () => {
   const userName = useRef('');
   const userEmail = useRef('');
   const profileInputRef = useRef<HTMLInputElement>(null);
-  const { openModal, closeModal, setModal, navigate } =
+  const { openModal, closeModal, setModal, popupError } =
     useOutletContext<OutletContext>();
 
   useEffect(() => {
@@ -78,13 +77,7 @@ const ProfessorProfile = () => {
         userName.current = response.name;
         userEmail.current = response.email;
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
     getProfessor();
@@ -116,13 +109,7 @@ const ProfessorProfile = () => {
       });
       setIsEdit({ ...isEdit, profileImage: false });
     } catch (error) {
-      ProfessorError({
-        error,
-        setModal,
-        openModal,
-        closeModal,
-        navigate,
-      });
+      popupError(error);
     }
   };
 
@@ -135,13 +122,7 @@ const ProfessorProfile = () => {
       setProfile({ ...profile, name: userName.current });
       setIsEdit({ ...isEdit, name: false });
     } catch (error) {
-      ProfessorError({
-        error,
-        setModal,
-        openModal,
-        closeModal,
-        navigate,
-      });
+      popupError(error);
     }
   };
 
@@ -191,13 +172,7 @@ const ProfessorProfile = () => {
           try {
             await professorRepository.logout();
           } catch (error) {
-            ProfessorError({
-              error,
-              setModal,
-              openModal,
-              closeModal,
-              navigate,
-            });
+            popupError(error);
           }
         }}
         onClickCloseButton={offModal}
@@ -218,13 +193,7 @@ const ProfessorProfile = () => {
           try {
             await professorRepository.deleteProfessor();
           } catch (error) {
-            ProfessorError({
-              error,
-              setModal,
-              openModal,
-              closeModal,
-              navigate,
-            });
+            popupError(error);
           }
         }}
         onClickCloseButton={offModal}

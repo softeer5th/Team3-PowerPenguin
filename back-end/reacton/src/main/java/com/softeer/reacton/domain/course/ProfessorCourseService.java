@@ -15,6 +15,8 @@ import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.FileErrorCode;
 import com.softeer.reacton.global.exception.code.ProfessorErrorCode;
 import com.softeer.reacton.global.s3.S3Service;
+import com.softeer.reacton.global.sse.SseMessageSender;
+import com.softeer.reacton.global.sse.dto.SseMessage;
 import com.softeer.reacton.global.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,7 @@ public class ProfessorCourseService {
     private static final String FILE_DIRECTORY = "course-files/";
     private static final long MAX_FILE_SIZE = 100L * 1024 * 1024;
     private static final int PRESIGNED_URL_EXPIRATION_MINUTES = 1;
+    private final SseMessageSender sseMessageSender;
 
     public ActiveCourseResponse getActiveCourseByUser(String oauthId) {
         log.debug("활성화된 수업을 조회합니다.");
@@ -102,6 +105,17 @@ public class ProfessorCourseService {
         return CourseAllResponse.of(todayCoursesResponse, allCoursesResponse);
     }
 
+    public List<CourseSummaryResponse> searchCourses(String oauthId, String keyword) {
+        log.debug("검색 결과를 조회합니다.");
+
+        Professor professor = getProfessorByOauthId(oauthId);
+        String escapedKeyword = escapeWildcard(keyword);
+        String searchKeyword = "%" + escapedKeyword + "%";
+        List<Course> searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
+
+        return getAllCoursesResponse(searchCourses);
+    }
+
     @Transactional
     public void updateCourse(String oauthId, long courseId, CourseRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
@@ -157,6 +171,10 @@ public class ProfessorCourseService {
 
         Course course = getCourseByProfessor(oauthId, courseId);
         course.deactivate();
+
+        log.debug("SSE 서버에 수업 종료 메시지 전송을 요청합니다.");
+        SseMessage<Void> sseMessage = new SseMessage<>("COURSE_CLOSED", null);
+        sseMessageSender.sendMessageToAll(String.valueOf(courseId), sseMessage);
 
         log.info("수업이 종료 상태로 변경되었습니다. courseId = {}", courseId);
     }
@@ -367,5 +385,11 @@ public class ProfessorCourseService {
             s3Service.deleteFile(course.getFileS3Key());
             log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
         }
+    }
+
+    private String escapeWildcard(String keyword) {
+        return keyword.replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
     }
 }

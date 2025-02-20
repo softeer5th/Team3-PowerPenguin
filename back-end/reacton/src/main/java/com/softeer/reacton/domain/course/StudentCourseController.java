@@ -80,7 +80,7 @@ public class StudentCourseController {
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + "students/classroom")
+                .header(HttpHeaders.LOCATION, FRONTEND_BASE_URL + "student/course")
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
     }

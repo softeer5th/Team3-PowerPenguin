@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 import java.time.Duration;
@@ -26,9 +27,13 @@ public class SseService {
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourseMessages(String courseId) {
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.computeIfAbsent(courseId, k -> ConcurrentHashMap.newKeySet());
+        MessageResponse<?> initMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
+        ServerSentEvent<MessageResponse<?>> initEvent = ServerSentEvent.<MessageResponse<?>>builder()
+                .data(initMessage)
+                .build();
 
         log.debug("교수와 연결 가능한 SSE 통신을 찾았습니다.");
-        return openCourseConnection(sink, courseId);
+        return openCourseConnection(sink, initEvent, courseId);
     }
 
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeStudentMessages(String studentId, String courseId) {
@@ -38,13 +43,17 @@ public class SseService {
         }
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(studentId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.get(courseId).add(studentId);
+        MessageResponse<?> initMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
+        ServerSentEvent<MessageResponse<?>> initEvent = ServerSentEvent.<MessageResponse<?>>builder()
+                .data(initMessage)
+                .build();
 
         log.debug("학생과 연결 가능한 SSE 통신을 찾았습니다.");
-        return openStudentConnection(sink, studentId, courseId);
+        return openStudentConnection(sink, initEvent, studentId, courseId);
     }
 
-    public void sendMessage(String courseId, MessageResponse<?> message) {
-        Sinks.Many<MessageResponse<?>> sink = sinks.get(courseId);
+    public void sendMessage(String id, MessageResponse<?> message) {
+        Sinks.Many<MessageResponse<?>> sink = sinks.get(id);
         if (sink == null) {
             log.debug("전송 대상을 찾지 못했습니다. : Receiver not found.");
             throw new BaseException(SseErrorCode.USER_NOT_FOUND);
@@ -58,12 +67,19 @@ public class SseService {
         log.info("메시지 전송에 성공했습니다.");
     }
 
-    private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
-        return sink.asFlux()
-                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+    public void sendMessageToStudents(String courseId, MessageResponse<?> message) {
+        for (String studentId : courseStudentMap.get(courseId)) {
+            sendMessage(studentId, message);
+        }
+    }
+
+    private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, ServerSentEvent<MessageResponse<?>> initEvent, String courseId) {
+        return Flux.concat(Mono.just(initEvent),
+                        sink.asFlux()
+                                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+                )
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
-                    // TODO: 프론트 측에서 자동 재연결 요청 기능 추가 필요
                     log.warn("SSE 연결 제한 시간이 초과되었습니다. : courseId={}", courseId);
                     closeConnection(sink, courseId);
                     return Flux.empty();
@@ -74,12 +90,13 @@ public class SseService {
                 });
     }
 
-    private Flux<ServerSentEvent<MessageResponse<?>>> openStudentConnection(Sinks.Many<MessageResponse<?>> sink, String studentId, String courseId) {
-        return sink.asFlux()
-                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+    private Flux<ServerSentEvent<MessageResponse<?>>> openStudentConnection(Sinks.Many<MessageResponse<?>> sink, ServerSentEvent<MessageResponse<?>> initEvent, String studentId, String courseId) {
+        return Flux.concat(Mono.just(initEvent),
+                        sink.asFlux()
+                                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+                )
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
-                    // TODO: 프론트 측에서 자동 재연결 요청 기능 추가 필요
                     log.warn("학생 SSE 연결 제한 시간이 초과되었습니다. : studentId={}", studentId);
                     closeConnection(sink, studentId);
                     return Flux.empty();
@@ -115,4 +132,3 @@ public class SseService {
         sink.tryEmitComplete();
     }
 }
-

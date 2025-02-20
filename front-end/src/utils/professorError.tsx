@@ -9,7 +9,6 @@ interface ProfessorErrorContentType {
 }
 
 type ProfessorErrorProps = {
-  error: unknown;
   setModal: (modal: React.ReactNode | null) => void;
   openModal: () => void;
   closeModal: () => void;
@@ -42,57 +41,94 @@ const ProfessorErrorContent: Record<string, ProfessorErrorContentType> = {
     description: '다시 시도해주세요.',
     navigateTo: null,
   },
+  INVALID_IMAGE_TYPE: {
+    message: '이미지 파일만 업로드 가능합니다.',
+    description: '.png, .jpeg, .jpg, .webp 파일만 업로드 가능합니다.',
+    navigateTo: null,
+  },
+  INVALID_IMAGE_SIZE: {
+    message: '이미지 파일은 5MB 이하만 업로드 가능합니다.',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
+  INVALID_NAME: {
+    message: '이름을 입력해주세요.',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
+  INVALID_NAME_LENGTH: {
+    message: '이름은 20자 이하로 입력해주세요.',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
+  INVALID_NAME_REGEX: {
+    message: '이름은 한글과 영문 대소문자만 입력 가능합니다.',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
+  INVALID_FILE_TYPE: {
+    message: '파일 형식이 올바르지 않습니다.',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
+  INVALID_FILE_SIZE: {
+    message: '파일 크기가 너무 큽니다.',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
 };
 
 const ProfessorError = ({
-  error,
   setModal,
   openModal,
   closeModal,
   navigate,
 }: ProfessorErrorProps) => {
-  let errorContent = null;
-  if (error instanceof ClientError || error instanceof ServerError) {
-    errorContent = ProfessorErrorContent[error.errorCode];
-  }
+  const popupError = (error: unknown) => {
+    let errorContent = null;
+    if (error instanceof ClientError || error instanceof ServerError) {
+      errorContent = ProfessorErrorContent[error.errorCode];
+    }
 
-  if (!errorContent) {
-    setModal(
-      <AlertModal
-        type="caution"
-        message="알 수 없는 오류가 발생했습니다."
-        description="이전 페이지로 돌아갑니다."
-        buttonText="확인"
-        onClickModalButton={() => {
-          setModal(null);
-          closeModal();
-          navigate(-1);
-        }}
-      />
-    );
-  } else {
-    setModal(
-      <AlertModal
-        type="caution"
-        message={errorContent.message}
-        description={errorContent.description}
-        buttonText="확인"
-        onClickModalButton={() => {
-          setModal(null);
-          closeModal();
+    if (!errorContent) {
+      setModal(
+        <AlertModal
+          type="caution"
+          message="알 수 없는 오류가 발생했습니다."
+          description="이전 페이지로 돌아갑니다."
+          buttonText="확인"
+          onClickModalButton={() => {
+            setModal(null);
+            closeModal();
+            navigate(-1);
+          }}
+        />
+      );
+    } else {
+      setModal(
+        <AlertModal
+          type="caution"
+          message={errorContent.message}
+          description={errorContent.description}
+          buttonText="확인"
+          onClickModalButton={() => {
+            setModal(null);
+            closeModal();
 
-          if (errorContent.navigateTo === null) return;
-          if (typeof errorContent.navigateTo === 'number') {
-            navigate(errorContent.navigateTo);
-          } else {
-            navigate(errorContent.navigateTo);
-          }
-        }}
-      />
-    );
-  }
+            if (errorContent.navigateTo === null) return;
+            if (typeof errorContent.navigateTo === 'number') {
+              navigate(errorContent.navigateTo);
+            } else {
+              navigate(errorContent.navigateTo);
+            }
+          }}
+        />
+      );
+    }
 
-  openModal();
+    openModal();
+  };
+  return popupError;
 };
 
 export default ProfessorError;

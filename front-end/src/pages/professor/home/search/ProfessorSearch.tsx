@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useOutletContext, useSearchParams } from 'react-router';
 import S from './ProfessorSearch.module.css';
 import { CourseMeta } from '@/core/model';
 import { courseRepository } from '@/di';
-import { CourseDay, CourseType } from '@/utils/util';
+import { CourseDay, CourseType, filterCourse } from '@/utils/util';
 import FilterDropDown from '../components/FilterDropDown';
 import TotalCourses from '../components/TotalCourses';
-import useModal from '@/hooks/useModal';
 import courseActions from '@/utils/courseAction';
-import ProfessorError from '@/utils/professorError';
+import { OutletContext } from '../layout/ProfessorHomeLayout';
 
 const ProfessorSearch = () => {
   const [courses, setCourses] = useState<CourseMeta[]>([]);
   const [courseDay, setCourseDay] = useState<string>('수업 요일');
   const [courseType, setCourseType] = useState<string>('수업 종류');
-  const [modal, setModal] = useState<React.ReactNode | null>(null);
-  const navigate = useNavigate();
-  const { openModal, closeModal, Modal } = useModal();
+  const { openModal, closeModal, setModal, navigate, popupError } =
+    useOutletContext<OutletContext>();
   const {
     handleDeleteCourse,
     handleEditCourse,
@@ -27,14 +25,7 @@ const ProfessorSearch = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') || '';
 
-  const filteredCourses = courses.filter(
-    (course) =>
-      (courseDay === '수업 요일' ||
-        course.schedule.find(
-          (schedule) => schedule.day === courseDay.slice(0, 1)
-        )) &&
-      (courseType === '수업 종류' || courseType === course.classType)
-  );
+  const filteredCourses = filterCourse(courses, courseDay, courseType);
 
   useEffect(() => {
     if (keyword.trim() === '') {
@@ -50,13 +41,7 @@ const ProfessorSearch = () => {
         );
         setCourses(searchedCourses);
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
 
@@ -64,38 +49,35 @@ const ProfessorSearch = () => {
   }, [keyword]);
 
   return (
-    <>
-      <div className={S.container}>
-        <div className={S.content}>
-          <h2 className={S.title}>
-            검색 결과 <span>{filteredCourses.length}건</span>
-          </h2>
-          <div className={S.courseList}>
-            <div className={S.filter}>
-              <FilterDropDown
-                title={courseDay}
-                options={CourseDay.map((day) => `${day}요일`)}
-                setTitle={setCourseDay}
-              />
-              <FilterDropDown
-                title={courseType}
-                options={CourseType}
-                setTitle={setCourseType}
-              />
-            </div>
-            <TotalCourses
-              filteredCourses={filteredCourses}
-              onDetailCourse={handleDetailCourse}
-              onDeleteCourse={handleDeleteCourse}
-              onEditCourse={handleEditCourse}
-              onFileCourse={handleFileCourse}
-              onStartCourse={handleStartCourse}
+    <div className={S.container}>
+      <div className={S.content}>
+        <h2 className={S.title}>
+          검색 결과 <span>{filteredCourses.length}건</span>
+        </h2>
+        <div className={S.courseList}>
+          <div className={S.filter}>
+            <FilterDropDown
+              title={courseDay}
+              options={CourseDay.map((day) => `${day}요일`)}
+              setTitle={setCourseDay}
+            />
+            <FilterDropDown
+              title={courseType}
+              options={CourseType}
+              setTitle={setCourseType}
             />
           </div>
+          <TotalCourses
+            filteredCourses={filteredCourses}
+            onDetailCourse={handleDetailCourse}
+            onDeleteCourse={handleDeleteCourse}
+            onEditCourse={handleEditCourse}
+            onFileCourse={handleFileCourse}
+            onStartCourse={handleStartCourse}
+          />
         </div>
       </div>
-      {modal && <Modal>{modal}</Modal>}
-    </>
+    </div>
   );
 };
 

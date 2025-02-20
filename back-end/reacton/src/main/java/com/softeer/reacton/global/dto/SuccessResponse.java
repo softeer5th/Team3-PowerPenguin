@@ -7,6 +7,7 @@ import com.softeer.reacton.domain.professor.dto.ProfessorInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -39,6 +40,13 @@ public class SuccessResponse<T> {
 
     public static SuccessResponse<CourseSummaryResponse> of(String message, CourseSummaryResponse data) {
         return SuccessResponse.<CourseSummaryResponse>builder()
+                .message(message)
+                .data(data)
+                .build();
+    }
+
+    public static SuccessResponse<List<CourseSummaryResponse>> of(String message, List<CourseSummaryResponse> data) {
+        return SuccessResponse.<List<CourseSummaryResponse>>builder()
                 .message(message)
                 .data(data)
                 .build();

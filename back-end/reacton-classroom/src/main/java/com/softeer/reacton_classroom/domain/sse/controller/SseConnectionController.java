@@ -2,6 +2,7 @@ package com.softeer.reacton_classroom.domain.sse.controller;
 
 import com.softeer.reacton_classroom.domain.sse.dto.MessageResponse;
 import com.softeer.reacton_classroom.domain.sse.service.SseService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,20 @@ public class SseConnectionController {
 
     private final SseService sseService;
 
+    @Operation(
+            summary = "교수 SSE 연결 요청",
+            description = "교수가 SSE 연결을 요청합니다."
+    )
     @GetMapping(path = "/course/{courseId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourse(@PathVariable String courseId) {
         log.debug("교수 SSE 연결을 요청합니다. : courseId = {}", courseId);
         return sseService.subscribeCourseMessages(courseId);
     }
 
+    @Operation(
+            summary = "학생 SSE 연결 요청",
+            description = "학생이 SSE 연결을 요청합니다."
+    )
     @GetMapping(path = "/student", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeStudent(HttpServletRequest request) {
         String studentId = (String) request.getAttribute("studentId");

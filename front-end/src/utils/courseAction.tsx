@@ -21,7 +21,7 @@ const fileSuccessModal = (
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
   openModal: () => void,
   closeModal: () => void,
-  navigate: NavigateFunction
+  popupError: (error: unknown) => void
 ) => {
   setModal(
     <AlertModal
@@ -39,17 +39,13 @@ const fileSuccessModal = (
           console.log('Save file:', file);
           await courseRepository.uploadCourseFile(courseId, file);
         } catch (error) {
-          ProfessorError({
-            error,
-            setModal,
-            openModal,
-            closeModal,
-            navigate,
-          });
+          popupError(error);
         }
       }}
     />
   );
+
+  openModal();
 };
 
 const courseActions = ({
@@ -58,6 +54,13 @@ const courseActions = ({
   closeModal,
   navigate,
 }: courseActionsProps) => {
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
+
   const offModal = () => {
     setModal(null);
     closeModal();
@@ -78,14 +81,9 @@ const courseActions = ({
             console.log('Delete course:', course.id);
             offModal();
             await courseRepository.deleteCourse(course.id);
+            navigate(0);
           } catch (error) {
-            ProfessorError({
-              error,
-              setModal,
-              openModal,
-              closeModal,
-              navigate,
-            });
+            popupError(error);
           }
         }}
       />
@@ -106,14 +104,9 @@ const courseActions = ({
             console.log('Submit course:', course);
             offModal();
             await courseRepository.updateCourse(course);
+            navigate(0);
           } catch (error) {
-            ProfessorError({
-              error,
-              setModal,
-              openModal,
-              closeModal,
-              navigate,
-            });
+            popupError(error);
           }
         }}
       />
@@ -163,7 +156,7 @@ const courseActions = ({
                 setModal,
                 openModal,
                 closeModal,
-                navigate
+                popupError
               );
             }}
             onClickCloseButton={() => {
@@ -178,7 +171,7 @@ const courseActions = ({
           setModal,
           openModal,
           closeModal,
-          navigate
+          popupError
         );
       }
     };
