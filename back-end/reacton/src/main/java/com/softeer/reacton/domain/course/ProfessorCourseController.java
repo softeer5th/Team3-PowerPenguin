@@ -3,6 +3,7 @@ package com.softeer.reacton.domain.course;
 import com.softeer.reacton.domain.course.dto.CourseDetailResponse;
 import com.softeer.reacton.domain.course.dto.CourseRequest;
 import com.softeer.reacton.domain.course.dto.CourseAllResponse;
+import com.softeer.reacton.domain.course.dto.CourseSummaryResponse;
 import com.softeer.reacton.global.dto.SuccessResponse;
 import com.sun.net.httpserver.HttpsServer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -118,6 +120,29 @@ public class ProfessorCourseController {
         CourseAllResponse response = professorCourseService.getAllCourses(oauthId);
 
         log.info("전체 수업 정보 조회를 완료했습니다.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(SuccessResponse.of("성공적으로 조회했습니다.", response));
+    }
+
+    @GetMapping(params = "keyword")
+    @Operation(
+            summary = "수업 검색",
+            description = "키워드로 수업을 검색합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "검색 결과를 반환합니다."),
+                    @ApiResponse(responseCode = "404", description = "검색 결과가 없습니다.")
+            }
+    )
+    public ResponseEntity<SuccessResponse<List<CourseSummaryResponse>>> searchCourses(
+            @RequestParam("keyword") String keyword,
+            HttpServletRequest request) {
+        log.debug("검색 결과에 따른 수업 목록을 요청합니다. : keyword = {}", keyword);
+
+        String oauthId = (String) request.getAttribute("oauthId");
+        List<CourseSummaryResponse> response = professorCourseService.searchCourses(oauthId, keyword);
+
+        log.info("검색을 완료했습니다.");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(SuccessResponse.of("성공적으로 조회했습니다.", response));

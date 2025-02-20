@@ -103,6 +103,17 @@ public class ProfessorCourseService {
         return CourseAllResponse.of(todayCoursesResponse, allCoursesResponse);
     }
 
+    public List<CourseSummaryResponse> searchCourses(String oauthId, String keyword) {
+        log.debug("검색 결과를 조회합니다.");
+
+        Professor professor = getProfessorByOauthId(oauthId);
+        String escapedKeyword = escapeWildcard(keyword);
+        String searchKeyword = "%" + escapedKeyword + "%";
+        List<Course> searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
+
+        return getAllCoursesResponse(searchCourses);
+    }
+
     @Transactional
     public void updateCourse(String oauthId, long courseId, CourseRequest request) {
         log.debug("수업 데이터를 업데이트합니다. : courseId = {}", courseId);
@@ -372,5 +383,11 @@ public class ProfessorCourseService {
             s3Service.deleteFile(course.getFileS3Key());
             log.debug("기존 강의자료 파일 삭제 완료: fileName = {}", course.getFileName());
         }
+    }
+
+    private String escapeWildcard(String keyword) {
+        return keyword.replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
     }
 }
