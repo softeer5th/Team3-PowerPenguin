@@ -1,48 +1,66 @@
 import { useEffect, useState, useRef } from 'react';
 
-const useBlockTimer = (
-  isSelected: boolean,
-  setIsSelected: React.Dispatch<React.SetStateAction<boolean>>,
-  blockDuration: number,
-  delay: number
-) => {
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [countdown, setCountdown] = useState(blockDuration / 1000); // 초기값 설정
+const useBlockTimer = (type: string, blockDuration: number, delay: number) => {
+  // 로컬에 값이 있으면 사용 없으면 0으로
+  const storedCountdown = Number(localStorage.getItem(type)) || 0;
+  const initialCountdown = storedCountdown > 0 ? storedCountdown : 0;
 
-  const blockTimerRef = useRef<number | null>(null);
+  // 값이 존재하는 경우 isBlock을 바로 true처리
+  const [isBlocked, setIsBlocked] = useState(initialCountdown > 0);
+  const [countdown, setCountdown] = useState(initialCountdown);
+
   const countdownIntervalRef = useRef<number | null>(null);
+  const blockTimerRef = useRef<number | null>(null);
 
+  // 로컬 스토리지에 값이 존재하는 경우 바로 카운트 다운 시작
   useEffect(() => {
-    if (!isSelected) {
-      setIsBlocked(false);
-      setCountdown(blockDuration / 1000); // 초기값으로 리셋
-      return;
-    }
-
-    setTimeout(() => {
+    if (initialCountdown > 0) {
       setIsBlocked(true);
-      setCountdown(blockDuration / 1000);
-
-      //시간 줄이는 기능
-      countdownIntervalRef.current = setInterval(() => {
-        setCountdown((prev) => (prev > 1 ? prev - 1 : 0));
-      }, 1000);
-
-      //끝나고 초기화
-      blockTimerRef.current = setTimeout(() => {
-        setIsSelected(false);
-        setIsBlocked(false);
-        setCountdown(blockDuration / 1000);
-      }, blockDuration);
-    }, delay);
+      startCountdown(initialCountdown);
+    }
 
     return () => {
       clearTimeout(blockTimerRef.current!);
       clearInterval(countdownIntervalRef.current!);
     };
-  }, [isSelected, blockDuration, delay]);
+  }, [type, blockDuration, delay]);
 
-  return { isBlocked, countdown };
+  // 카운트 다운 함수
+  const startCountdown = (duration: number) => {
+    setCountdown(duration);
+    localStorage.setItem(type, duration.toString());
+
+    countdownIntervalRef.current = window.setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownIntervalRef.current!);
+          localStorage.setItem(type, '0');
+          return 0;
+        }
+        const newCountdown = prev - 1;
+        localStorage.setItem(type, newCountdown.toString());
+        return newCountdown;
+      });
+    }, 1000);
+
+    blockTimerRef.current = window.setTimeout(() => {
+      setIsBlocked(false);
+      setCountdown(0);
+      localStorage.setItem(type, '0');
+    }, duration * 1000);
+  };
+
+  //외부에서 호출할 블록 시작 함수
+  const startBlock = () => {
+    if (isBlocked) return;
+
+    setTimeout(() => {
+      setIsBlocked(true);
+      startCountdown(blockDuration / 1000);
+    }, delay);
+  };
+
+  return { isBlocked, countdown, startBlock };
 };
 
 export default useBlockTimer;

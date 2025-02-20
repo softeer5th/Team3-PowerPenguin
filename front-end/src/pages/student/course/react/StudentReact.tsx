@@ -63,6 +63,7 @@ const StudentReact = ({ setModalType, openModal }: StudentReactProps) => {
         {CARD_List.map((item) => (
           <ReactCard
             key={item.type}
+            type={item.type}
             Icon={item.icon}
             onCardClick={() => handleCardClick(item.type)}
           />

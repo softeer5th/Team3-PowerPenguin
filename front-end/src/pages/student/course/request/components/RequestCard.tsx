@@ -1,12 +1,14 @@
+import { RequestType } from '@/core/model';
 import S from './RequestCard.module.css';
 import useBlockTimer from '@/hooks/useBlockTimer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type RequestCardProps = {
   onCardClick: () => Promise<boolean>;
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
+  type: RequestType;
 };
 
 const RequestCard = ({
@@ -14,19 +16,28 @@ const RequestCard = ({
   Icon,
   title,
   description,
+  type,
 }: RequestCardProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const { isBlocked, countdown } = useBlockTimer(
-    isSelected,
-    setIsSelected,
+  const { isBlocked, countdown, startBlock } = useBlockTimer(
+    `requests_block_${type}`,
     60000,
     2000
   );
+
+  useEffect(() => {
+    if (isBlocked) {
+      setIsSelected(true);
+    } else {
+      setIsSelected(false);
+    }
+  }, [isBlocked]);
 
   const handleButtonClick = async () => {
     const success = await onCardClick();
     if (success) {
       setIsSelected(true);
+      startBlock();
     }
   };
 
