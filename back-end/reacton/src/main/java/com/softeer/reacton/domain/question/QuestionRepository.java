@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    List<Question> findByStudentIdAndCourse(String studentId, Course course);
+    @Query("SELECT q FROM Question q " +
+            "WHERE q.studentId = :studentId AND q.course = :course AND q.isComplete = false")
+    List<Question> findNotCompleteByStudentIdAndCourse(String studentId, Course course);
 
     @Modifying
     @Transactional

@@ -33,7 +33,7 @@ public class StudentQuestionService {
         log.debug("이전에 질문했던 목록을 조회합니다. : studentId = {}, courseId = {}", studentId, courseId);
 
         Course course = getCourse(courseId);
-        List<CourseQuestionResponse> questions = findQuestions(studentId, course);
+        List<CourseQuestionResponse> questions = findQuestionsNotComplete(studentId, course);
 
         return QuestionAllResponse.of(questions);
     }
@@ -95,8 +95,8 @@ public class StudentQuestionService {
                 .orElseThrow(() -> new BaseException(CourseErrorCode.COURSE_NOT_FOUND));
     }
 
-    private List<CourseQuestionResponse> findQuestions(String studentId, Course course) {
-        List<Question> questions =  questionRepository.findByStudentIdAndCourse(studentId, course);
+    private List<CourseQuestionResponse> findQuestionsNotComplete(String studentId, Course course) {
+        List<Question> questions =  questionRepository.findNotCompleteByStudentIdAndCourse(studentId, course);
 
         return questions.stream()
                 .map(question -> new CourseQuestionResponse(
