@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 import java.time.Duration;
@@ -26,10 +27,13 @@ public class SseService {
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourseMessages(String courseId) {
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.computeIfAbsent(courseId, k -> ConcurrentHashMap.newKeySet());
-        sendInitMessage(sink);
+        MessageResponse<?> initMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
+        ServerSentEvent<MessageResponse<?>> initEvent = ServerSentEvent.<MessageResponse<?>>builder()
+                .data(initMessage)
+                .build();
 
         log.debug("교수와 연결 가능한 SSE 통신을 찾았습니다.");
-        return openCourseConnection(sink, courseId);
+        return openCourseConnection(sink, initEvent, courseId);
     }
 
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeStudentMessages(String studentId, String courseId) {
@@ -39,10 +43,13 @@ public class SseService {
         }
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(studentId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.get(courseId).add(studentId);
-        sendInitMessage(sink);
+        MessageResponse<?> initMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
+        ServerSentEvent<MessageResponse<?>> initEvent = ServerSentEvent.<MessageResponse<?>>builder()
+                .data(initMessage)
+                .build();
 
         log.debug("학생과 연결 가능한 SSE 통신을 찾았습니다.");
-        return openStudentConnection(sink, studentId, courseId);
+        return openStudentConnection(sink, initEvent, studentId, courseId);
     }
 
     public void sendMessage(String id, MessageResponse<?> message) {
@@ -66,9 +73,11 @@ public class SseService {
         }
     }
 
-    private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
-        return sink.asFlux()
-                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+    private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, ServerSentEvent<MessageResponse<?>> initEvent, String courseId) {
+        return Flux.concat(Mono.just(initEvent),
+                        sink.asFlux()
+                                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+                )
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
                     log.warn("SSE 연결 제한 시간이 초과되었습니다. : courseId={}", courseId);
@@ -81,9 +90,11 @@ public class SseService {
                 });
     }
 
-    private Flux<ServerSentEvent<MessageResponse<?>>> openStudentConnection(Sinks.Many<MessageResponse<?>> sink, String studentId, String courseId) {
-        return sink.asFlux()
-                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+    private Flux<ServerSentEvent<MessageResponse<?>>> openStudentConnection(Sinks.Many<MessageResponse<?>> sink, ServerSentEvent<MessageResponse<?>> initEvent, String studentId, String courseId) {
+        return Flux.concat(Mono.just(initEvent),
+                        sink.asFlux()
+                                .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
+                )
                 .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
                 .onErrorResume(TimeoutException.class, e -> {
                     log.warn("학생 SSE 연결 제한 시간이 초과되었습니다. : studentId={}", studentId);
@@ -119,10 +130,5 @@ public class SseService {
     private void closeConnection(Sinks.Many<MessageResponse<?>> sink, String courseId) {
         sinks.remove(courseId);
         sink.tryEmitComplete();
-    }
-
-    private void sendInitMessage(Sinks.Many<MessageResponse<?>> sink) {
-        MessageResponse<?> initialMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
-        sink.tryEmitNext(initialMessage);
     }
 }
