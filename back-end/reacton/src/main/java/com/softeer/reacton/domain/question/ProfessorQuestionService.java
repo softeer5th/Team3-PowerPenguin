@@ -19,8 +19,8 @@ public class ProfessorQuestionService {
 
     private final QuestionRepository questionRepository;
     private final SseMessageSender sseMessageSender;
+    private final QuestionService questionService;
 
-    @Transactional
     public void sendQuestionCheck(Long questionId) {
         log.debug("질문 체크 처리를 시작합니다. : questionId = {}", questionId);
 
@@ -30,7 +30,7 @@ public class ProfessorQuestionService {
         String studentId = question.getStudentId();
 
         question.setIsComplete(true);
-        questionRepository.save(question);
+        questionService.save(question);
 
         QuestionCheckSseRequest questionCheckSseRequest = new QuestionCheckSseRequest(questionId);
 

@@ -69,7 +69,6 @@ public class StudentQuestionService {
         return courseQuestionResponse;
     }
 
-    @Transactional
     public void sendQuestionCheck(String studentId, Long courseId, Long questionId) {
         log.debug("질문 체크 처리를 시작합니다. : questionId = {}", questionId);
 
