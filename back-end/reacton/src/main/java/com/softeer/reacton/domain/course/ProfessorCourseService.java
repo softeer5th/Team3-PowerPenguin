@@ -109,9 +109,15 @@ public class ProfessorCourseService {
         log.debug("검색 결과를 조회합니다.");
 
         Professor professor = getProfessorByOauthId(oauthId);
-        String escapedKeyword = escapeWildcard(keyword);
-        String searchKeyword = "%" + escapedKeyword + "%";
-        List<Course> searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
+        List<Course> searchCourses;
+        if (keyword == null || keyword.isEmpty()) {
+            searchCourses = courseRepository.findCoursesWithSchedulesByProfessor(professor);
+        }
+        else {
+            String escapedKeyword = escapeWildcard(keyword);
+            String searchKeyword = "%" + escapedKeyword + "%";
+            searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
+        }
 
         return getAllCoursesResponse(searchCourses);
     }
