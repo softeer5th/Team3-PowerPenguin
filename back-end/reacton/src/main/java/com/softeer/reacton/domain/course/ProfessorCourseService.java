@@ -112,8 +112,7 @@ public class ProfessorCourseService {
         List<Course> searchCourses;
         if (keyword == null || keyword.isEmpty()) {
             searchCourses = courseRepository.findCoursesWithSchedulesByProfessor(professor);
-        }
-        else {
+        } else {
             String escapedKeyword = escapeWildcard(keyword);
             String searchKeyword = "%" + escapedKeyword + "%";
             searchCourses = courseRepository.findCoursesWithSchedulesByProfessorAndKeyword(professor, searchKeyword);
