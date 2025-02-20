@@ -102,10 +102,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
     }
     onSubmit({
       ...courseForm,
-      id: course?.id || 0,
+      id: course?.id || '',
       capacity: parseInt(courseForm.capacity),
       accessCode: course?.accessCode || 0,
-      fileURL: course?.fileURL || '',
+      fileName: course?.fileName || '',
     } as CourseMeta);
   };
 

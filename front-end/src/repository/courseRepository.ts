@@ -249,7 +249,7 @@ class CourseRepository {
       fileName: data.fileName,
       questions: data.questions.map((question) => ({
         id: question.id.toString(),
-        time: question.time,
+        createdAt: question.time,
         content: question.content,
       })),
       requests: [
@@ -380,7 +380,7 @@ class CourseRepository {
     await throwError(response);
   }
 
-  async uploadCourseFile(courseId: string, file: File): Promise<string> {
+  async uploadCourseFile(courseId: Course['id'], file: File): Promise<string> {
     // API: POST /professors/courses/{courseId}/file
     // Request body: FormData { key: 'file', value: file }
 
