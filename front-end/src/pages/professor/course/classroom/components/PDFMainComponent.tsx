@@ -7,31 +7,31 @@ import ExpandSvg from '@/assets/icons/expansion.svg?react';
 import usePDF from '@/hooks/usePDF';
 import AccessCodeModal from './AccessCodeModal';
 import { Course, Reaction, ReactionType } from '@/core/model';
-import { professorRepository } from '@/di';
+import { courseRepository } from '@/di';
 import { Action } from '../ProfessorClassroom';
 
 type PDFMainComponentProps = {
-  courseInfo: Course;
+  courseInfo: Course | null;
   setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
   setModal: React.Dispatch<React.SetStateAction<ReactNode>>;
-  courseId: number;
   closeModal: () => void;
   openModal: () => void;
   reactions: ReactionType[];
   reactionsCount: Record<Reaction, number>;
   dispatch: React.Dispatch<Action>;
+  popupError: (error: unknown) => void;
 };
 
 const PDFMainComponent = ({
   courseInfo,
   setIsUploading,
   setModal,
-  courseId,
   closeModal,
   openModal,
   reactions,
   reactionsCount,
   dispatch,
+  popupError,
 }: PDFMainComponentProps) => {
   const {
     scale,
@@ -47,15 +47,24 @@ const PDFMainComponent = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 처음 저장된 pdf 받아오기
   useEffect(() => {
     async function fetchPDF() {
-      const pdfUrl = await professorRepository.getProfessorPDF(courseId);
-      setPDF(pdfUrl);
-      loadPdf(pdfUrl);
+      try {
+        if (!courseInfo) {
+          return;
+        }
+        const pdfUrl = await courseRepository.getCourseFileUrl(courseInfo.id);
+        if (!pdfUrl) {
+          return;
+        }
+        setPDF(pdfUrl);
+        loadPdf(pdfUrl);
+      } catch (error) {
+        popupError(error);
+      }
     }
     fetchPDF();
-  }, [courseId, courseInfo]);
+  }, [courseInfo]);
 
   const handleCloseModal = () => {
     closeModal();
@@ -83,8 +92,8 @@ const PDFMainComponent = ({
         // 해당강의의 pdf가 변경되었다는것을 알려야함
         setIsUploading(false);
       } catch (error) {
-        //추후 에러 핸들링
-        console.log(error);
+        setIsUploading(false);
+        popupError(error);
       }
     }
   }
@@ -93,7 +102,7 @@ const PDFMainComponent = ({
     <div className={S.mainContainer}>
       <div className={S.mainHeader}>
         <div className={S.accessCodeContainer}>
-          <div className={S.accessCode}>입장코드 {courseInfo.accessCode}</div>
+          <div className={S.accessCode}>입장코드 {courseInfo?.accessCode}</div>
           <button
             className={S.expandCode}
             onClick={() =>

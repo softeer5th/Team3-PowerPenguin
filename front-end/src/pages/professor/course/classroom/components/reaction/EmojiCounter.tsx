@@ -19,12 +19,12 @@ type EmojiCounterProps = {
 };
 
 const CHIP_LIST = [
-  { type: 'okay', icon: OkayEmoji },
-  { type: 'clap', icon: ClapEmoji },
-  { type: 'thumb', icon: ThumbEmoji },
-  { type: 'scream', icon: ScreamEmoji },
-  { type: 'cry', icon: CryEmoji },
-  { type: 'like', icon: LikeEmoji },
+  { type: 'OKAY', icon: OkayEmoji },
+  { type: 'CLAP', icon: ClapEmoji },
+  { type: 'THUMBS_UP', icon: ThumbEmoji },
+  { type: 'SURPRISED', icon: ScreamEmoji },
+  { type: 'CRYING', icon: CryEmoji },
+  { type: 'HEART_EYES', icon: LikeEmoji },
 ] as const;
 
 const getEmojiIcon = (reaction: ReactionType) =>
