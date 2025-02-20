@@ -19,11 +19,11 @@ type RequestBoxProps = {
 };
 
 const EmojiType = {
-  hard: WishEmoji,
-  fast: WindEmoji,
-  question: BulbEmoji,
-  size: MagnifierEmoji,
-  sound: EarEmoji,
+  [RequestHard.kind]: WishEmoji,
+  [RequestFast.kind]: WindEmoji,
+  [RequestQuestion.kind]: BulbEmoji,
+  [RequestSize.kind]: MagnifierEmoji,
+  [RequestSound.kind]: EarEmoji,
 };
 
 const RequestBox = ({ request }: RequestBoxProps) => {

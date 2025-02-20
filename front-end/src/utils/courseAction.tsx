@@ -4,7 +4,7 @@ import AlertModal from '../components/modal/AlertModal';
 import CourseModal from '../pages/professor/home/modal/CourseModal';
 import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
 import ClassStartModal from '../components/modal/ClassStartModal';
-import { courseRepository } from '@/di';
+import { classroomRepository, courseRepository } from '@/di';
 import ProfessorError from './professorError';
 import { NavigateFunction } from 'react-router';
 
@@ -123,7 +123,7 @@ const courseActions = ({
         course={course}
         handleClickBackButton={offModal}
         handleClickStartButton={() => {
-          console.log('Start course:', course.id);
+          classroomRepository.startCourse(course.id);
           offModal();
           navigate(`/professor/course/${course.id}/classroom`);
         }}

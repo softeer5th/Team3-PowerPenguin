@@ -3,9 +3,12 @@ import { throwError } from './throwError';
 
 class ClassroomRepository {
   async startCourse(courseId: string): Promise<void> {
-    // API: POST /professors/courses/{courseId}/start
+    // API: PATCH /professors/courses/{courseId}/start
 
-    console.log('start course:', courseId);
+    const response = await fetch(`/api/professors/courses/${courseId}/start`, {
+      method: 'PATCH',
+    });
+    await throwError(response);
   }
 
   async enterCourse(accessCode: number): Promise<void> {
@@ -19,9 +22,12 @@ class ClassroomRepository {
   }
 
   async closeCourse(courseId: string): Promise<void> {
-    // API: POST /professors/courses/{courseId}/close
+    // API: PATCH /professors/courses/{courseId}/close
 
-    console.log('close course:', courseId);
+    const response = await fetch(`/api/professors/courses/${courseId}/close`, {
+      method: 'PATCH',
+    });
+    await throwError(response);
   }
 
   async checkQuestionByProfessor(questionId: string): Promise<void> {
@@ -36,8 +42,6 @@ class ClassroomRepository {
       }
     );
     await throwError(response);
-    const data = response.json();
-    return data;
   }
 
   async checkQuestionByStudent(questionId: string): Promise<void> {

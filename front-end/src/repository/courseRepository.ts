@@ -57,7 +57,7 @@ type BackendCourse = {
   accessCode: string | number;
   fileName: string;
   questions: BackendQuestion[];
-  request: BackendRequests;
+  requests: BackendRequests;
 };
 
 class CourseRepository {
@@ -282,33 +282,28 @@ class CourseRepository {
       requests: [
         {
           type: RequestHard,
-          count:
-            data.request?.find((req) => req.type === RequestHard.kind)?.count ||
-            0,
+          count: data.requests?.find((req) => req.type === RequestHard.kind)
+            ?.count,
         },
         {
           type: RequestFast,
-          count:
-            data.request?.find((req) => req.type === RequestFast.kind)?.count ||
-            0,
+          count: data.requests?.find((req) => req.type === RequestFast.kind)
+            ?.count,
         },
         {
           type: RequestQuestion,
-          count:
-            data.request?.find((req) => req.type === RequestQuestion.kind)
-              ?.count || 0,
+          count: data.requests?.find((req) => req.type === RequestQuestion.kind)
+            ?.count,
         },
         {
           type: RequestSize,
-          count:
-            data.request?.find((req) => req.type === RequestSize.kind)?.count ||
-            0,
+          count: data.requests?.find((req) => req.type === RequestSize.kind)
+            ?.count,
         },
         {
           type: RequestSound,
-          count:
-            data.request?.find((req) => req.type === RequestSound.kind)
-              ?.count || 0,
+          count: data.requests?.find((req) => req.type === RequestSound.kind)
+            ?.count,
         },
       ],
     } as Course;
@@ -373,7 +368,7 @@ class CourseRepository {
 
     const body: Omit<
       BackendCourse,
-      'id' | 'accessCode' | 'fileName' | 'questions' | 'request'
+      'id' | 'accessCode' | 'fileName' | 'questions' | 'requests'
     > = {
       name: course.name,
       courseCode: course.code,
