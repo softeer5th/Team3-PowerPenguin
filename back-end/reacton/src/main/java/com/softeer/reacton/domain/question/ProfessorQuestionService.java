@@ -7,7 +7,6 @@ import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import com.softeer.reacton.global.exception.code.QuestionErrorCode;
 import com.softeer.reacton.global.sse.SseMessageSender;
 import com.softeer.reacton.global.sse.dto.SseMessage;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
