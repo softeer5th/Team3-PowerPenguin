@@ -23,7 +23,6 @@ public class StudentRequestService {
     private final RequestRepository requestRepository;
     private final SseMessageSender sseMessageSender;
 
-    @Transactional
     public void sendRequest(Long courseId, RequestSendRequest requestSendRequest) {
         String content = requestSendRequest.getContent();
         log.debug("요청 처리를 시작합니다. : content = {}", content);
