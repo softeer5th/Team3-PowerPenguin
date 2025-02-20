@@ -77,7 +77,7 @@ const StudentHome = () => {
       }
 
       case 'notFound':
-        return getStudentPopup('notfound', closeModal, closeModal);
+        return getStudentPopup('notFound', closeModal, closeModal);
 
       case 'notStart':
         return getStudentPopup('notStart', closeModal, closeModal);

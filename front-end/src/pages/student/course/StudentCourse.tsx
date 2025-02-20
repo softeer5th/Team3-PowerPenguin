@@ -6,8 +6,14 @@ import StudentRequest from './request/StudentRequest';
 import StudentReact from './react/StudentReact';
 import StudentQuestion from './question/StudentQuestion';
 import useModal from '@/hooks/useModal';
-import { getStudentPopup, PopupType } from '@/utils/studentPopupUtils';
+import {
+  getStudentPopup,
+  handleStudentError,
+  PopupType,
+} from '@/utils/studentPopupUtils';
 import { useNavigate } from 'react-router';
+import { Question } from '@/core/model';
+import { classroomRepository } from '@/di';
 
 const TAB_OPTIONS = [
   { key: 'request', label: '요청하기' },
@@ -15,15 +21,31 @@ const TAB_OPTIONS = [
   { key: 'question', label: '질문하기' },
 ];
 
+const SSE_URL = import.meta.env.VITE_API_URL;
+
 const StudentCourse = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(TAB_OPTIONS[0].key);
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [modalType, setModalType] = useState<PopupType | null>(null);
 
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   const { openModal, closeModal, Modal } = useModal();
+
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        const questionList = await classroomRepository.getQuestions();
+        setQuestions(questionList);
+      } catch (error) {
+        handleStudentError({ error, setModalType, openModal });
+      }
+    }
+    fetchQuestions();
+  }, []);
 
   useEffect(() => {
     updateUnderline();
@@ -33,27 +55,50 @@ const StudentCourse = () => {
     };
   }, [selectedTab]);
 
-  // useEffect(() => {
-  //   const eventSource = new EventSource('/api/sse/connection/student');
+  useEffect(() => {
+    const connectSSE = () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
 
-  //   eventSource.onopen = () => {
-  //     console.log('🔗 SSE 연결됨');
-  //   };
+      const eventSource = new EventSource(`${SSE_URL}/sse/connection/student`, {
+        withCredentials: true,
+      });
 
-  //   eventSource.onmessage = (event) => {
-  //     console.log('📩 받은 데이터:', event.data);
-  //   };
+      eventSource.onmessage = (event) => {
+        const parsedData = JSON.parse(event.data); // JSON 형식으로 변환
 
-  //   eventSource.onerror = (error) => {
-  //     console.error('❌ SSE 오류:', error);
-  //     eventSource.close();
-  //   };
+        // messageType에 따라 분기 처리
+        switch (parsedData.messageType) {
+          case 'QUESTION_CHECK':
+            setQuestions((prevQuestions) =>
+              prevQuestions.filter((q) => q.id !== parsedData.data.id)
+            );
+            break;
 
-  //   return () => {
-  //     console.log('🔌 SSE 연결 종료');
-  //     eventSource.close();
-  //   };
-  // }, []);
+          case 'COURSE_CLOSED':
+            setModalType('closedCourse');
+            openModal();
+            break;
+
+          default:
+            break;
+        }
+      };
+
+      eventSource.onerror = () => {
+        eventSource.close();
+        connectSSE();
+      };
+      eventSourceRef.current = eventSource;
+    };
+
+    connectSSE(); // 최초 연결
+
+    return () => {
+      eventSourceRef.current?.close();
+    };
+  }, []);
 
   const selectedIndex = TAB_OPTIONS.findIndex((tab) => tab.key === selectedTab);
 
@@ -76,7 +121,7 @@ const StudentCourse = () => {
     switch (modalType) {
       case 'notFound':
         return getStudentPopup(
-          'notfound',
+          'notFound',
           handleErrorModalClick,
           handleErrorModalClick
         );
@@ -91,6 +136,12 @@ const StudentCourse = () => {
       case 'server':
         return getStudentPopup(
           'server',
+          handleErrorModalClick,
+          handleErrorModalClick
+        );
+      case 'closedCourse':
+        return getStudentPopup(
+          'closedCourse',
           handleErrorModalClick,
           handleErrorModalClick
         );
@@ -146,6 +197,8 @@ const StudentCourse = () => {
             </div>
             <div className={S.tabLayout}>
               <StudentQuestion
+                questions={questions}
+                setQuestions={setQuestions}
                 setModalType={setModalType}
                 openModal={openModal}
               />
