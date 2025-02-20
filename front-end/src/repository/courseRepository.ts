@@ -164,9 +164,14 @@ class CourseRepository {
 
     const response = await fetch('/api/professors/courses/active', {
       method: 'GET',
+      redirect: 'follow',
     });
 
     await throwError(response);
+
+    if (response.redirected) {
+      window.location.href = response.url;
+    }
 
     const json = await response.json();
     const data = json.data as BackendCourse;

@@ -49,6 +49,7 @@ const ProfessorLoading = () => {
           openModal();
         } else {
           closeModal();
+          setModal(null);
         }
       } catch (error) {
         popupError(error);
