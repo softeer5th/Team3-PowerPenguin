@@ -27,6 +27,7 @@ public class StudentQuestionService {
     private final QuestionRepository questionRepository;
     private final CourseRepository courseRepository;
     private final SseMessageSender sseMessageSender;
+    private final QuestionService questionService;
 
     @Transactional(readOnly = true)
     public QuestionAllResponse getQuestionsByStudentId(String studentId, Long courseId) {
@@ -38,7 +39,6 @@ public class StudentQuestionService {
         return QuestionAllResponse.of(questions);
     }
 
-    @Transactional
     public CourseQuestionResponse sendQuestion(String studentId, Long courseId, QuestionSendRequest questionSendRequest) {
         String content = questionSendRequest.getContent();
         log.debug("질문 처리를 시작합니다. : content = {}", content);
@@ -53,7 +53,7 @@ public class StudentQuestionService {
                 .build();
 
         log.debug("질문을 저장합니다.");
-        Question savedQuestion = questionRepository.save(question);
+        Question savedQuestion = questionService.save(question);
 
         CourseQuestionResponse courseQuestionResponse = new CourseQuestionResponse(
                 savedQuestion.getId(),
