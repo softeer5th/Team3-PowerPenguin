@@ -81,6 +81,7 @@ const StudentRequest = ({ setModalType, openModal }: StudentRequestProps) => {
       <div className={S.cardContainer}>
         {CARD_CONTENT.map((item) => (
           <RequestCard
+            type={item.type}
             key={item.type}
             onCardClick={() => handleCardClick(item.type)}
             title={item.title}

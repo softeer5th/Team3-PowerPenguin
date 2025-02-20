@@ -1,25 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import S from './ReactCard.module.css';
 import useBlockTimer from '@/hooks/useBlockTimer';
+import { Reaction } from '@/core/model';
 
 type ReactCardProps = {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   onCardClick: () => Promise<boolean>;
+  type: Reaction;
 };
 
-const ReactCard = ({ Icon, onCardClick }: ReactCardProps) => {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
-  const { isBlocked, countdown } = useBlockTimer(
-    isSelected,
-    setIsSelected,
+const ReactCard = ({ type, Icon, onCardClick }: ReactCardProps) => {
+  const [isSelected, setIsSelected] = useState(false);
+  const { isBlocked, countdown, startBlock } = useBlockTimer(
+    `reactions_block_${type}`,
     10000,
     2000
   );
+
+  useEffect(() => {
+    if (isBlocked) {
+      setIsSelected(true);
+    } else {
+      setIsSelected(false);
+    }
+  }, [isBlocked]);
 
   const handleButtonClick = async () => {
     const success = await onCardClick();
     if (success) {
       setIsSelected(true);
+      startBlock();
     }
   };
 
