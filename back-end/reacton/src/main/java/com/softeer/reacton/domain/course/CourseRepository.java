@@ -28,9 +28,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     Optional<Course> findByAccessCode(int accessCode);
 
-    boolean existsByAccessCode(int accessCode);
-
-    List<Object> findByProfessor(Professor professor);
+    List<Course> findByProfessor(Professor professor);
 
     void deleteByProfessor(Professor professor);
 
