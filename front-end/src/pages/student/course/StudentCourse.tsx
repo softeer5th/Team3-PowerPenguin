@@ -76,7 +76,7 @@ const StudentCourse = () => {
     switch (modalType) {
       case 'notFound':
         return getStudentPopup(
-          'notfound',
+          'notFound',
           handleErrorModalClick,
           handleErrorModalClick
         );
