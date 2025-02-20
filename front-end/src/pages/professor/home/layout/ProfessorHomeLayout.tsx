@@ -31,6 +31,12 @@ const ProfessorHomeLayout = () => {
   const navigate = useNavigate();
   const [modal, setModal] = useState<ReactNode | null>(null);
   const { openModal, closeModal, Modal } = useModal();
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const handleClickLogo = () => {
     setSearch('');
@@ -78,13 +84,7 @@ const ProfessorHomeLayout = () => {
           };
         }
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
 

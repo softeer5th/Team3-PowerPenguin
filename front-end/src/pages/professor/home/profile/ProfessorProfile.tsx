@@ -60,6 +60,12 @@ const ProfessorProfile = () => {
   const profileInputRef = useRef<HTMLInputElement>(null);
   const { openModal, closeModal, setModal, navigate } =
     useOutletContext<OutletContext>();
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   useEffect(() => {
     async function getProfessor() {
@@ -78,13 +84,7 @@ const ProfessorProfile = () => {
         userName.current = response.name;
         userEmail.current = response.email;
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
     getProfessor();
@@ -116,13 +116,7 @@ const ProfessorProfile = () => {
       });
       setIsEdit({ ...isEdit, profileImage: false });
     } catch (error) {
-      ProfessorError({
-        error,
-        setModal,
-        openModal,
-        closeModal,
-        navigate,
-      });
+      popupError(error);
     }
   };
 
@@ -135,13 +129,7 @@ const ProfessorProfile = () => {
       setProfile({ ...profile, name: userName.current });
       setIsEdit({ ...isEdit, name: false });
     } catch (error) {
-      ProfessorError({
-        error,
-        setModal,
-        openModal,
-        closeModal,
-        navigate,
-      });
+      popupError(error);
     }
   };
 
@@ -191,13 +179,7 @@ const ProfessorProfile = () => {
           try {
             await professorRepository.logout();
           } catch (error) {
-            ProfessorError({
-              error,
-              setModal,
-              openModal,
-              closeModal,
-              navigate,
-            });
+            popupError(error);
           }
         }}
         onClickCloseButton={offModal}
@@ -218,13 +200,7 @@ const ProfessorProfile = () => {
           try {
             await professorRepository.deleteProfessor();
           } catch (error) {
-            ProfessorError({
-              error,
-              setModal,
-              openModal,
-              closeModal,
-              navigate,
-            });
+            popupError(error);
           }
         }}
         onClickCloseButton={offModal}

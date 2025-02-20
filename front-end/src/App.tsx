@@ -12,7 +12,7 @@ import ProfessorClassRoom from './pages/professor/course/classroom/ProfessorClas
 import StudentHome from './pages/student/home/StudentHome';
 import StudentCourse from './pages/student/course/StudentCourse';
 import ProfessorLayout from './pages/professor/ProfessorLayout';
-import ProfessorLoading from './pages/professor/home/loading/ProfessorLoading';
+import ProfessorLoading from './pages/professor/loading/ProfessorLoading';
 import StudentLayout from './pages/student/StudentLayout';
 
 function App() {

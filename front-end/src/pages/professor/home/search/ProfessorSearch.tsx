@@ -26,6 +26,12 @@ const ProfessorSearch = () => {
   } = courseActions({ setModal, openModal, closeModal, navigate });
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') || '';
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -50,13 +56,7 @@ const ProfessorSearch = () => {
         );
         setCourses(searchedCourses);
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
 

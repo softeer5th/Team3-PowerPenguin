@@ -12,6 +12,12 @@ const ProfessorLoading = () => {
   const { openModal, closeModal, Modal } = useModal();
   const [modal, setModal] = useState<React.ReactNode | null>(null);
   const navigate = useNavigate();
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const handleClickBackButton = () => {
     setModal(null);
@@ -45,13 +51,7 @@ const ProfessorLoading = () => {
           closeModal();
         }
       } catch (error) {
-        ProfessorError({
-          error,
-          setModal,
-          openModal,
-          closeModal,
-          navigate,
-        });
+        popupError(error);
       }
     }
 
