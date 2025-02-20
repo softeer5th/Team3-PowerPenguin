@@ -95,10 +95,9 @@ public class StudentQuestionController {
             HttpServletRequest request) {
         log.debug("학생 사용자가 질문 체크를 등록 및 전송합니다.");
 
-        String studentId = (String) request.getAttribute("studentId");
         Long courseId = (Long) request.getAttribute("courseId");
 
-        studentQuestionService.sendQuestionCheck(studentId, courseId, questionId);
+        studentQuestionService.sendQuestionCheck(courseId, questionId);
 
         log.info("질문 체크를 성공적으로 등록했습니다.");
 
