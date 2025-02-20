@@ -253,7 +253,7 @@ public class ProfessorCourseService {
     }
 
     private List<CourseQuestionResponse> getQuestionsByCourseInOrder(Course course) {
-        List<Question> questions = course.getQuestions();
+        List<Question> questions = questionRepository.findNotCompleteByCourse(course);
 
         return questions.stream()
                 .map(question -> new CourseQuestionResponse(
