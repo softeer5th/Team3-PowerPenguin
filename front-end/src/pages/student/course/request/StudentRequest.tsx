@@ -14,53 +14,58 @@ import {
   RequestQuestion,
   RequestSize,
   RequestSound,
+  RequestType,
 } from '@/core/model';
-
-export type CardType = 'hard' | 'fast' | 'question' | 'size' | 'sound';
+import { handleStudentError } from '@/utils/studentPopupUtils';
 
 const CARD_CONTENT = [
   {
-    type: 'hard',
+    type: RequestHard.kind,
     icon: WishSvg,
     title: RequestHard.title,
     description: RequestHard.description,
   },
   {
-    type: 'fast',
+    type: RequestFast.kind,
     icon: WindSvg,
     title: RequestFast.title,
     description: RequestFast.description,
   },
   {
-    type: 'question',
+    type: RequestQuestion.kind,
     icon: BulbSvg,
     title: RequestQuestion.title,
     description: RequestQuestion.description,
   },
   {
-    type: 'size',
+    type: RequestSize.kind,
     icon: MagnifierSvg,
     title: RequestSize.title,
     description: RequestSize.description,
   },
   {
-    type: 'sound',
+    type: RequestSound.kind,
     icon: EarSvg,
     title: RequestSound.title,
     description: RequestSound.description,
   },
 ] as const;
 
-const StudentRequest = ({ courseId }: { courseId: number }) => {
+type StudentRequestProps = {
+  setModalType: React.Dispatch<React.SetStateAction<string | null>>;
+  openModal: () => void;
+};
+
+const StudentRequest = ({ setModalType, openModal }: StudentRequestProps) => {
   const [successPopup, setSuccessPopup] = useState<boolean>(false);
 
-  const handleCardClick = async (type: CardType) => {
+  const handleCardClick = async (type: RequestType) => {
     try {
-      await classroomRepository.sendRequest(courseId, type);
+      await classroomRepository.sendRequest(type);
       setSuccessPopup(true);
       return true;
     } catch (error) {
-      console.error(error);
+      handleStudentError({ error, setModalType, openModal });
       return false;
     }
   };

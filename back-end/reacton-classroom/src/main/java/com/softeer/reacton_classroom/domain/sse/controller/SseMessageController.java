@@ -18,8 +18,8 @@ public class SseMessageController {
     private final SseService sseService;
 
     @PostMapping("/course/{courseId}")
-    public ResponseEntity<SuccessResponse> sendMessage(@PathVariable String courseId, @RequestBody MessageResponse message) {
-        log.debug("메시지 전송을 요청합니다. : courseId = {}", courseId);
+    public ResponseEntity<SuccessResponse> sendMessage(@PathVariable String courseId, @RequestBody MessageResponse<?> message) {
+        log.debug("메시지 전송을 요청합니다. : courseId = {}, type = {}", courseId, message.getMessageType());
         sseService.sendMessage(courseId, message);
         return ResponseEntity
                 .status(HttpStatus.OK)

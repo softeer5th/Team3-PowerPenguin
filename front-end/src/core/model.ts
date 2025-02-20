@@ -10,7 +10,13 @@ export type Schedule = {
   end: string;
 };
 
-export type Reaction = 'okay' | 'clap' | 'thumb' | 'scream' | 'cry' | 'like';
+export type Reaction =
+  | 'OKAY'
+  | 'CLAP'
+  | 'THUMBS_UP'
+  | 'HEART_EYES'
+  | 'CRYING'
+  | 'SURPRISED';
 
 export type ReactionType = {
   id: string;
@@ -79,7 +85,7 @@ export type Requests = [
 
 export type Question = {
   id: string;
-  time: string;
+  createdAt: string;
   content: string;
 };
 
@@ -97,7 +103,7 @@ export type Course = {
   questions: Question[];
 };
 
-export type ProfessorQuestion = Omit<Question, 'time'>;
+export type ProfessorQuestion = Omit<Question, 'createdAt'>;
 
 export type CourseMeta = Omit<Course, 'requests' | 'questions'>;
 

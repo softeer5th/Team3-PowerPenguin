@@ -2,9 +2,7 @@ package com.softeer.reacton.domain.request;
 
 import com.softeer.reacton.domain.course.Course;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,7 +20,21 @@ public class Request {
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private int count;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    @Builder
+    public Request(String type, Course course) {
+        this.type = type;
+        this.count = 0;
+        this.course = course;
+    }
+
+    public static Request create(String type, Course course) {
+        return Request.builder()
+                .type(type)
+                .course(course).build();
+    }
 }
