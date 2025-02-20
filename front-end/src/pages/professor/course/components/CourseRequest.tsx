@@ -19,11 +19,11 @@ type CourseRequestProps = {
 };
 
 const EmojiType = {
-  hard: WishEmoji,
-  fast: WindEmoji,
-  question: BulbEmoji,
-  size: MagnifierEmoji,
-  sound: EarEmoji,
+  [RequestHard.kind]: WishEmoji,
+  [RequestFast.kind]: WindEmoji,
+  [RequestQuestion.kind]: BulbEmoji,
+  [RequestSize.kind]: MagnifierEmoji,
+  [RequestSound.kind]: EarEmoji,
 };
 
 const getRequestPercentage = (count: number, max: number) => {
@@ -32,6 +32,7 @@ const getRequestPercentage = (count: number, max: number) => {
 };
 
 const getIsActive = (requests: Requests, index: number) => {
+  if (requests[index].count === 0) return false;
   if (requests[index].count === requests[0].count) return true;
   else {
     return index < 2;
@@ -47,31 +48,31 @@ const CourseRequest = ({ requests }: CourseRequestProps) => {
         <>
           <RequestBar
             title={RequestSize.title}
-            Emoji={EmojiType.size}
+            Emoji={EmojiType[RequestSize.kind]}
             count={0}
             percentage={0}
           />
           <RequestBar
             title={RequestQuestion.title}
-            Emoji={EmojiType.question}
+            Emoji={EmojiType[RequestQuestion.kind]}
             count={0}
             percentage={0}
           />
           <RequestBar
             title={RequestHard.title}
-            Emoji={EmojiType.hard}
+            Emoji={EmojiType[RequestHard.kind]}
             count={0}
             percentage={0}
           />
           <RequestBar
             title={RequestSound.title}
-            Emoji={EmojiType.sound}
+            Emoji={EmojiType[RequestSound.kind]}
             count={0}
             percentage={0}
           />
           <RequestBar
             title={RequestFast.title}
-            Emoji={EmojiType.fast}
+            Emoji={EmojiType[RequestFast.kind]}
             count={0}
             percentage={0}
           />

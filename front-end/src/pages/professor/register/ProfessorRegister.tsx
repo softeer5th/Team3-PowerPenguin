@@ -4,10 +4,9 @@ import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import TextButton from '@/components/button/text/TextButton';
 import { validateImage, validateName } from '@/utils/util';
 import { professorRepository } from '@/di';
-import { ClientError, ServerError } from '@/core/errorType';
-import AlertModal from '@/components/modal/AlertModal';
-import PopupModal from '@/components/modal/PopupModal';
 import useModal from '@/hooks/useModal';
+import ProfessorError from '@/utils/professorError';
+import { useNavigate } from 'react-router';
 
 const ProfessorRegister = () => {
   const [profile, setProfile] = useState<File | null>(null);
@@ -16,12 +15,22 @@ const ProfessorRegister = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const profileInputRef = useRef<HTMLInputElement>(null);
   const { openModal, closeModal, Modal } = useModal();
+  const navigate = useNavigate();
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      if (validateImage(files[0])) {
+      try {
+        validateImage(files[0]);
         setProfile(files[0]);
+      } catch (error) {
+        popupError(error);
       }
     }
   };
@@ -37,75 +46,15 @@ const ProfessorRegister = () => {
       return;
     }
 
-    if (name.length === 0) {
-      setModal(
-        <AlertModal
-          type="caution"
-          message="이름을 입력해 주세요."
-          buttonText="확인"
-          onClickModalButton={() => {
-            closeModal();
-            setModal(null);
-          }}
-        />
-      );
+    validateName(name);
 
-      openModal();
-      return;
-    }
-
-    if (!validateName(name)) {
-      setModal(
-        <AlertModal
-          type="caution"
-          message="입력한 이름이 올바르지 않습니다."
-          description="한글 또는 영문으로만 입력해 주세요."
-          buttonText="확인"
-          onClickModalButton={() => {
-            closeModal();
-            setModal(null);
-          }}
-        />
-      );
-
-      openModal();
-      return;
-    }
+    if (profile) validateImage(profile);
 
     try {
       setIsSubmitting(true);
       await professorRepository.createProfessor(name, profile);
     } catch (error) {
-      if (error instanceof ClientError || error instanceof ServerError) {
-        setModal(
-          <AlertModal
-            type="caution"
-            message="회원가입에 실패했습니다."
-            description="다시 시도해 주세요."
-            buttonText="확인"
-            onClickModalButton={() => {
-              closeModal();
-              setModal(null);
-            }}
-          />
-        );
-
-        openModal();
-      } else {
-        setModal(
-          <PopupModal
-            type="caution"
-            title="오류가 발생했습니다."
-            description="다시 시도해주세요."
-          />
-        );
-
-        openModal();
-        setTimeout(() => {
-          closeModal();
-          setModal(null);
-        }, 2000);
-      }
+      popupError(error);
     } finally {
       setIsSubmitting(false);
     }

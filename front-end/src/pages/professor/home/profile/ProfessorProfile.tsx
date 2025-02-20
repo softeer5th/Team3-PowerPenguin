@@ -6,8 +6,6 @@ import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import TextButton from '@/components/button/text/TextButton';
 import { validateImage } from '@/utils/util';
 import AlertModal from '@/components/modal/AlertModal';
-import { ClientError, ServerError } from '@/core/errorType';
-import PopupModal from '@/components/modal/PopupModal';
 import { OutletContext } from '../layout/ProfessorHomeLayout';
 
 const createEditButton = ({
@@ -59,7 +57,7 @@ const ProfessorProfile = () => {
   const userName = useRef('');
   const userEmail = useRef('');
   const profileInputRef = useRef<HTMLInputElement>(null);
-  const { openModal, closeModal, setModal, navigate } =
+  const { openModal, closeModal, setModal, popupError } =
     useOutletContext<OutletContext>();
 
   useEffect(() => {
@@ -79,7 +77,7 @@ const ProfessorProfile = () => {
         userName.current = response.name;
         userEmail.current = response.email;
       } catch (error) {
-        console.error(error);
+        popupError(error);
       }
     }
     getProfessor();
@@ -111,48 +109,7 @@ const ProfessorProfile = () => {
       });
       setIsEdit({ ...isEdit, profileImage: false });
     } catch (error) {
-      if (error instanceof ClientError || error instanceof ServerError) {
-        if (error.errorCode === 'USER_NOT_FOUND') {
-          setModal(
-            <AlertModal
-              type="caution"
-              message={error.message}
-              description="로그인 페이지로 이동합니다."
-              buttonText="확인"
-              onClickModalButton={() => navigate('/professor/login')}
-            />
-          );
-          openModal();
-        } else {
-          setModal(
-            <PopupModal
-              type="caution"
-              title="오류가 발생했습니다."
-              description="다시 시도해주세요."
-            />
-          );
-          openModal();
-
-          setTimeout(() => {
-            closeModal();
-            setModal(null);
-          }, 2000);
-        }
-      } else {
-        setModal(
-          <PopupModal
-            type="caution"
-            title="오류가 발생했습니다."
-            description="다시 시도해주세요."
-          />
-        );
-        openModal();
-
-        setTimeout(() => {
-          closeModal();
-          setModal(null);
-        }, 2000);
-      }
+      popupError(error);
     }
   };
 
@@ -165,13 +122,7 @@ const ProfessorProfile = () => {
       setProfile({ ...profile, name: userName.current });
       setIsEdit({ ...isEdit, name: false });
     } catch (error) {
-      if (error instanceof ClientError) {
-        alert(error.message);
-      } else if (error instanceof ServerError) {
-        alert(error.message);
-      } else {
-        console.error(error);
-      }
+      popupError(error);
     }
   };
 
@@ -221,7 +172,7 @@ const ProfessorProfile = () => {
           try {
             await professorRepository.logout();
           } catch (error) {
-            console.error(error);
+            popupError(error);
           }
         }}
         onClickCloseButton={offModal}
@@ -242,7 +193,7 @@ const ProfessorProfile = () => {
           try {
             await professorRepository.deleteProfessor();
           } catch (error) {
-            console.error(error);
+            popupError(error);
           }
         }}
         onClickCloseButton={offModal}

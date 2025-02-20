@@ -3,10 +3,7 @@ package com.softeer.reacton.domain.question;
 import com.softeer.reacton.domain.course.Course;
 import com.softeer.reacton.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +21,7 @@ public class Question extends BaseEntity {
     @Column(nullable = false, length = 600)
     private String content;
 
+    @Setter
     @Column(nullable = false)
     private Boolean isComplete;
 

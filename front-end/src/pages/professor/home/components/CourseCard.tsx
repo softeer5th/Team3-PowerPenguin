@@ -175,7 +175,7 @@ const CourseCard = ({
               </div>
               <div className={S.metaItem}>
                 <PeopleIcon className={S.metaIcon} />
-                <span className={S.metaText}>{course.capacity}</span>
+                <span className={S.metaText}>{course.capacity}명</span>
               </div>
             </div>
           </div>
@@ -243,7 +243,7 @@ const CourseCard = ({
               </div>
               <div className={S.metaItem}>
                 <PeopleIcon className={S.metaIcon} />
-                <span className={S.metaText}>{course.capacity}</span>
+                <span className={S.metaText}>{course.capacity}명</span>
               </div>
             </div>
           </div>

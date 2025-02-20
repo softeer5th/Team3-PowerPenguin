@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import {
+  NavigateFunction,
   Outlet,
   useLocation,
   useNavigate,
@@ -11,16 +12,15 @@ import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import SearchIcon from '@/assets/icons/Search.svg?react';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import { professorRepository } from '@/di';
-import { ClientError, ServerError } from '@/core/errorType';
 import useModal from '@/hooks/useModal';
-import AlertModal from '@/components/modal/AlertModal';
-import PopupModal from '@/components/modal/PopupModal';
+import ProfessorError from '@/utils/professorError';
 
 export type OutletContext = {
   openModal: () => void;
   closeModal: () => void;
-  setModal: (modal: React.ReactNode | null) => void;
-  navigate: (path: string) => void;
+  setModal: React.Dispatch<React.SetStateAction<ReactNode>>;
+  navigate: NavigateFunction;
+  popupError: (error: unknown) => void;
 };
 
 const ProfessorHomeLayout = () => {
@@ -32,6 +32,12 @@ const ProfessorHomeLayout = () => {
   const navigate = useNavigate();
   const [modal, setModal] = useState<ReactNode | null>(null);
   const { openModal, closeModal, Modal } = useModal();
+  const popupError = ProfessorError({
+    setModal,
+    openModal,
+    closeModal,
+    navigate,
+  });
 
   const handleClickLogo = () => {
     setSearch('');
@@ -79,48 +85,7 @@ const ProfessorHomeLayout = () => {
           };
         }
       } catch (error) {
-        if (error instanceof ClientError || error instanceof ServerError) {
-          if (error.errorCode === 'USER_NOT_FOUND') {
-            setModal(
-              <AlertModal
-                type="caution"
-                message={error.message}
-                description="로그인 페이지로 이동합니다."
-                buttonText="확인"
-                onClickModalButton={() => navigate('/professor/login')}
-              />
-            );
-            openModal();
-          } else {
-            setModal(
-              <PopupModal
-                type="caution"
-                title="오류가 발생했습니다."
-                description="다시 시도해주세요."
-              />
-            );
-
-            openModal();
-            setTimeout(() => {
-              closeModal();
-              setModal(null);
-            }, 2000);
-          }
-        } else {
-          setModal(
-            <PopupModal
-              type="caution"
-              title="오류가 발생했습니다."
-              description="다시 시도해주세요."
-            />
-          );
-          openModal();
-
-          setTimeout(() => {
-            closeModal();
-            setModal(null);
-          }, 2000);
-        }
+        popupError(error);
       }
     }
 
@@ -171,7 +136,9 @@ const ProfessorHomeLayout = () => {
         )}
       </div>
       <div className={S.container}>
-        <Outlet context={{ openModal, closeModal, setModal, navigate }} />
+        <Outlet
+          context={{ openModal, closeModal, setModal, navigate, popupError }}
+        />
       </div>
       {modal && <Modal>{modal}</Modal>}
     </>

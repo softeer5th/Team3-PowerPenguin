@@ -77,4 +77,33 @@ public class StudentQuestionController {
                 .status(HttpStatus.OK)
                 .body(SuccessResponse.of("질문을 성공적으로 등록했습니다.", response));
     }
+
+    @PostMapping("/check/{questionId}")
+    @Operation(
+            summary = "학생 질문 체크 전송",
+            description = "학생이 교수에게 질문 체크를 전송합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 전송했습니다."),
+                    @ApiResponse(responseCode = "404", description = "수업을 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "409", description = "아직 수업이 시작되지 않았습니다."),
+                    @ApiResponse(responseCode = "500", description = "서버와의 연결에 실패했습니다.")
+            }
+    )
+    public ResponseEntity<Void> checkQuestion(
+            @PathVariable("questionId") Long questionId,
+            HttpServletRequest request) {
+        log.debug("학생 사용자가 질문 체크를 등록 및 전송합니다.");
+
+        String studentId = (String) request.getAttribute("studentId");
+        Long courseId = (Long) request.getAttribute("courseId");
+
+        studentQuestionService.sendQuestionCheck(studentId, courseId, questionId);
+
+        log.info("질문 체크를 성공적으로 등록했습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }
