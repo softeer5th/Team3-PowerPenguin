@@ -38,53 +38,56 @@ const StudentCourse = () => {
       try {
         const questionList = await classroomRepository.getQuestions();
         setQuestions(questionList);
-        const connectSSE = () => {
-          if (eventSourceRef.current) {
-            eventSourceRef.current.close();
-          }
-
-          const eventSource = new EventSource('/api/sse/connection/student', {
-            withCredentials: true,
-          });
-
-          eventSource.onmessage = (event) => {
-            const parsedData = JSON.parse(event.data); // JSON 형식으로 변환
-
-            // messageType에 따라 분기 처리
-            switch (parsedData.messageType) {
-              case 'QUESTION_CHECK':
-                setQuestions((prevQuestions) =>
-                  prevQuestions.filter((q) => q.id !== parsedData.data.id)
-                );
-                break;
-
-              case 'COURSE_CLOSED':
-                setModalType('closedCourse');
-                openModal();
-                break;
-
-              default:
-                break;
-            }
-          };
-
-          eventSource.onerror = () => {
-            eventSource.close();
-            connectSSE();
-          };
-          eventSourceRef.current = eventSource;
-        };
-
-        connectSSE(); // 최초 연결
-
-        return () => {
-          eventSourceRef.current?.close();
-        };
       } catch (error) {
         handleStudentError({ error, setModalType, openModal });
       }
     }
     fetchQuestions();
+  }, []);
+
+  useEffect(() => {
+    const connectSSE = () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+
+      const eventSource = new EventSource('/api/sse/connection/student', {
+        withCredentials: true,
+      });
+
+      eventSource.onmessage = (event) => {
+        const parsedData = JSON.parse(event.data); // JSON 형식으로 변환
+
+        // messageType에 따라 분기 처리
+        switch (parsedData.messageType) {
+          case 'QUESTION_CHECK':
+            setQuestions((prevQuestions) =>
+              prevQuestions.filter((q) => q.id !== parsedData.data.id)
+            );
+            break;
+
+          case 'COURSE_CLOSED':
+            setModalType('closedCourse');
+            openModal();
+            break;
+
+          default:
+            break;
+        }
+      };
+
+      eventSource.onerror = () => {
+        eventSource.close();
+      };
+
+      eventSourceRef.current = eventSource;
+    };
+
+    connectSSE(); // 최초 연결
+
+    return () => {
+      eventSourceRef.current?.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -154,7 +157,7 @@ const StudentCourse = () => {
     <>
       <div className={S.courseLayout}>
         <header className={S.headerContainer}>
-          <Logo className={S.logo} />
+          <Logo className={S.logo} onClick={() => navigate('/student')} />
           <div className={S.TabsContainer}>
             {TAB_OPTIONS.map(({ key, label }) => (
               <button

@@ -18,6 +18,7 @@
 .logo {
   width: 73px;
   height: 10px;
+  cursor: pointer;
 }
 
 .TabsContainer {
