@@ -67,6 +67,9 @@ export const handleStudentError = ({
     } else if (error.errorCode === 'COURSE_NOT_ACTIVE') {
       setModalType('notStart');
       openModal();
+    } else {
+      setModalType('unknown');
+      openModal();
     }
   } else if (error instanceof ServerError) {
     setModalType('server');
