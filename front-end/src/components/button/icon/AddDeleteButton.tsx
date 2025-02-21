@@ -12,7 +12,10 @@ const AddDeleteButton = ({ onButtonClick, type }: AddDeleteButtonProps) => {
   return (
     <button
       className={`${S.buttonContainer}  ${bgClass}`}
-      onClick={onButtonClick}
+      onClick={(e) => {
+        e.preventDefault();
+        onButtonClick();
+      }}
     >
       {type === 'plus' && <PlusIcon width="20px" height="20px" />}
       {type === 'minus' && <MinusIcon width="20px" height="20px" />}
