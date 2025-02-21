@@ -188,12 +188,15 @@
 .medium .metaIcon {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .medium .metaText {
   font: var(--web-body2-medium);
   color: var(--gray-500);
-  white-space: break-word;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .medium .buttonContainer {
@@ -311,11 +314,15 @@
 .large .metaIcon {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .large .metaText {
   font: var(--web-body1-medium);
   color: var(--gray-500);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .large .buttonContainer {

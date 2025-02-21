@@ -48,17 +48,38 @@
 }
 
 .wrapper {
+  width: 100%;
   display: flex;
+  flex-grow: 0;
   gap: 16px;
 }
 
-.wrapperContent {
+.schedule {
+  min-width: 0;
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-grow: 0;
 }
 
-.wrapperContent > span {
+.schedule > span {
+  flex: 1 1 0;
+  margin: auto 0;
+  font: var(--web-body3-medium);
+  color: var(--gray-500);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.capacity {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.capacity > span {
   font: var(--web-body3-medium);
   color: var(--gray-500);
 }
@@ -66,6 +87,8 @@
 .icon {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+  margin: auto;
 }
 
 .buttonContainer {
