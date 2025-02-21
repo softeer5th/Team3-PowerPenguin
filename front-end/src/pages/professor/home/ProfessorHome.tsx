@@ -54,10 +54,10 @@ const ProfessorHome = () => {
         }}
         onSubmit={async (course) => {
           try {
-            console.log('Submit course:', course);
+            await courseRepository.createCourse(course);
             setModal(null);
             closeModal();
-            await courseRepository.createCourse(course);
+            navigate(0);
           } catch (error) {
             popupError(error);
           }
