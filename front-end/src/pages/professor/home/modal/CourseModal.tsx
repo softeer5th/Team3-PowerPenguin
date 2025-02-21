@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CourseMeta } from '@/core/model';
 import S from './CourseModal.module.css';
 import ModalInput from '@/components/input/ModalInput';
@@ -7,7 +7,6 @@ import DropDown from '@/components/dropdown/DropDown';
 import TimeInput from './components/TimeInput';
 import AddDeleteButton from '@/components/button/icon/AddDeleteButton';
 import TextButton from '@/components/button/text/TextButton';
-import { CourseError } from '@/core/errorType';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import { CourseType, CourseDay, getCourseColor } from '@/utils/util';
 
@@ -30,12 +29,21 @@ type CourseForm = {
   }[];
 };
 
+type CourseError = {
+  name: string;
+  code: string;
+  capacity: string;
+  university: string;
+  classType: string;
+  schedule: string;
+};
+
 const makeFullUniversity = (university: string) => {
   if (university === '') {
     return '';
   }
-  if (university.includes('대학')) {
-    return university.slice(0, university.length - 2) + '대학교';
+  if (university.endsWith('대학')) {
+    return university + '교';
   }
   if (university.endsWith('대')) {
     return university + '학교';
@@ -44,27 +52,26 @@ const makeFullUniversity = (university: string) => {
   return university;
 };
 
-const checkForm = (courseForm: CourseForm) => {
-  if (courseForm.name === '') {
-    throw new CourseError('강의 이름을 입력해 주세요');
+const checkFormError = (courseError: CourseError): boolean => {
+  if (courseError.name) {
+    return true;
   }
-  if (courseForm.code === '') {
-    throw new CourseError('학수번호를 입력해 주세요');
+  if (courseError.code) {
+    return true;
   }
-  if (courseForm.capacity === '' || !/^\d*$/.test(courseForm.capacity)) {
-    throw new CourseError('수업정원을 입력해 주세요');
+  if (courseError.capacity) {
+    return true;
   }
-  if (courseForm.classType === '') {
-    throw new CourseError('강의 유형을 선택해 주세요');
+  if (courseError.university) {
+    return true;
   }
-  courseForm.schedule.forEach((schedule) => {
-    if (schedule.start === '00:00' && schedule.end === '00:00') {
-      throw new CourseError('강의 시간을 입력해 주세요');
-    }
-    if (schedule.start >= schedule.end) {
-      throw new CourseError('시작 시간이 종료 시간보다 빠를 수 없습니다');
-    }
-  });
+  if (courseError.classType) {
+    return true;
+  }
+  if (courseError.schedule) {
+    return true;
+  }
+  return false;
 };
 
 const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
@@ -83,7 +90,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
     ],
   });
 
-  const [formError, setFormError] = useState({
+  const [formError, setFormError] = useState<CourseError>({
     name: '',
     code: '',
     capacity: '',
@@ -92,21 +99,14 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
     schedule: '',
   });
 
-  const handleSubmit = async () => {
-    try {
-      checkForm(courseForm);
-      await onSubmit({
-        ...courseForm,
-        id: course?.id || '',
-        capacity: parseInt(courseForm.capacity),
-        accessCode: course?.accessCode || 0,
-        fileName: course?.fileName || '',
-      } as CourseMeta);
-    } catch (error) {
-      if (error instanceof CourseError) {
-        alert(error.message);
-      }
-    }
+  const handleSubmit = () => {
+    onSubmit({
+      ...courseForm,
+      id: course?.id || '',
+      capacity: parseInt(courseForm.capacity),
+      accessCode: course?.accessCode || 0,
+      fileName: course?.fileName || '',
+    } as CourseMeta);
   };
 
   const handleInputChange = (key: string, value: string) => {
@@ -135,6 +135,9 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
   };
 
   const handleScheduleAdd = () => {
+    if (courseForm.schedule.length >= 10) {
+      return;
+    }
     setCourseForm((prev) => ({
       ...prev,
       schedule: [
@@ -143,6 +146,37 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
       ],
     }));
   };
+
+  useEffect(() => {
+    if (courseForm.classType === '') {
+      setFormError((prev) => ({
+        ...prev,
+        classType: '강의 유형을 선택해 주세요',
+      }));
+    } else {
+      setFormError((prev) => ({ ...prev, classType: '' }));
+    }
+  }, [courseForm.classType]);
+
+  useEffect(() => {
+    courseForm.schedule.forEach((schedule, index) => {
+      if (schedule.day === '') {
+        setFormError((prev) => ({
+          ...prev,
+          schedule: `${index + 1}번째 강의 요일을 선택해 주세요`,
+        }));
+        return;
+      } else if (schedule.start > schedule.end) {
+        setFormError((prev) => ({
+          ...prev,
+          schedule: `${index + 1}번째 강의 시간을 확인해 주세요`,
+        }));
+        return;
+      } else {
+        setFormError((prev) => ({ ...prev, schedule: '' }));
+      }
+    });
+  }, [courseForm.schedule]);
 
   return (
     <form
@@ -250,7 +284,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
                     />
                   </div>
                 )}
-                {index === courseForm.schedule.length - 1 && (
+                {index === courseForm.schedule.length - 1 && index < 9 && (
                   <div className={S.addButton}>
                     <AddDeleteButton
                       onButtonClick={handleScheduleAdd}
@@ -274,11 +308,6 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
                 ...prev,
                 code: '학수번호를 입력해 주세요',
               }));
-            } else if (!/^\d+$/.test(courseForm.code)) {
-              setFormError((prev) => ({
-                ...prev,
-                code: '학수번호는 숫자로만 입력되어야 합니다',
-              }));
             } else {
               setFormError((prev) => ({ ...prev, code: '' }));
             }
@@ -291,13 +320,15 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
           value={courseForm.capacity}
           onInputChange={(value) => handleInputChange('capacity', value)}
           onBlur={() => {
-            if (
-              courseForm.capacity === '' ||
-              !/^\d*$/.test(courseForm.capacity)
-            ) {
+            if (courseForm.capacity === '') {
               setFormError((prev) => ({
                 ...prev,
                 capacity: '수업정원을 입력해 주세요',
+              }));
+            } else if (!/^\d*$/.test(courseForm.capacity)) {
+              setFormError((prev) => ({
+                ...prev,
+                capacity: '숫자만 입력해 주세요',
               }));
             } else {
               setFormError((prev) => ({ ...prev, capacity: '' }));
@@ -334,14 +365,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
           height="80px"
           text={course ? '정보 수정하기' : '강의 만들기'}
           onClick={() => {}}
-          isActive={(() => {
-            try {
-              checkForm(courseForm);
-              return true;
-            } catch {
-              return false;
-            }
-          })()}
+          isActive={!checkFormError(formError)}
         />
       </div>
     </form>
