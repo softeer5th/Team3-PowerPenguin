@@ -29,8 +29,6 @@ export type Action =
   | { type: 'ADD'; payload: Reaction }
   | { type: 'REMOVE'; payload: string };
 
-const SSE_URL = import.meta.env.VITE_API_URL;
-
 const initialReactionsCount = () => {
   const storageCounts = localStorage.getItem('reactions');
   return storageCounts
@@ -122,7 +120,7 @@ const ProfessorClassroom = () => {
     }
 
     const eventSource = new EventSource(
-      `${SSE_URL}/sse/connection/course/${courseId}`,
+      `/api/sse/connection/course/${courseId}`,
       {
         withCredentials: true,
       }
@@ -194,7 +192,6 @@ const ProfessorClassroom = () => {
           return;
         }
         const course = await courseRepository.getCourseById(courseId);
-        console.log(course);
         setCourseInfo(course);
         setQuestions(course.questions);
         setRequests(course.requests);
