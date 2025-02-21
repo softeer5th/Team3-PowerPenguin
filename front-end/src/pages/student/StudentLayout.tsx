@@ -27,9 +27,6 @@ const StudentLayout = () => {
       if (window.matchMedia('(min-width: 961px)').matches) {
         document.body.style.zoom = `${width / 1920}`;
         document.body.style.backgroundColor = 'var(--gray-200)';
-      } else if (window.matchMedia('(min-width: 600px)').matches) {
-        document.body.style.zoom = `${width / 960}`;
-        document.body.style.backgroundColor = 'var(--gray-100)';
       } else {
         document.body.style.zoom = '1';
         document.body.style.backgroundColor = '';
