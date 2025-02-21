@@ -1,3 +1,4 @@
+import { utcToKst } from './../utils/util';
 import { Question, Reaction } from '@/core/model';
 import { throwError } from './throwError';
 
@@ -73,7 +74,7 @@ class ClassroomRepository {
     const data = await response.json();
     return {
       id: data.data.id,
-      createdAt: data.data.createdAt,
+      createdAt: utcToKst(data.data.createdAt),
       content: data.data.content,
     };
   }
@@ -117,10 +118,11 @@ class ClassroomRepository {
     const questions: Question[] = data.data.questions.map(
       (question: Question) => ({
         id: question.id,
-        createdAt: question.createdAt,
+        createdAt: utcToKst(question.createdAt),
         content: question.content,
       })
     );
+
     return questions;
   }
 }
