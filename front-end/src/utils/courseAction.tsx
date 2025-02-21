@@ -69,9 +69,9 @@ const courseActions = ({
         }}
         onClickModalButton={async () => {
           try {
-            console.log('Delete course:', course.id);
-            offModal();
             await courseRepository.deleteCourse(course.id);
+            offModal();
+            setModal(null);
             navigate(0);
           } catch (error) {
             popupError(error);

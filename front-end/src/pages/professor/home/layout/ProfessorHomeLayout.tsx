@@ -58,7 +58,6 @@ const ProfessorHomeLayout = () => {
   ) => {
     if (event.key === 'Enter') {
       if (search.trim() !== '') {
-        console.log('Search triggered:', search);
         if (search.trim() === keyword) {
           return;
         }

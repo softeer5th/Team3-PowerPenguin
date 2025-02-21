@@ -45,7 +45,6 @@ const ProfessorHome = () => {
   }, []);
 
   const handleAddCourse = () => {
-    console.log('Add course');
     setModal(
       <CourseModal
         onClose={() => {
