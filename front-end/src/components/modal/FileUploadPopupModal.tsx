@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import S from './FileUploadPopupModal.module.css';
 import TextButton from '../button/text/TextButton';
 import CloseIcon from '@/assets/icons/close.svg?react';
+import { validateFile } from '@/utils/util';
 
 type FileUploadPopupModalProps = {
   onClickCloseButton: () => void;
@@ -19,6 +20,7 @@ const FileUploadPopupModal = ({
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
     if (files) {
+      validateFile(files[0]);
       setFile(files[0]);
     }
   }
