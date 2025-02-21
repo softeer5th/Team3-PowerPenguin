@@ -44,6 +44,8 @@
 }
 
 .fileContainer {
+  width: 588px;
+  height: 57px;
   background-color: var(--gray-200);
   border-radius: var(--xsmall);
   display: flex;
@@ -54,14 +56,15 @@
 .fileInfo {
   font: var(--web-title4-bold);
   color: var(--blue-400);
-  display: flex;
-  height: 57px;
-  justify-content: center;
-  align-items: center;
-  margin: 12px 20px;
+  margin: auto 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 
 .fileSize {
+  display: flex;
   font: var(--web-title4-medium);
   color: var(--gray-900);
 }

@@ -38,10 +38,8 @@ const FileUploadPopupModal = ({
         </div>
         {file && (
           <div className={S.fileContainer}>
-            <span className={S.fileInfo}>
-              {file.name}{' '}
-              <p className={S.fileSize}>({Math.floor(file.size / 1000)}K)</p>
-            </span>
+            <span className={S.fileInfo}>{file.name} </span>
+            <p className={S.fileSize}>({Math.floor(file.size / 1000)}K)</p>
             <button
               className={S.deleteButton}
               onClick={() => {
