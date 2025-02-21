@@ -54,7 +54,7 @@ public class ProfessorCourseService {
         Professor professor = professorRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new BaseException(ProfessorErrorCode.PROFESSOR_NOT_FOUND));
 
-        Course course = courseRepository.findByProfessorAndIsActiveTrue(professor).orElse(null);
+        Course course = courseRepository.findTopByProfessorAndIsActiveTrue(professor).orElse(null);
         if (course != null) {
             List<CourseScheduleResponse> schedules = getSchedulesByCourseInOrder(course);
             return ActiveCourseResponse.of(course, schedules);
