@@ -163,9 +163,9 @@ public class ProfessorCourseService {
         log.debug("시작을 요청한 수업의 활성화 상태입니다. : isActive = {}", wasActive);
 
         deactivateOtherCourses(oauthId, courseId);
-
-        professorCourseTransactionService.activateCourse(targetCourse, wasActive);
-
+        if( !wasActive ) {
+            professorCourseTransactionService.activateCourse(targetCourse);
+        }
         log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
     }
 

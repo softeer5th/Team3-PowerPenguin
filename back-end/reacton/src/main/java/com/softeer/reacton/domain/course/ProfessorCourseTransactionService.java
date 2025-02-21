@@ -38,11 +38,10 @@ public class ProfessorCourseTransactionService {
     }
 
     @Transactional
-    public void activateCourse(Course course, boolean wasActive) {
-        if (!wasActive) {
-            questionRepository.deleteAllByCourse(course);
-            requestRepository.resetCountByCourse(course);
-        }
+    public void activateCourse(Course course) {
+        questionRepository.deleteAllByCourse(course);
+        requestRepository.resetCountByCourse(course);
+
         course.activate();
         courseRepository.save(course);
     }
