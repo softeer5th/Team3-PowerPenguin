@@ -23,6 +23,7 @@ const TimeInput = ({ time, setTime }: TimeInputProps) => {
         type="text"
         className={S.timeInput}
         value={localHour}
+        onClick={() => setLocalHour('')}
         onChange={(e) => {
           const currentHour = e.target.value;
           if (!/^\d*$/.test(currentHour)) {
@@ -31,12 +32,15 @@ const TimeInput = ({ time, setTime }: TimeInputProps) => {
           setLocalHour(e.target.value);
         }}
         onBlur={(e) => {
-          const hour = e.target.value;
-          if (parseInt(hour) > 23) {
-            setTime(`23:${minute}`);
+          const inputHour = e.target.value;
+          if (inputHour === '') {
+            setLocalHour('00');
+            setTime(`00:${localMinute}`);
+          } else if (parseInt(inputHour) > 23) {
+            setTime(`23:${localMinute}`);
           } else {
             setTime(
-              `${parseInt(e.target.value).toString().padStart(2, '0')}:${minute}`
+              `${parseInt(inputHour).toString().padStart(2, '0')}:${localMinute}`
             );
           }
         }}
@@ -46,6 +50,7 @@ const TimeInput = ({ time, setTime }: TimeInputProps) => {
         type="text"
         className={S.timeInput}
         value={localMinute}
+        onClick={() => setLocalMinute('')}
         onChange={(e) => {
           const currentMinute = e.target.value;
           if (!/^\d*$/.test(currentMinute)) {
@@ -54,12 +59,15 @@ const TimeInput = ({ time, setTime }: TimeInputProps) => {
           setLocalMinute(e.target.value);
         }}
         onBlur={(e) => {
-          const minute = e.target.value;
-          if (parseInt(minute) > 59) {
-            setTime(`${hour}:59`);
+          const inputMinute = e.target.value;
+          if (inputMinute === '') {
+            setLocalMinute('00');
+            setTime(`${localHour}:00`);
+          } else if (parseInt(inputMinute) > 59) {
+            setTime(`${localHour}:59`);
           } else {
             setTime(
-              `${hour}:${parseInt(e.target.value).toString().padStart(2, '0')}`
+              `${localHour}:${parseInt(inputMinute).toString().padStart(2, '0')}`
             );
           }
         }}
