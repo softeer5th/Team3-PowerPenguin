@@ -83,7 +83,6 @@ const courseActions = ({
   };
 
   const handleEditCourse = (course: CourseMeta) => {
-    console.log('Edit course:', course.id);
     setModal(
       <CourseModal
         course={course}
@@ -92,9 +91,9 @@ const courseActions = ({
         }}
         onSubmit={async (course) => {
           try {
-            console.log('Submit course:', course);
-            offModal();
             await courseRepository.updateCourse(course);
+            offModal();
+            setModal(null);
             navigate(0);
           } catch (error) {
             popupError(error);
