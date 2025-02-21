@@ -30,6 +30,20 @@ type CourseForm = {
   }[];
 };
 
+const makeFullUniversity = (university: string) => {
+  if (university === '') {
+    return '';
+  }
+  if (university.includes('대학')) {
+    return university.slice(0, university.length - 2) + '대학교';
+  }
+  if (university.endsWith('대')) {
+    return university + '학교';
+  }
+
+  return university;
+};
+
 const checkForm = (courseForm: CourseForm) => {
   if (courseForm.name === '') {
     throw new CourseError('강의 이름을 입력해 주세요');
@@ -39,13 +53,6 @@ const checkForm = (courseForm: CourseForm) => {
   }
   if (courseForm.capacity === '' || !/^\d*$/.test(courseForm.capacity)) {
     throw new CourseError('수업정원을 입력해 주세요');
-  }
-  if (
-    courseForm.university === '' ||
-    !courseForm.university.includes('대학교') ||
-    courseForm.university.length < 4
-  ) {
-    throw new CourseError('대학교를 입력해 주세요');
   }
   if (courseForm.classType === '') {
     throw new CourseError('강의 유형을 선택해 주세요');
@@ -74,6 +81,15 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
         end: '00:00',
       },
     ],
+  });
+
+  const [formError, setFormError] = useState({
+    name: '',
+    code: '',
+    capacity: '',
+    university: '',
+    classType: courseForm.classType === '' ? '강의 유형을 선택해 주세요' : '',
+    schedule: '',
   });
 
   const handleSubmit = () => {
@@ -155,9 +171,20 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
         <ModalInput
           size="full"
           title="강의 이름"
+          desc={formError.name}
           placeholder="강의 이름을 입력해 주세요"
           value={courseForm.name}
           onInputChange={(value) => handleInputChange('name', value)}
+          onBlur={() => {
+            if (courseForm.name === '') {
+              setFormError((prev) => ({
+                ...prev,
+                name: '강의 이름을 입력해 주세요',
+              }));
+            } else {
+              setFormError((prev) => ({ ...prev, name: '' }));
+            }
+          }}
         />
         <div className={S.inputContainer}>
           <div className={S.inputTitle}>
@@ -180,6 +207,9 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
                 />
               </button>
             ))}
+            {formError.classType && (
+              <span className={S.errorText}>{formError.classType}</span>
+            )}
           </div>
         </div>
         <div className={S.inputContainer}>
@@ -235,22 +265,60 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
         <ModalInput
           title="학수번호"
           placeholder="학수번호를 입력해 주세요"
+          desc={formError.code}
           value={courseForm.code}
           onInputChange={(value) => handleInputChange('code', value)}
+          onBlur={() => {
+            if (courseForm.code === '') {
+              setFormError((prev) => ({
+                ...prev,
+                code: '학수번호를 입력해 주세요',
+              }));
+            } else {
+              setFormError((prev) => ({ ...prev, code: '' }));
+            }
+          }}
         />
         <ModalInput
           title="인원 수"
-          desc="숫자만 작성해 주세요"
           placeholder="수업정원을 입력해 주세요"
+          desc={formError.capacity}
           value={courseForm.capacity}
           onInputChange={(value) => handleInputChange('capacity', value)}
+          onBlur={() => {
+            if (
+              courseForm.capacity === '' ||
+              !/^\d*$/.test(courseForm.capacity)
+            ) {
+              setFormError((prev) => ({
+                ...prev,
+                capacity: '수업정원을 입력해 주세요',
+              }));
+            } else {
+              setFormError((prev) => ({ ...prev, capacity: '' }));
+            }
+          }}
         />
         <ModalInput
           title="대학교"
-          desc="'대학교' 텍스트를 포함해 작성해 주세요"
           placeholder="대학이름을 입력해 주세요"
+          desc={formError.university}
           value={courseForm.university}
           onInputChange={(value) => handleInputChange('university', value)}
+          onBlur={() => {
+            if (courseForm.university === '') {
+              setFormError((prev) => ({
+                ...prev,
+                university: '대학이름을 입력해 주세요',
+              }));
+            } else {
+              setFormError((prev) => ({ ...prev, university: '' }));
+              setCourseForm((prev) => ({
+                ...prev,
+                university: makeFullUniversity(prev.university),
+              }));
+            }
+          }}
         />
       </div>
       <div className={S.buttonContainer}>

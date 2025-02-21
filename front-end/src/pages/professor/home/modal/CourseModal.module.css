@@ -71,7 +71,8 @@
 
 .categoryContainer {
   display: flex;
-  width: 100%;
+  align-content: center;
+  width: auto;
   height: auto;
   gap: 15px;
 }
@@ -80,6 +81,12 @@
   width: 71px;
   height: 44px;
   font: var(--web-body1-medium);
+}
+
+.errorText {
+  color: var(--error-red-500);
+  font: var(--web-caption3-medium);
+  margin: auto;
 }
 
 .scheduleList {
