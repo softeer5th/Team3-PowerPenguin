@@ -66,10 +66,10 @@ const StudentHome = () => {
             university={classInfo.university}
             courseTitle={classInfo.name}
             coursePeople={classInfo.capacity}
-            courseDay={currentSchedule?.day}
+            courseDay={currentSchedule?.day || classInfo.schedule[0].day}
             courseNumber={classInfo.code}
-            startTime={currentSchedule?.start}
-            endTime={currentSchedule?.end}
+            startTime={currentSchedule?.start || classInfo.schedule[0].start}
+            endTime={currentSchedule?.end || classInfo.schedule[0].end}
             courseSort={classInfo.classType}
             onCheckClick={handleCheckClick}
           />
