@@ -1,5 +1,6 @@
 package com.softeer.reacton.domain.course;
 
+import com.softeer.reacton.domain.question.QuestionRepository;
 import com.softeer.reacton.domain.request.Request;
 import com.softeer.reacton.domain.request.RequestRepository;
 import com.softeer.reacton.domain.schedule.Schedule;
@@ -17,6 +18,7 @@ public class ProfessorCourseTransactionService {
     private final CourseRepository courseRepository;
     private final ScheduleRepository scheduleRepository;
     private final RequestRepository requestRepository;
+    private final QuestionRepository questionRepository;
 
     @Transactional
     public long saveCourse(Course course) {
@@ -33,5 +35,15 @@ public class ProfessorCourseTransactionService {
         }
 
         return course.getId();
+    }
+
+    @Transactional
+    public void activateCourse(Course course, boolean wasActive) {
+        if (!wasActive) {
+            questionRepository.deleteAllByCourse(course);
+            requestRepository.resetCountByCourse(course);
+        }
+        course.activate();
+        courseRepository.save(course);
     }
 }

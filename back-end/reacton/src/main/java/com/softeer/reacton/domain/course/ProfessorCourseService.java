@@ -155,13 +155,16 @@ public class ProfessorCourseService {
         log.info("수업이 삭제되었습니다. : courseId = {}", courseId);
     }
 
-    @Transactional
     public void startCourse(String oauthId, long courseId) {
         log.debug("수업을 시작 상태로 변경합니다. courseId = {}", courseId);
 
-        Course course = getCourseByProfessor(oauthId, courseId);
-        course.activate();
-        questionRepository.deleteAllByCourse(course);
+        Course targetCourse = getCourseByProfessor(oauthId, courseId);
+        boolean wasActive = targetCourse.isActive();
+        log.debug("시작을 요청한 수업의 활성화 상태입니다. : isActive = {}", wasActive);
+
+        deactivateOtherCourses(oauthId, courseId);
+
+        professorCourseTransactionService.activateCourse(targetCourse, wasActive);
 
         log.info("수업이 시작 상태로 변경되었습니다. courseId = {}", courseId);
     }
@@ -209,6 +212,19 @@ public class ProfessorCourseService {
             return Map.of("fileUrl", s3Url);
         }
         return Map.of("fileUrl", "");
+    }
+
+    private void deactivateOtherCourses(String oauthId, long courseId) {
+        Professor professor = getProfessorByOauthId(oauthId);
+        List<Course> activeCourses = courseRepository.findIsActiveCoursesByProfessor(professor);
+
+        for (Course course : activeCourses) {
+            if (course.getId() != courseId) {
+                course.deactivate();
+            }
+        }
+
+        courseRepository.saveAll(activeCourses);
     }
 
     private Professor getProfessorByOauthId(String oauthId) {
