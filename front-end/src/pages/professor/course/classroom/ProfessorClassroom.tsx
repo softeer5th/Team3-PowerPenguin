@@ -23,7 +23,7 @@ import {
 import QuestionModal from './components/question/QuestionModal';
 import PDFMainComponent from './components/PDFMainComponent';
 import PDFSideBar from './components/PDFSideBar';
-import ProfessorError from '@/utils/professorError';
+import ProfessorError from '@/pages/professor/professorError';
 
 export type Action =
   | { type: 'ADD'; payload: Reaction }
@@ -76,12 +76,7 @@ const ProfessorClassroom = () => {
   const { openModal, closeModal, Modal } = useModal();
   const navigate = useNavigate();
 
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
+  const { popupError, ErrorModal } = ProfessorError();
 
   const handleReaction = (type: Reaction) => {
     startTransition(() => {
@@ -256,6 +251,7 @@ const ProfessorClassroom = () => {
         />
       </div>
       {modal && <Modal>{modal}</Modal>}
+      <ErrorModal />
     </>
   );
 };

@@ -4,7 +4,7 @@ import useModal from '@/hooks/useModal';
 import React, { useEffect, useState } from 'react';
 import { courseRepository } from '@/di';
 import ClassStartModal from '@/components/modal/ClassStartModal';
-import ProfessorError from '@/utils/professorError';
+import ProfessorError from '@/pages/professor/professorError';
 import { useNavigate } from 'react-router';
 import { Course } from '@/core/model';
 
@@ -12,12 +12,7 @@ const ProfessorLoading = () => {
   const { openModal, closeModal, Modal } = useModal();
   const [modal, setModal] = useState<React.ReactNode | null>(null);
   const navigate = useNavigate();
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
+  const { popupError, ErrorModal } = ProfessorError();
 
   const handleClickBackButton = () => {
     setModal(null);
@@ -68,6 +63,7 @@ const ProfessorLoading = () => {
         </div>
       </div>
       {modal && <Modal>{modal}</Modal>}
+      <ErrorModal />
     </>
   );
 };

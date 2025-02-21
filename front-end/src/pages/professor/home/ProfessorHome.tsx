@@ -26,7 +26,7 @@ const ProfessorHome = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = courseActions({ setModal, openModal, closeModal, navigate });
+  } = courseActions({ setModal, openModal, closeModal, navigate, popupError });
 
   const filteredCourses = filterCourse(courses, courseDay, courseType);
 
@@ -44,7 +44,7 @@ const ProfessorHome = () => {
     fetchCourses();
   }, []);
 
-  const handleAddCourse = () => {
+  const handleAddCourse = async () => {
     setModal(
       <CourseModal
         onClose={() => {

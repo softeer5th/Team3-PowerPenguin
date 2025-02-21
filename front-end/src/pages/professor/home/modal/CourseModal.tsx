@@ -13,7 +13,7 @@ import { CourseType, CourseDay, getCourseColor } from '@/utils/util';
 
 type CourseModalProps = {
   course?: CourseMeta;
-  onSubmit: (course: CourseMeta) => void;
+  onSubmit: (course: CourseMeta) => Promise<void>;
   onClose: () => void;
 };
 
@@ -92,10 +92,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
     schedule: '',
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       checkForm(courseForm);
-      onSubmit({
+      await onSubmit({
         ...courseForm,
         id: course?.id || '',
         capacity: parseInt(courseForm.capacity),
@@ -273,6 +273,11 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
               setFormError((prev) => ({
                 ...prev,
                 code: '학수번호를 입력해 주세요',
+              }));
+            } else if (!/^\d+$/.test(courseForm.code)) {
+              setFormError((prev) => ({
+                ...prev,
+                code: '학수번호는 숫자로만 입력되어야 합니다',
               }));
             } else {
               setFormError((prev) => ({ ...prev, code: '' }));

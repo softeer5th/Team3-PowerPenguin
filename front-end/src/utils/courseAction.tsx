@@ -5,7 +5,6 @@ import CourseModal from '../pages/professor/home/modal/CourseModal';
 import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
 import ClassStartModal from '../components/modal/ClassStartModal';
 import { classroomRepository, courseRepository } from '@/di';
-import ProfessorError from './professorError';
 import { NavigateFunction } from 'react-router';
 
 type courseActionsProps = {
@@ -13,6 +12,7 @@ type courseActionsProps = {
   openModal: () => void;
   closeModal: () => void;
   navigate: NavigateFunction;
+  popupError: (error: unknown) => void;
 };
 
 const fileSuccessModal = (
@@ -44,14 +44,8 @@ const courseActions = ({
   openModal,
   closeModal,
   navigate,
+  popupError,
 }: courseActionsProps) => {
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
-
   const offModal = () => {
     setModal(null);
     closeModal();
