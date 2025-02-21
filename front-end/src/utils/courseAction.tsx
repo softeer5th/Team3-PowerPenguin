@@ -16,12 +16,9 @@ type courseActionsProps = {
 };
 
 const fileSuccessModal = (
-  courseId: string,
-  file: File,
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
   openModal: () => void,
-  closeModal: () => void,
-  popupError: (error: unknown) => void
+  closeModal: () => void
 ) => {
   setModal(
     <AlertModal
@@ -33,14 +30,8 @@ const fileSuccessModal = (
         setModal(null);
       }}
       onClickModalButton={async () => {
-        try {
-          closeModal();
-          setModal(null);
-          console.log('Save file:', file);
-          await courseRepository.uploadCourseFile(courseId, file);
-        } catch (error) {
-          popupError(error);
-        }
+        closeModal();
+        setModal(null);
       }}
     />
   );
@@ -133,14 +124,10 @@ const courseActions = ({
   };
 
   const handleDetailCourse = (course: CourseMeta) => {
-    console.log('Detail course:', course.id);
-
     navigate(`/professor/course/${course.id}`);
   };
 
   const handleFileCourse = (course: CourseMeta) => {
-    console.log('File course:', course.id);
-
     const handleFileSave = (file: File) => {
       if (course?.fileName) {
         setModal(
@@ -149,15 +136,14 @@ const courseActions = ({
             message="새 파일을 저장하시겠습니까?"
             description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
             buttonText="새 파일 저장"
-            onClickModalButton={() => {
-              fileSuccessModal(
-                course.id.toString(),
-                file,
-                setModal,
-                openModal,
-                closeModal,
-                popupError
-              );
+            onClickModalButton={async () => {
+              try {
+                await courseRepository.uploadCourseFile(course.id, file);
+
+                fileSuccessModal(setModal, openModal, closeModal);
+              } catch (error) {
+                popupError(error);
+              }
             }}
             onClickCloseButton={() => {
               offModal();
@@ -165,14 +151,7 @@ const courseActions = ({
           />
         );
       } else {
-        fileSuccessModal(
-          course.id.toString(),
-          file,
-          setModal,
-          openModal,
-          closeModal,
-          popupError
-        );
+        fileSuccessModal(setModal, openModal, closeModal);
       }
     };
 
