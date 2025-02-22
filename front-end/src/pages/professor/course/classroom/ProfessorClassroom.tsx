@@ -136,6 +136,10 @@ const ProfessorClassroom = () => {
     };
 
     eventSource.onerror = () => {
+      if (eventSource.readyState === EventSource.CONNECTING) {
+        return;
+      }
+
       sseRef.current?.close();
       sseRef.current = null;
       popupError(new Error('SSE_ERROR'));
