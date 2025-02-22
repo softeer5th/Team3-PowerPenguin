@@ -8,8 +8,8 @@ import {
   useState,
   useTransition,
 } from 'react';
-import { classroomRepository, courseRepository } from '@/di';
 import { useNavigate, useParams } from 'react-router';
+import { classroomRepository, courseRepository } from '@/di';
 import useModal from '@/hooks/useModal';
 
 import {
@@ -61,21 +61,17 @@ const ProfessorClassroom = () => {
   const [reactionsCount, setReactionsCount] = useState<
     Record<Reaction, number>
   >(initialReactionsCount);
-  const [isUploading, setIsUploading] = useState(false);
   const [courseInfo, setCourseInfo] = useState<Course | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [requests, setRequests] = useState<Requests | []>([]);
   const [reactions, dispatch] = useReducer(reactionReducer, []);
 
-  const isUploadingRef = useRef(false);
   const reactionsRef = useRef(reactionsCount);
   const sseRef = useRef<EventSource | null>(null);
 
-  const [isPending, startTransition] = useTransition();
-
-  const { openModal, closeModal, Modal } = useModal();
   const navigate = useNavigate();
-
+  const [, startTransition] = useTransition();
+  const { openModal, closeModal, Modal } = useModal();
   const { popupError, ErrorModal } = ProfessorError();
 
   const handleReaction = (type: Reaction) => {
@@ -104,9 +100,7 @@ const ProfessorClassroom = () => {
   };
 
   const handleQuestionCheck = (id: Question['id']) => {
-    const updatedQuestions = questions.filter((question) => question.id !== id);
-
-    setQuestions(updatedQuestions);
+    setQuestions((prev) => prev.filter((question) => question.id !== id));
   };
 
   const connectSSE = () => {
@@ -144,7 +138,7 @@ const ProfessorClassroom = () => {
     eventSource.onerror = () => {
       sseRef.current?.close();
       sseRef.current = null;
-      connectSSE();
+      popupError(new Error('SSE_ERROR'));
     };
   };
 
@@ -152,11 +146,8 @@ const ProfessorClassroom = () => {
   const handleResolveClick = async (id: Question['id']) => {
     try {
       await classroomRepository.checkQuestionByProfessor(id);
-      const updatedQuestions = questions.filter(
-        (question) => question.id !== id
-      );
 
-      setQuestions(updatedQuestions);
+      setQuestions((prev) => prev.filter((question) => question.id !== id));
     } catch (error) {
       popupError(error);
     }
@@ -194,6 +185,7 @@ const ProfessorClassroom = () => {
         popupError(error);
       }
     }
+
     fetchCourse();
   }, [courseId]);
 
@@ -210,15 +202,8 @@ const ProfessorClassroom = () => {
     }
   }, [questions]);
 
-  // SSE에 의존성을 빼기 위해
   useEffect(() => {
-    isUploadingRef.current = isUploading;
-  }, [isUploading]);
-
-  useEffect(() => {
-    if (!sseRef.current) {
-      connectSSE();
-    }
+    connectSSE();
 
     return () => {
       sseRef.current?.close();
@@ -231,7 +216,6 @@ const ProfessorClassroom = () => {
       <div className={S.professorClassroom}>
         <PDFMainComponent
           courseInfo={courseInfo}
-          setIsUploading={setIsUploading}
           setModal={setModal}
           closeModal={closeModal}
           reactionsCount={reactionsCount}

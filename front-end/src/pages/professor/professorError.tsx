@@ -71,6 +71,11 @@ const ProfessorErrorContent: Record<string, ProfessorErrorContentType> = {
     description: '다시 시도해주세요.',
     navigateTo: null,
   },
+  SSE_ERROR: {
+    message: '서버 연결에 실패했습니다.',
+    description: '홈 화면으로 돌아갑니다.',
+    navigateTo: '/professor',
+  },
 };
 
 const ProfessorError = () => {
@@ -79,9 +84,12 @@ const ProfessorError = () => {
   const navigate = useNavigate();
 
   const popupError = (error: unknown) => {
+    console.error(error);
     let errorContent = null;
     if (error instanceof ClientError || error instanceof ServerError) {
       errorContent = ProfessorErrorContent[error.errorCode];
+    } else if (error instanceof Error && error.message === 'SSE_ERROR') {
+      errorContent = ProfessorErrorContent.SSE_ERROR;
     }
 
     if (!errorContent) {
