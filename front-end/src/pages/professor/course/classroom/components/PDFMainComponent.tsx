@@ -49,6 +49,52 @@ const PDFMainComponent = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    async function fetchPDF() {
+      try {
+        if (!courseInfo) {
+          return;
+        }
+
+        if (isPDFLoading) {
+          return;
+        }
+
+        setIsPDFLoading(true);
+        setModal(<PopupModal type="loading" title="강의자료 여는 중..." />);
+        openModal();
+        const pdfUrl = await courseRepository.getCourseFileUrl(courseInfo.id);
+        if (!pdfUrl) {
+          return;
+        }
+
+        setPDF(pdfUrl);
+        await loadPdf(pdfUrl);
+
+        setIsPDFLoading(false);
+        closeModal();
+        setModal(null);
+      } catch {
+        setIsPDFLoading(false);
+
+        setModal(
+          <PopupModal
+            type="caution"
+            title="파일 열기에 실패했습니다."
+            description="다시 시도해 주세요."
+          />
+        );
+        openModal();
+
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
+      }
+    }
+
+    fetchPDF();
+  }, [courseInfo]);
+
   const handleCloseModal = () => {
     closeModal();
     setModal(null);
@@ -100,51 +146,7 @@ const PDFMainComponent = ({
     }
   }
 
-  useEffect(() => {
-    async function fetchPDF() {
-      try {
-        if (!courseInfo) {
-          return;
-        }
-
-        if (isPDFLoading) {
-          return;
-        }
-
-        setIsPDFLoading(true);
-        setModal(<PopupModal type="loading" title="강의자료 여는 중..." />);
-        openModal();
-        const pdfUrl = await courseRepository.getCourseFileUrl(courseInfo.id);
-        if (!pdfUrl) {
-          return;
-        }
-
-        setPDF(pdfUrl);
-        await loadPdf(pdfUrl);
-
-        setIsPDFLoading(false);
-        closeModal();
-        setModal(null);
-      } catch {
-        setIsPDFLoading(false);
-
-        setModal(
-          <PopupModal
-            type="caution"
-            title="파일 열기에 실패했습니다."
-            description="다시 시도해 주세요."
-          />
-        );
-        openModal();
-
-        setTimeout(() => {
-          handleCloseModal();
-        }, 2000);
-      }
-    }
-
-    fetchPDF();
-  }, [courseInfo]);
+  
 
   return (
     <div className={S.mainContainer}>
