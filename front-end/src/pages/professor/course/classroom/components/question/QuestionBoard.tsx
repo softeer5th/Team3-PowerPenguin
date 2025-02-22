@@ -26,7 +26,7 @@ const QuestionBoard = ({
         <button
           className={S.buttonContainer}
           onClick={prevPage}
-          disabled={!(page > 0)}
+          disabled={page === 0}
         >
           <PrevIcon className={S.icon} />
         </button>
@@ -37,7 +37,7 @@ const QuestionBoard = ({
         <button
           className={S.buttonContainer}
           onClick={nextPage}
-          disabled={!(page < totalPages - 1)}
+          disabled={page >= totalPages - 1}
         >
           <NextIcon className={S.icon} />
         </button>
