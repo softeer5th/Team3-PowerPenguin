@@ -106,8 +106,13 @@ const courseActions = ({
       <ClassStartModal
         course={course}
         handleClickBackButton={offModal}
-        handleClickStartButton={() => {
-          classroomRepository.startCourse(course.id);
+        handleClickStartButton={async () => {
+          try {
+            await classroomRepository.startCourse(course.id);
+            localStorage.clear();
+          } catch {
+            // do nothing
+          }
           offModal();
           navigate(`/professor/course/${course.id}/classroom`);
         }}
@@ -121,30 +126,30 @@ const courseActions = ({
   };
 
   const handleFileCourse = (course: CourseMeta) => {
-    const handleFileSave = (file: File) => {
-      if (course?.fileName) {
-        setModal(
-          <AlertModal
-            type="caution"
-            message="새 파일을 저장하시겠습니까?"
-            description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
-            buttonText="새 파일 저장"
-            onClickModalButton={async () => {
-              try {
+    const handleFileSave = async (file: File) => {
+      try {
+        if (course?.fileName) {
+          setModal(
+            <AlertModal
+              type="caution"
+              message="새 파일을 저장하시겠습니까?"
+              description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
+              buttonText="새 파일 저장"
+              onClickModalButton={async () => {
                 await courseRepository.uploadCourseFile(course.id, file);
-
                 fileSuccessModal(setModal, openModal, closeModal);
-              } catch (error) {
-                popupError(error);
-              }
-            }}
-            onClickCloseButton={() => {
-              offModal();
-            }}
-          />
-        );
-      } else {
-        fileSuccessModal(setModal, openModal, closeModal);
+              }}
+              onClickCloseButton={() => {
+                offModal();
+              }}
+            />
+          );
+        } else {
+          await courseRepository.uploadCourseFile(course.id, file);
+          fileSuccessModal(setModal, openModal, closeModal);
+        }
+      } catch (error) {
+        popupError(error);
       }
     };
 
