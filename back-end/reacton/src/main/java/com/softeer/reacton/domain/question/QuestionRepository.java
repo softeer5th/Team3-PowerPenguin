@@ -20,12 +20,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Question q SET q.isComplete = true " +
-            "WHERE q.studentId = :studentId AND q.course = :course AND q.id = :questionId")
-    int updateQuestion(@Param("studentId") String studentId, @Param("course") Course course, @Param("questionId") Long questionId);
-
-    @Modifying
-    @Transactional
     @Query("DELETE FROM Question q " +
             "WHERE q.course = :course AND q.isComplete = true")
     void deleteCompleteByCourse(@Param("course") Course course);

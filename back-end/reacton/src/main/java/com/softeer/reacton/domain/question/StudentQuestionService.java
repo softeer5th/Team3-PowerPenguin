@@ -8,7 +8,6 @@ import com.softeer.reacton.domain.question.dto.QuestionCheckSseRequest;
 import com.softeer.reacton.domain.question.dto.QuestionSendRequest;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
-import com.softeer.reacton.global.exception.code.QuestionErrorCode;
 import com.softeer.reacton.global.sse.SseMessageSender;
 import com.softeer.reacton.global.sse.dto.SseMessage;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ public class StudentQuestionService {
     private final QuestionRepository questionRepository;
     private final CourseRepository courseRepository;
     private final SseMessageSender sseMessageSender;
+    private final QuestionService questionService;
 
     @Transactional(readOnly = true)
     public QuestionAllResponse getQuestionsByStudentId(String studentId, Long courseId) {
@@ -38,27 +38,16 @@ public class StudentQuestionService {
         return QuestionAllResponse.of(questions);
     }
 
-    @Transactional
     public CourseQuestionResponse sendQuestion(String studentId, Long courseId, QuestionSendRequest questionSendRequest) {
         String content = questionSendRequest.getContent();
         log.debug("질문 처리를 시작합니다. : content = {}", content);
 
-        Course course = getCourse(courseId);
-        checkIfOpen(course);
-
-        Question question = Question.builder()
-                .studentId(studentId)
-                .content(content)
-                .course(course)
-                .build();
-
-        log.debug("질문을 저장합니다.");
-        Question savedQuestion = questionRepository.save(question);
+        Question question = questionService.saveQuestion(studentId, content, courseId);
 
         CourseQuestionResponse courseQuestionResponse = new CourseQuestionResponse(
-                savedQuestion.getId(),
-                savedQuestion.getCreatedAt(),
-                savedQuestion.getContent()
+                question.getId(),
+                question.getCreatedAt(),
+                question.getContent()
         );
 
         log.debug("SSE 서버에 질문 전송을 요청합니다.");
@@ -69,17 +58,10 @@ public class StudentQuestionService {
         return courseQuestionResponse;
     }
 
-    public void sendQuestionCheck(String studentId, Long courseId, Long questionId) {
+    public void sendQuestionCheck(Long courseId, Long questionId) {
         log.debug("질문 체크 처리를 시작합니다. : questionId = {}", questionId);
 
-        Course course = getCourse(courseId);
-        checkIfOpen(course);
-
-        int updatedRows = questionRepository.updateQuestion(studentId, course, questionId);
-        if (updatedRows == 0) {
-            log.debug("질문 체크를 처리하는 과정에서 발생한 에러입니다. : Question does not exist.");
-            throw new BaseException(QuestionErrorCode.QUESTION_NOT_FOUND);
-        }
+        questionService.checkQuestion(questionId);
 
         QuestionCheckSseRequest questionCheckSseRequest = new QuestionCheckSseRequest(questionId);
 
@@ -105,11 +87,5 @@ public class StudentQuestionService {
                         question.getContent()
                 ))
                 .collect(Collectors.toList());
-    }
-
-    private void checkIfOpen(Course course) {
-        if (!course.isActive()) {
-            throw new BaseException(CourseErrorCode.COURSE_NOT_ACTIVE);
-        }
     }
 }
