@@ -1,6 +1,5 @@
 package com.softeer.reacton_classroom.domain.sse;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,9 +13,6 @@ import java.time.LocalTime;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SseMessageTest {
-    // 실제 Cookie 값 (테스트 시 쿠키 값 필요)
-    @Value("${test.access_token}")
-    private String PROFESSOR_COOKIE;
     private HttpClient client;
 
     @BeforeAll
@@ -26,7 +22,7 @@ class SseMessageTest {
     }
 
     @Test
-    void testSseConnectionAndMessageSend() throws Exception {
+    void testSseMessageSend() throws Exception {
         System.out.println("SSE 메시지 전송 테스트");
 
         LocalTime startTime = LocalTime.now();
@@ -38,10 +34,9 @@ class SseMessageTest {
                     i, currentTime);
 
             HttpRequest messageRequest = HttpRequest.newBuilder()
+                    // uri와 일치하는 수업의 SSE connection이 열린 상태여야 함
                     .uri(URI.create("https://softeer-reacton.shop/sse/message/course/1"))
                     .header("Content-Type", "application/json")
-                    // Cookie의 Expires 값 업데이트 필요
-                    .header("Cookie", PROFESSOR_COOKIE + "; Path=/; Domain=.softeer-reacton.shop; Max-Age=86400; Expires=Mon, 24 Feb 2025 12:39:51 GMT; Secure; HttpOnly; SameSite=Strict")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();
 
