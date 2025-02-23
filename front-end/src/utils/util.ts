@@ -146,3 +146,10 @@ export const filterCourse = (
       (courseType === '수업 종류' || courseType === course.classType)
   );
 };
+
+export const utcToKst = (isoString: string) => {
+  const date = new Date(isoString);
+  const kstHours = (date.getHours() + 9).toString().padStart(2, '0');
+  const kstMinutes = date.getMinutes().toString().padStart(2, '0');
+  return `${kstHours}:${kstMinutes}`;
+};

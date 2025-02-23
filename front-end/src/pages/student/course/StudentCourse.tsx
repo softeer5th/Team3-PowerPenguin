@@ -21,8 +21,6 @@ const TAB_OPTIONS = [
   { key: 'question', label: '질문하기' },
 ];
 
-const SSE_URL = import.meta.env.VITE_API_URL;
-
 const StudentCourse = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(TAB_OPTIONS[0].key);
@@ -48,20 +46,12 @@ const StudentCourse = () => {
   }, []);
 
   useEffect(() => {
-    updateUnderline();
-    window.addEventListener('resize', updateUnderline);
-    return () => {
-      window.removeEventListener('resize', updateUnderline);
-    };
-  }, [selectedTab]);
-
-  useEffect(() => {
     const connectSSE = () => {
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
       }
 
-      const eventSource = new EventSource(`${SSE_URL}/sse/connection/student`, {
+      const eventSource = new EventSource('/api/sse/connection/student', {
         withCredentials: true,
       });
 
@@ -87,18 +77,36 @@ const StudentCourse = () => {
       };
 
       eventSource.onerror = () => {
+        if (eventSource.readyState === EventSource.CONNECTING) {
+          return;
+        }
         eventSource.close();
-        connectSSE();
+        eventSourceRef.current = null;
+        setModalType('sse');
+        openModal();
       };
+
       eventSourceRef.current = eventSource;
     };
 
     connectSSE(); // 최초 연결
 
     return () => {
-      eventSourceRef.current?.close();
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current.onmessage = null;
+        eventSourceRef.current.onerror = null;
+      }
     };
   }, []);
+
+  useEffect(() => {
+    updateUnderline();
+    window.addEventListener('resize', updateUnderline);
+    return () => {
+      window.removeEventListener('resize', updateUnderline);
+    };
+  }, [selectedTab]);
 
   const selectedIndex = TAB_OPTIONS.findIndex((tab) => tab.key === selectedTab);
 
@@ -145,6 +153,12 @@ const StudentCourse = () => {
           handleErrorModalClick,
           handleErrorModalClick
         );
+      case 'sse':
+        return getStudentPopup(
+          'sse',
+          handleErrorModalClick,
+          handleErrorModalClick
+        );
 
       default:
         return getStudentPopup(
@@ -159,7 +173,7 @@ const StudentCourse = () => {
     <>
       <div className={S.courseLayout}>
         <header className={S.headerContainer}>
-          <Logo className={S.logo} />
+          <Logo className={S.logo} onClick={() => navigate('/student')} />
           <div className={S.TabsContainer}>
             {TAB_OPTIONS.map(({ key, label }) => (
               <button

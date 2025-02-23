@@ -27,6 +27,10 @@ const popupConfigs: Record<string, PopupConfig> = {
     title: '알 수 없는 오류입니다',
     content: '다시 한번 시도해주세요',
   },
+  sse: {
+    title: '서버에 오류가 발생했습니다',
+    content: '홈 화면으로 돌아갑니다',
+  },
 };
 
 export type PopupType = keyof typeof popupConfigs;
@@ -66,6 +70,9 @@ export const handleStudentError = ({
       openModal();
     } else if (error.errorCode === 'COURSE_NOT_ACTIVE') {
       setModalType('notStart');
+      openModal();
+    } else {
+      setModalType('unknown');
       openModal();
     }
   } else if (error instanceof ServerError) {

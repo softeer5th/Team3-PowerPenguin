@@ -45,7 +45,8 @@
 .questionContainer {
   display: flex;
   max-width: 390px;
-  overflow: scroll;
+  max-height: 350px;
+  overflow-y: scroll;
   width: 100%;
   flex-direction: column;
   align-items: end;

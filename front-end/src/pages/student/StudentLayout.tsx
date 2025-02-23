@@ -19,10 +19,33 @@ const StudentLayout = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const applyZoom = () => {
+      const width = window.outerWidth;
+
+      if (window.matchMedia('(min-width: 961px)').matches) {
+        document.body.style.zoom = `${width / 1920}`;
+        document.body.style.backgroundColor = 'var(--gray-200)';
+      } else {
+        document.body.style.zoom = '1';
+        document.body.style.backgroundColor = '';
+      }
+    };
+
+    applyZoom();
+    window.addEventListener('resize', applyZoom);
+
+    return () => {
+      window.removeEventListener('resize', applyZoom);
+      document.body.style.zoom = '1';
+    };
+  }, []);
+
   return (
-    <div>
+    <>
       <Outlet />
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 .courseLayout {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -11,11 +12,13 @@
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  background-color: white;
 }
 
 .logo {
   width: 73px;
   height: 10px;
+  cursor: pointer;
 }
 
 .TabsContainer {
@@ -56,7 +59,6 @@
 
 .tabLayout {
   width: 100%;
-  height: 100%;
 }
 
 /*스플릿 뷰 */
