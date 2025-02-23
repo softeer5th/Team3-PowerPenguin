@@ -23,12 +23,14 @@ public class SseService {
     private final Map<String, Sinks.Many<MessageResponse<?>>> sinks = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> courseStudentMap = new ConcurrentHashMap<>();
     private final int MAX_CONNECTION_TIMEOUT_MINUTES = 10;
+    private final int RETRY_INTERVAL_SECONDS = 1;
 
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourseMessages(String courseId) {
         Sinks.Many<MessageResponse<?>> sink = sinks.computeIfAbsent(courseId, k -> Sinks.many().multicast().onBackpressureBuffer());
         courseStudentMap.computeIfAbsent(courseId, k -> ConcurrentHashMap.newKeySet());
         MessageResponse<?> initMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
         ServerSentEvent<MessageResponse<?>> initEvent = ServerSentEvent.<MessageResponse<?>>builder()
+                .retry(Duration.ofSeconds(RETRY_INTERVAL_SECONDS))
                 .data(initMessage)
                 .build();
 
@@ -45,6 +47,7 @@ public class SseService {
         courseStudentMap.get(courseId).add(studentId);
         MessageResponse<?> initMessage = new MessageResponse<>("CONNECTION_ESTABLISHED", null);
         ServerSentEvent<MessageResponse<?>> initEvent = ServerSentEvent.<MessageResponse<?>>builder()
+                .retry(Duration.ofSeconds(RETRY_INTERVAL_SECONDS))
                 .data(initMessage)
                 .build();
 
