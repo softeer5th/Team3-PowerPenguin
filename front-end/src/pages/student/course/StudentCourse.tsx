@@ -77,7 +77,13 @@ const StudentCourse = () => {
       };
 
       eventSource.onerror = () => {
+        if (eventSource.readyState === EventSource.CONNECTING) {
+          return;
+        }
         eventSource.close();
+        eventSourceRef.current = null;
+        setModalType('sse');
+        openModal();
       };
 
       eventSourceRef.current = eventSource;
@@ -86,7 +92,11 @@ const StudentCourse = () => {
     connectSSE(); // 최초 연결
 
     return () => {
-      eventSourceRef.current?.close();
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current.onmessage = null;
+        eventSourceRef.current.onerror = null;
+      }
     };
   }, []);
 
@@ -140,6 +150,12 @@ const StudentCourse = () => {
       case 'closedCourse':
         return getStudentPopup(
           'closedCourse',
+          handleErrorModalClick,
+          handleErrorModalClick
+        );
+      case 'sse':
+        return getStudentPopup(
+          'sse',
           handleErrorModalClick,
           handleErrorModalClick
         );
