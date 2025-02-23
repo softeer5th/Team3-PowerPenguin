@@ -95,12 +95,12 @@ const ProfessorProfile = () => {
     try {
       const newProfileURL =
         await professorRepository.updateProfessorProfile(selectedProfileFile);
-      if (profileImageRef.current) {
-        profileImageRef.current.src = newProfileURL;
-      } else {
+      if (newProfileURL !== '') {
         const img = new Image();
         img.src = newProfileURL;
         profileImageRef.current = img;
+      } else {
+        profileImageRef.current = null;
       }
       setSelectedProfileFile(null);
       setProfile({
@@ -126,6 +126,30 @@ const ProfessorProfile = () => {
     }
   };
 
+  const handleUpdateProfileImage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    try {
+      const files = event.target.files;
+      if (files && files[0]) {
+        validateImage(files[0]);
+
+        if (profile.profileImage?.src.startsWith('blob:')) {
+          URL.revokeObjectURL(profile.profileImage.src);
+        }
+
+        const file = files[0];
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        setProfile({ ...profile, profileImage: img });
+        setSelectedProfileFile(file);
+        event.target.value = '';
+      }
+    } catch (error) {
+      popupError(error);
+    }
+  };
+
   const handleClickCancel = (type: 'profile' | 'name') => {
     if (type === 'profile') {
       setIsEdit({ ...isEdit, profileImage: false });
@@ -137,22 +161,6 @@ const ProfessorProfile = () => {
     } else if (type === 'name') {
       setIsEdit({ ...isEdit, name: false });
       setProfile({ ...profile, name: userName.current });
-    }
-  };
-
-  const handleUpdateProfileImage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = event.target.files;
-    if (files && files[0] && validateImage(files[0])) {
-      if (profile.profileImage?.src.startsWith('blob:')) {
-        URL.revokeObjectURL(profile.profileImage.src);
-      }
-      const file = files[0];
-      const img = new Image();
-      img.src = URL.createObjectURL(file);
-      setProfile({ ...profile, profileImage: img });
-      setSelectedProfileFile(file);
     }
   };
 

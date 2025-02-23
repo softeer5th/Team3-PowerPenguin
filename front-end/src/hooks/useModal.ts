@@ -39,7 +39,6 @@ const useModal = () => {
           zIndex: 1000,
           overflow: 'hidden',
         },
-        onClick: closeModal,
       },
       children
     );

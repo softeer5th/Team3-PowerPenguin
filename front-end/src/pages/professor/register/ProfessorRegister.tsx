@@ -4,24 +4,14 @@ import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import TextButton from '@/components/button/text/TextButton';
 import { validateImage, validateName } from '@/utils/util';
 import { professorRepository } from '@/di';
-import useModal from '@/hooks/useModal';
-import ProfessorError from '@/utils/professorError';
-import { useNavigate } from 'react-router';
+import ProfessorError from '@/pages/professor/professorError';
 
 const ProfessorRegister = () => {
   const [profile, setProfile] = useState<File | null>(null);
   const [name, setName] = useState('');
-  const [modal, setModal] = useState<React.ReactNode | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const profileInputRef = useRef<HTMLInputElement>(null);
-  const { openModal, closeModal, Modal } = useModal();
-  const navigate = useNavigate();
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
+  const { popupError, ErrorModal } = ProfessorError();
 
   const handleProfileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -123,7 +113,7 @@ const ProfessorRegister = () => {
           </form>
         </div>
       </div>
-      {modal && <Modal>{modal}</Modal>}
+      <ErrorModal />
     </>
   );
 };

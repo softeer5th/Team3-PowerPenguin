@@ -14,7 +14,7 @@ import { courseRepository } from '@/di';
 import CourseQuestion from './components/CourseQuestion';
 import CourseRequest from './components/CourseRequest';
 import CategoryChip from '@/components/chip/CategoryChip';
-import ProfessorError from '@/utils/professorError';
+import ProfessorError from '@/pages/professor/professorError';
 
 const ProfessorCourse = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -22,18 +22,13 @@ const ProfessorCourse = () => {
   const [modal, setModal] = useState<React.ReactNode | null>(null);
   const { openModal, closeModal, Modal } = useModal();
   const navigate = useNavigate();
+  const { popupError, ErrorModal } = ProfessorError();
   const {
     handleDeleteCourse,
     handleEditCourse,
     handleStartCourse,
     handleFileCourse,
-  } = courseActions({ setModal, openModal, closeModal, navigate });
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
+  } = courseActions({ setModal, openModal, closeModal, navigate, popupError });
 
   const handleClickBack = () => {
     navigate('/professor');
@@ -159,6 +154,7 @@ const ProfessorCourse = () => {
         </div>
       </div>
       {modal && <Modal>{modal}</Modal>}
+      <ErrorModal />
     </>
   );
 };

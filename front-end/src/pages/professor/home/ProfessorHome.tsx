@@ -26,7 +26,7 @@ const ProfessorHome = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = courseActions({ setModal, openModal, closeModal, navigate });
+  } = courseActions({ setModal, openModal, closeModal, navigate, popupError });
 
   const filteredCourses = filterCourse(courses, courseDay, courseType);
 
@@ -44,8 +44,7 @@ const ProfessorHome = () => {
     fetchCourses();
   }, []);
 
-  const handleAddCourse = () => {
-    console.log('Add course');
+  const handleAddCourse = async () => {
     setModal(
       <CourseModal
         onClose={() => {
@@ -54,10 +53,10 @@ const ProfessorHome = () => {
         }}
         onSubmit={async (course) => {
           try {
-            console.log('Submit course:', course);
+            await courseRepository.createCourse(course);
             setModal(null);
             closeModal();
-            await courseRepository.createCourse(course);
+            navigate(0);
           } catch (error) {
             popupError(error);
           }

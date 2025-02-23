@@ -4,6 +4,57 @@
   position: relative;
 }
 
+.subButtonPopup {
+  position: absolute;
+  display: flex;
+  background-color: var(--gray-900);
+  border-radius: var(--medium);
+  width: auto;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  pointer-events: none;
+  top: 0;
+  transform: translate(-8px, calc(-100% - 15px));
+  opacity: 0;
+  scale: 0.95;
+  transition:
+    opacity 0.2s ease-in-out,
+    scale 0.2s ease-in-out;
+}
+
+.subButtonPopup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 38px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid var(--gray-900);
+}
+
+.subButtonPopup > span {
+  font: var(--web-body3-bold);
+  color: white;
+  margin: 15px 34px;
+  text-wrap: nowrap;
+}
+
+.subButtonIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--gray-600);
+  fill: none;
+}
+
+.subButton:hover .subButtonPopup {
+  opacity: 1;
+  scale: 1;
+}
+
 .small {
   composes: card;
   width: 608px;
@@ -103,6 +154,7 @@
 .medium .type {
   width: 64px;
   height: 35px;
+  font: var(--web-caption2-bold);
 }
 
 .medium .text {
@@ -136,12 +188,15 @@
 .medium .metaIcon {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .medium .metaText {
   font: var(--web-body2-medium);
   color: var(--gray-500);
-  white-space: break-word;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .medium .buttonContainer {
@@ -158,50 +213,6 @@
   background-color: var(--gray-100);
   outline: 1px solid var(--gray-400);
   position: relative;
-}
-
-.medium .subButtonPopup {
-  position: absolute;
-  background-color: var(--gray-900);
-  border-radius: var(--medium);
-  width: auto;
-  justify-content: center;
-  align-items: center;
-  z-index: 5;
-  top: 0;
-  transform: translate(-8px, calc(-100% - 15px));
-  display: none;
-}
-
-.medium .subButtonPopup::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 38px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid var(--gray-900);
-}
-
-.medium .subButton:hover .subButtonPopup {
-  display: flex;
-}
-
-.medium .subButtonPopup > span {
-  font: var(--web-body3-bold);
-  color: white;
-  margin: 15px 34px;
-  text-wrap: nowrap;
-}
-
-.medium .subButtonIcon {
-  width: 24px;
-  height: 24px;
-  color: var(--gray-600);
-  fill: none;
 }
 
 .medium .footer {
@@ -303,11 +314,15 @@
 .large .metaIcon {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
 }
 
 .large .metaText {
   font: var(--web-body1-medium);
   color: var(--gray-500);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .large .buttonContainer {
@@ -325,43 +340,6 @@
   background-color: var(--gray-100);
   outline: 1px solid var(--gray-400);
   position: relative;
-}
-
-.large .subButtonPopup {
-  position: absolute;
-  background-color: var(--gray-900);
-  border-radius: var(--medium);
-  width: auto;
-  justify-content: center;
-  align-items: center;
-  z-index: 5;
-  top: 0;
-  transform: translate(-8px, calc(-100% - 15px));
-  display: none;
-}
-
-.large .subButtonPopup::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 38px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid var(--gray-900);
-}
-
-.large .subButton:hover .subButtonPopup {
-  display: flex;
-}
-
-.large .subButtonPopup > span {
-  font: var(--web-body3-bold);
-  color: white;
-  margin: 15px 34px;
-  text-wrap: nowrap;
 }
 
 .large .subButtonIcon {

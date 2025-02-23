@@ -21,7 +21,7 @@ const ProfessorSearch = () => {
     handleStartCourse,
     handleDetailCourse,
     handleFileCourse,
-  } = courseActions({ setModal, openModal, closeModal, navigate });
+  } = courseActions({ setModal, openModal, closeModal, navigate, popupError });
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') || '';
 

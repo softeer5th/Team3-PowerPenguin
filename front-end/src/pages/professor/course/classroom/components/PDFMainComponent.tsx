@@ -9,10 +9,12 @@ import AccessCodeModal from './AccessCodeModal';
 import { Course, Reaction, ReactionType } from '@/core/model';
 import { courseRepository } from '@/di';
 import { Action } from '../ProfessorClassroom';
+import PopupModal from '@/components/modal/PopupModal';
+import { validateFile } from '@/utils/util';
+import { ClientError } from '@/core/errorType';
 
 type PDFMainComponentProps = {
   courseInfo: Course | null;
-  setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
   setModal: React.Dispatch<React.SetStateAction<ReactNode>>;
   closeModal: () => void;
   openModal: () => void;
@@ -24,7 +26,6 @@ type PDFMainComponentProps = {
 
 const PDFMainComponent = ({
   courseInfo,
-  setIsUploading,
   setModal,
   closeModal,
   openModal,
@@ -44,6 +45,7 @@ const PDFMainComponent = ({
   } = usePDF();
 
   const [pdf, setPDF] = useState<File | string | null>(null);
+  const [isPDFLoading, setIsPDFLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -53,16 +55,43 @@ const PDFMainComponent = ({
         if (!courseInfo) {
           return;
         }
+
+        if (isPDFLoading) {
+          return;
+        }
+
+        setIsPDFLoading(true);
+        setModal(<PopupModal type="loading" title="강의자료 여는 중..." />);
+        openModal();
         const pdfUrl = await courseRepository.getCourseFileUrl(courseInfo.id);
         if (!pdfUrl) {
           return;
         }
+
         setPDF(pdfUrl);
-        loadPdf(pdfUrl);
-      } catch (error) {
-        popupError(error);
+        await loadPdf(pdfUrl);
+
+        setIsPDFLoading(false);
+        closeModal();
+        setModal(null);
+      } catch {
+        setIsPDFLoading(false);
+
+        setModal(
+          <PopupModal
+            type="caution"
+            title="파일 열기에 실패했습니다."
+            description="다시 시도해 주세요."
+          />
+        );
+        openModal();
+
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
       }
     }
+
     fetchPDF();
   }, [courseInfo]);
 
@@ -83,20 +112,41 @@ const PDFMainComponent = ({
   };
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!courseInfo) {
+      return;
+    }
+
     const files = event.target.files;
     if (files && files[0]) {
       try {
-        setIsUploading(true);
-        await loadPdf(files[0]);
-        setPDF(files[0]);
-        // 해당강의의 pdf가 변경되었다는것을 알려야함
-        setIsUploading(false);
+        const file = files[0];
+        validateFile(file);
+        await loadPdf(file);
+        setPDF(file);
+        courseRepository.uploadCourseFile(courseInfo.id, file);
+        event.target.value = '';
       } catch (error) {
-        setIsUploading(false);
-        popupError(error);
+        if (error instanceof ClientError) {
+          popupError(error);
+        } else {
+          setModal(
+            <PopupModal
+              type="caution"
+              title="파일 업로드에 실패했습니다."
+              description="다시 시도해 주세요."
+            />
+          );
+          openModal();
+
+          setTimeout(() => {
+            handleCloseModal();
+          }, 2000);
+        }
       }
     }
   }
+
+  
 
   return (
     <div className={S.mainContainer}>

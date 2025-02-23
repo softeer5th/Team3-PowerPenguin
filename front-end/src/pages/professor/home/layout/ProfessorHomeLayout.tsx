@@ -13,7 +13,7 @@ import SearchIcon from '@/assets/icons/Search.svg?react';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import { professorRepository } from '@/di';
 import useModal from '@/hooks/useModal';
-import ProfessorError from '@/utils/professorError';
+import ProfessorError from '@/pages/professor/professorError';
 
 export type OutletContext = {
   openModal: () => void;
@@ -32,12 +32,7 @@ const ProfessorHomeLayout = () => {
   const navigate = useNavigate();
   const [modal, setModal] = useState<ReactNode | null>(null);
   const { openModal, closeModal, Modal } = useModal();
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
+  const { popupError, ErrorModal } = ProfessorError();
 
   const handleClickLogo = () => {
     setSearch('');
@@ -58,7 +53,6 @@ const ProfessorHomeLayout = () => {
   ) => {
     if (event.key === 'Enter') {
       if (search.trim() !== '') {
-        console.log('Search triggered:', search);
         if (search.trim() === keyword) {
           return;
         }
@@ -141,6 +135,7 @@ const ProfessorHomeLayout = () => {
         />
       </div>
       {modal && <Modal>{modal}</Modal>}
+      <ErrorModal />
     </>
   );
 };

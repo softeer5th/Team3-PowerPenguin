@@ -7,6 +7,7 @@ type ModalInputProps = {
   placeholder: string;
   value: string;
   onInputChange: (value: string) => void;
+  onBlur?: () => void;
 };
 
 const ModalInput = ({
@@ -16,17 +17,19 @@ const ModalInput = ({
   placeholder,
   value,
   onInputChange,
+  onBlur,
 }: ModalInputProps) => {
   return (
     <div className={S.inputContainer}>
       <div className={S.inputTitle}>{title}</div>
       <input
-        className={`${S.input} ${size === 'full' ? S.full : ''}`}
+        className={`${S.input} ${size === 'full' && S.full} ${desc && S.withDesc}`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onInputChange(e.target.value)}
+        onBlur={onBlur}
       />
-      {desc && <div className={S.inputDesc}>{desc}</div>}
+      {size === 'half' && desc && <div className={S.inputDesc}>{desc}</div>}
     </div>
   );
 };

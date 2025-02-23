@@ -3,6 +3,7 @@ import { CourseMeta } from '@/core/model';
 import ClockIcon from '@/assets/icons/clock.svg?react';
 import PeopleIcon from '@/assets/icons/people.svg?react';
 import TextButton from '../button/text/TextButton';
+import { formatSchedule } from '@/utils/util';
 
 type ClassStartModalProps = {
   course: CourseMeta;
@@ -10,14 +11,6 @@ type ClassStartModalProps = {
   handleClickBackButton: () => void;
   handleClickStartButton: () => void;
 };
-
-const renderSchedule = (scheduleList: CourseMeta['schedule']) =>
-  scheduleList.map((schedule, index) => (
-    <span key={schedule.day}>
-      {schedule.day} {schedule.start} - {schedule.end}
-      {index < scheduleList.length - 1 && ', '}
-    </span>
-  ));
 
 const ClassStartModal = ({
   course,
@@ -39,11 +32,15 @@ const ClassStartModal = ({
             </h3>
           </div>
           <div className={S.wrapper}>
-            <div className={S.wrapperContent}>
+            <div className={S.schedule}>
               <ClockIcon className={S.icon} />
-              {renderSchedule(course.schedule)}
+              <span>
+                {course.schedule.map((schedule, index) =>
+                  formatSchedule(schedule, index === course.schedule.length - 1)
+                )}
+              </span>
             </div>
-            <div className={S.wrapperContent}>
+            <div className={S.capacity}>
               <PeopleIcon className={S.icon} />
               <span>{course.capacity}명</span>
             </div>

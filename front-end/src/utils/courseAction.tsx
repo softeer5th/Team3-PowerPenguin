@@ -5,7 +5,6 @@ import CourseModal from '../pages/professor/home/modal/CourseModal';
 import FileUploadPopupModal from '../components/modal/FileUploadPopupModal';
 import ClassStartModal from '../components/modal/ClassStartModal';
 import { classroomRepository, courseRepository } from '@/di';
-import ProfessorError from './professorError';
 import { NavigateFunction } from 'react-router';
 
 type courseActionsProps = {
@@ -13,15 +12,13 @@ type courseActionsProps = {
   openModal: () => void;
   closeModal: () => void;
   navigate: NavigateFunction;
+  popupError: (error: unknown) => void;
 };
 
 const fileSuccessModal = (
-  courseId: string,
-  file: File,
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
   openModal: () => void,
-  closeModal: () => void,
-  popupError: (error: unknown) => void
+  closeModal: () => void
 ) => {
   setModal(
     <AlertModal
@@ -33,14 +30,8 @@ const fileSuccessModal = (
         setModal(null);
       }}
       onClickModalButton={async () => {
-        try {
-          closeModal();
-          setModal(null);
-          console.log('Save file:', file);
-          await courseRepository.uploadCourseFile(courseId, file);
-        } catch (error) {
-          popupError(error);
-        }
+        closeModal();
+        setModal(null);
       }}
     />
   );
@@ -53,14 +44,8 @@ const courseActions = ({
   openModal,
   closeModal,
   navigate,
+  popupError,
 }: courseActionsProps) => {
-  const popupError = ProfessorError({
-    setModal,
-    openModal,
-    closeModal,
-    navigate,
-  });
-
   const offModal = () => {
     setModal(null);
     closeModal();
@@ -78,9 +63,9 @@ const courseActions = ({
         }}
         onClickModalButton={async () => {
           try {
-            console.log('Delete course:', course.id);
-            offModal();
             await courseRepository.deleteCourse(course.id);
+            offModal();
+            setModal(null);
             navigate(0);
           } catch (error) {
             popupError(error);
@@ -92,7 +77,6 @@ const courseActions = ({
   };
 
   const handleEditCourse = (course: CourseMeta) => {
-    console.log('Edit course:', course.id);
     setModal(
       <CourseModal
         course={course}
@@ -101,9 +85,9 @@ const courseActions = ({
         }}
         onSubmit={async (course) => {
           try {
-            console.log('Submit course:', course);
-            offModal();
             await courseRepository.updateCourse(course);
+            offModal();
+            setModal(null);
             navigate(0);
           } catch (error) {
             popupError(error);
@@ -122,8 +106,13 @@ const courseActions = ({
       <ClassStartModal
         course={course}
         handleClickBackButton={offModal}
-        handleClickStartButton={() => {
-          classroomRepository.startCourse(course.id);
+        handleClickStartButton={async () => {
+          try {
+            await classroomRepository.startCourse(course.id);
+            localStorage.clear();
+          } catch {
+            // do nothing
+          }
           offModal();
           navigate(`/professor/course/${course.id}/classroom`);
         }}
@@ -133,46 +122,34 @@ const courseActions = ({
   };
 
   const handleDetailCourse = (course: CourseMeta) => {
-    console.log('Detail course:', course.id);
-
     navigate(`/professor/course/${course.id}`);
   };
 
   const handleFileCourse = (course: CourseMeta) => {
-    console.log('File course:', course.id);
-
-    const handleFileSave = (file: File) => {
-      if (course?.fileName) {
-        setModal(
-          <AlertModal
-            type="caution"
-            message="새 파일을 저장하시겠습니까?"
-            description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
-            buttonText="새 파일 저장"
-            onClickModalButton={() => {
-              fileSuccessModal(
-                course.id.toString(),
-                file,
-                setModal,
-                openModal,
-                closeModal,
-                popupError
-              );
-            }}
-            onClickCloseButton={() => {
-              offModal();
-            }}
-          />
-        );
-      } else {
-        fileSuccessModal(
-          course.id.toString(),
-          file,
-          setModal,
-          openModal,
-          closeModal,
-          popupError
-        );
+    const handleFileSave = async (file: File) => {
+      try {
+        if (course?.fileName) {
+          setModal(
+            <AlertModal
+              type="caution"
+              message="새 파일을 저장하시겠습니까?"
+              description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
+              buttonText="새 파일 저장"
+              onClickModalButton={async () => {
+                await courseRepository.uploadCourseFile(course.id, file);
+                fileSuccessModal(setModal, openModal, closeModal);
+              }}
+              onClickCloseButton={() => {
+                offModal();
+              }}
+            />
+          );
+        } else {
+          await courseRepository.uploadCourseFile(course.id, file);
+          fileSuccessModal(setModal, openModal, closeModal);
+        }
+      } catch (error) {
+        popupError(error);
       }
     };
 

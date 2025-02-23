@@ -31,15 +31,13 @@ const QuestionBoard = ({
           <PrevIcon className={S.icon} />
         </button>
         <div className={S.page}>
-          <span className={S.currentPage}>
-            {questions.length === 0 ? 0 : page + 1}
-          </span>{' '}
-          / {Math.max(questions.length === 0 ? 0 : totalPages)}
+          <span className={S.currentPage}>{page + 1}</span> /{' '}
+          {Math.max(totalPages, 1)}
         </div>
         <button
           className={S.buttonContainer}
           onClick={nextPage}
-          disabled={page === totalPages - 1}
+          disabled={page >= totalPages - 1}
         >
           <NextIcon className={S.icon} />
         </button>

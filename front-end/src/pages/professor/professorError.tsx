@@ -1,19 +1,14 @@
 import AlertModal from '@/components/modal/AlertModal';
 import { ClientError, ServerError } from '@/core/errorType';
-import { NavigateFunction } from 'react-router';
+import useModal from '@/hooks/useModal';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 interface ProfessorErrorContentType {
   message: string;
   description: string;
   navigateTo: string | number | null;
 }
-
-type ProfessorErrorProps = {
-  setModal: (modal: React.ReactNode | null) => void;
-  openModal: () => void;
-  closeModal: () => void;
-  navigate: NavigateFunction;
-};
 
 const ProfessorErrorContent: Record<string, ProfessorErrorContentType> = {
   UNAUTHORIZED_PROFESSOR: {
@@ -76,34 +71,57 @@ const ProfessorErrorContent: Record<string, ProfessorErrorContentType> = {
     description: '다시 시도해주세요.',
     navigateTo: null,
   },
+  SSE_ERROR: {
+    message: '서버 연결에 실패했습니다.',
+    description: '홈 화면으로 돌아갑니다.',
+    navigateTo: '/professor',
+  },
 };
 
-const ProfessorError = ({
-  setModal,
-  openModal,
-  closeModal,
-  navigate,
-}: ProfessorErrorProps) => {
+const ProfessorError = () => {
+  const [modal, setModal] = useState<React.ReactNode | null>(null);
+  const { openModal, closeModal, Modal } = useModal();
+  const navigate = useNavigate();
+
   const popupError = (error: unknown) => {
+    console.error(error);
     let errorContent = null;
     if (error instanceof ClientError || error instanceof ServerError) {
       errorContent = ProfessorErrorContent[error.errorCode];
+    } else if (error instanceof Error && error.message === 'SSE_ERROR') {
+      errorContent = ProfessorErrorContent.SSE_ERROR;
     }
 
     if (!errorContent) {
-      setModal(
-        <AlertModal
-          type="caution"
-          message="알 수 없는 오류가 발생했습니다."
-          description="이전 페이지로 돌아갑니다."
-          buttonText="확인"
-          onClickModalButton={() => {
-            setModal(null);
-            closeModal();
-            navigate(-1);
-          }}
-        />
-      );
+      if (error instanceof ServerError) {
+        setModal(
+          <AlertModal
+            type="caution"
+            message="서버 연결에 실패했습니다."
+            description="다시 시도해주세요."
+            buttonText="확인"
+            onClickModalButton={() => {
+              setModal(null);
+              closeModal();
+            }}
+          />
+        );
+        openModal();
+      } else {
+        setModal(
+          <AlertModal
+            type="caution"
+            message="알 수 없는 오류가 발생했습니다."
+            description="이전 페이지로 돌아갑니다."
+            buttonText="확인"
+            onClickModalButton={() => {
+              setModal(null);
+              closeModal();
+              navigate(-1);
+            }}
+          />
+        );
+      }
     } else {
       setModal(
         <AlertModal
@@ -128,7 +146,11 @@ const ProfessorError = ({
 
     openModal();
   };
-  return popupError;
+
+  const ErrorModal = () => {
+    return modal && <Modal>{modal}</Modal>;
+  };
+  return { popupError, ErrorModal };
 };
 
 export default ProfessorError;
