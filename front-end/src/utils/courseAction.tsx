@@ -110,11 +110,11 @@ const courseActions = ({
           try {
             await classroomRepository.startCourse(course.id);
             localStorage.clear();
-          } catch {
-            // do nothing
+            offModal();
+            navigate(`/professor/course/${course.id}/classroom`);
+          } catch (error) {
+            popupError(error);
           }
-          offModal();
-          navigate(`/professor/course/${course.id}/classroom`);
         }}
       />
     );

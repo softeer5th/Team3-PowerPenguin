@@ -9,12 +9,12 @@ import GoldIcon from '@/assets/icons/gold.svg?react';
 import CloseIcon from '@/assets/icons/close.svg?react';
 
 const emojiType = {
-  okay: OkayEmoji,
-  clap: ClapEmoji,
-  thumb: ThumbEmoji,
-  scream: ScreamEmoji,
-  cry: CryEmoji,
-  like: LikeEmoji,
+  OKAY: OkayEmoji,
+  CLAP: ClapEmoji,
+  THUMBS_UP: ThumbEmoji,
+  SURPRISED: ScreamEmoji,
+  CRYING: CryEmoji,
+  HEART_EYES: LikeEmoji,
 } as const;
 
 type ReactionModalProps = {

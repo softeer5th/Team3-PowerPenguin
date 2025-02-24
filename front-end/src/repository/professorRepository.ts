@@ -1,8 +1,6 @@
 import { Professor } from '@/core/model';
 import { throwError } from './throwError';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 class ProfessorRepository {
   private ProfessorCache: Professor | null = null;
 
@@ -21,9 +19,10 @@ class ProfessorRepository {
       form.append('profileImage', profile);
     }
 
-    const response = await fetch(`${API_URL}/professors/signup`, {
+    const response = await fetch(`/api/professors/signup`, {
       method: 'POST',
       body: form,
+      credentials: 'include',
     });
 
     await throwError(response);
@@ -44,8 +43,9 @@ class ProfessorRepository {
       return this.ProfessorCache;
     }
 
-    const response = await fetch(`${API_URL}/professors`, {
+    const response = await fetch(`/api/professors`, {
       method: 'GET',
+      credentials: 'include',
     });
 
     await throwError(response);
@@ -70,8 +70,9 @@ class ProfessorRepository {
       return this.ProfessorCache.profileURL;
     }
 
-    const response = await fetch(`${API_URL}/professors/image`, {
+    const response = await fetch(`/api/professors/image`, {
       method: 'GET',
+      credentials: 'include',
     });
 
     await throwError(response);
@@ -89,8 +90,10 @@ class ProfessorRepository {
   async logout(): Promise<void> {
     // API: POST /professors/logout
 
-    const response = await fetch(`${API_URL}/professors/logout`, {
+    const response = await fetch(`/api/professors/logout`, {
       method: 'POST',
+      redirect: 'follow',
+      credentials: 'include',
     });
 
     await throwError(response);
@@ -114,12 +117,13 @@ class ProfessorRepository {
       name: newName,
     };
 
-    const response = await fetch(`${API_URL}/professors/name`, {
+    const response = await fetch(`/api/professors/name`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
+      credentials: 'include',
     });
 
     await throwError(response);
@@ -146,9 +150,10 @@ class ProfessorRepository {
     const form = new FormData();
     if (newProfile) form.append('profileImage', newProfile);
 
-    const response = await fetch(`${API_URL}/professors/image`, {
+    const response = await fetch(`/api/professors/image`, {
       method: 'PATCH',
       body: form,
+      credentials: 'include',
     });
 
     await throwError(response);
@@ -167,9 +172,10 @@ class ProfessorRepository {
   async deleteProfessor(): Promise<void> {
     // API: DELETE /professors
 
-    const response = await fetch(`${API_URL}/professors`, {
+    const response = await fetch(`/api/professors`, {
       method: 'DELETE',
       redirect: 'follow',
+      credentials: 'include',
     });
 
     await throwError(response);

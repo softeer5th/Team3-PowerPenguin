@@ -1,6 +1,6 @@
 import useModal from '@/hooks/useModal';
 import React, { useEffect, useState } from 'react';
-import { courseRepository } from '@/di';
+import { classroomRepository, courseRepository } from '@/di';
 import ClassStartModal from '@/components/modal/ClassStartModal';
 import ProfessorError from '@/pages/professor/professorError';
 import { useNavigate } from 'react-router';
@@ -13,10 +13,15 @@ const ProfessorLoading = () => {
   const navigate = useNavigate();
   const { popupError, ErrorModal } = ProfessorError();
 
-  const handleClickBackButton = () => {
-    setModal(null);
-    closeModal();
-    navigate('/professor');
+  const handleClickBackButton = async (courseId: Course['id']) => {
+    try {
+      await classroomRepository.closeCourse(courseId);
+      setModal(null);
+      closeModal();
+      navigate('/professor');
+    } catch (error) {
+      popupError(error);
+    }
   };
 
   const handleClickStartButton = (courseId: Course['id']) => {
@@ -34,7 +39,9 @@ const ProfessorLoading = () => {
             <ClassStartModal
               course={startedCourse}
               isStarted={true}
-              handleClickBackButton={handleClickBackButton}
+              handleClickBackButton={() =>
+                handleClickBackButton(startedCourse.id)
+              }
               handleClickStartButton={() =>
                 handleClickStartButton(startedCourse.id)
               }
