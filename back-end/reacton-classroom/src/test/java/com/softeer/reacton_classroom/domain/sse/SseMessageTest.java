@@ -23,7 +23,7 @@ class SseMessageTest {
 
     @Test
     void testSseMessageSend() throws Exception {
-        System.out.println("SSE 메시지 전송 테스트");
+        System.out.println("SSE 메시지 전송 부하 테스트");
 
         LocalTime startTime = LocalTime.now();
         LocalTime currentTime = startTime;
@@ -35,7 +35,7 @@ class SseMessageTest {
 
             HttpRequest messageRequest = HttpRequest.newBuilder()
                     // uri와 일치하는 수업의 SSE connection이 열린 상태여야 함
-                    .uri(URI.create("https://softeer-reacton.shop/sse/message/course/1"))
+                    .uri(URI.create("https://softeer-reacton.shop/api/sse/message/course/14"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();
