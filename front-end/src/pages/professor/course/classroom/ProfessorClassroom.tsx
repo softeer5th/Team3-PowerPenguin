@@ -25,6 +25,8 @@ import PDFMainComponent from './components/PDFMainComponent';
 import PDFSideBar from './components/PDFSideBar';
 import ProfessorError from '@/pages/professor/professorError';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export type Action =
   | { type: 'ADD'; payload: Reaction }
   | { type: 'REMOVE'; payload: string };
@@ -109,7 +111,7 @@ const ProfessorClassroom = () => {
     }
 
     const eventSource = new EventSource(
-      `/api/sse/connection/course/${courseId}`,
+      `${API_URL}/sse/connection/course/${courseId}`,
       {
         withCredentials: true,
       }

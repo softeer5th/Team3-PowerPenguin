@@ -51,7 +51,7 @@ const StudentCourse = () => {
         eventSourceRef.current.close();
       }
 
-      const eventSource = new EventSource('/api/sse/connection/student', {
+      const eventSource = new EventSource('${API_URL}/sse/connection/student', {
         withCredentials: true,
       });
 
