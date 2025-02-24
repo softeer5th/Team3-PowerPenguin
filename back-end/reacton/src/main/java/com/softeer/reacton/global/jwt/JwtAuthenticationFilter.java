@@ -49,10 +49,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String requestUri = request.getRequestURI();
+        String requestMethod = request.getMethod();
+
         log.debug("JWT 토큰 관련 필터 작업을 수행합니다. : requestUri = {}", requestUri);
 
+        if( requestMethod.equals("OPTIONS")) {
+            log.debug("필터를 적용하지 않는 OPTIONS 메서드입니다.");
+            chain.doFilter(request, response);
+            return;
+        }
+
         if (isWhiteListed(requestUri)) {
-            log.debug("필터를 적용하지 않는 URL 주소입니다.");
+            log.debug("필터를 적용하지 않는 URL 주소입니다. : requestUri = {}", requestUri);
             chain.doFilter(request, response);
             return;
         }
