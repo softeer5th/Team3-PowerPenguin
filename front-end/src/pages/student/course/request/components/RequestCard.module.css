@@ -19,14 +19,18 @@
     transform: scale(1);
     background-color: initial;
   }
-  100% {
+  50% {
     transform: scale(1.08);
+    background-color: var(--blue-200);
+  }
+  100% {
+    transform: scale(1);
     background-color: var(--blue-200);
   }
 }
 
 .active {
-  animation: activeAnimation 0.4s ease-in-out forwards;
+  animation: activeAnimation 2s ease-in-out forwards;
 }
 
 .blocked {

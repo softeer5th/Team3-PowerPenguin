@@ -1,7 +1,7 @@
 import { RequestType } from '@/core/model';
 import S from './RequestCard.module.css';
-import useBlockTimer from '@/hooks/useBlockTimer';
 import { useEffect, useState } from 'react';
+import useTemporaryState from '@/hooks/useTemporaryState';
 
 type RequestCardProps = {
   onCardClick: () => Promise<boolean>;
@@ -19,11 +19,14 @@ const RequestCard = ({
   type,
 }: RequestCardProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const { isBlocked, countdown, startBlock } = useBlockTimer(
-    `requests_block_${type}`,
-    60000,
-    2000
-  );
+  const {
+    isActive: isBlocked,
+    countdown,
+    trigger,
+  } = useTemporaryState({
+    storageKey: `requests_block_${type}`,
+    duration: 60,
+  });
 
   useEffect(() => {
     if (isBlocked) {
@@ -36,15 +39,15 @@ const RequestCard = ({
   const handleButtonClick = async () => {
     const success = await onCardClick();
     if (success) {
-      setIsSelected(true);
-      startBlock();
+      trigger();
     }
   };
 
   return (
     <button
       className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isBlocked ? S.blocked : ''} `}
-      onClick={handleButtonClick}
+      onClick={() => setIsSelected(true)}
+      onAnimationEnd={handleButtonClick}
       disabled={!!isSelected || isBlocked}
     >
       <div className={S.iconBg}>

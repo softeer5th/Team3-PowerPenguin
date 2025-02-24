@@ -35,7 +35,7 @@
 }
 
 .active {
-  animation: activeAnimation 0.4s ease-in-out forwards;
+  animation: activeAnimation 2s ease-in-out forwards;
 }
 
 .blocked {
