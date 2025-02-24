@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 
 type useTemporaryStateProps = {
-  type?: string;
+  storageKey?: string;
   duration: number;
   persist: boolean;
 };
 
 const useTemporaryState = ({
-  type,
+  storageKey,
   duration,
   persist = false,
 }: useTemporaryStateProps) => {
   // persist가 true면 localStorage 사용, 아니면 0으로 초기화
   const storedCountdown =
-    persist && type ? Number(localStorage.getItem(type)) || 0 : 0;
+    persist && storageKey ? Number(localStorage.getItem(storageKey)) || 0 : 0;
   const initialCountdown = storedCountdown > 0 ? storedCountdown : 0;
 
   const [isActive, setIsActive] = useState(initialCountdown > 0);
@@ -23,7 +23,7 @@ const useTemporaryState = ({
 
   // persist가 true이고 localStorage에 값이 있으면 countdown 시작
   useEffect(() => {
-    if (persist && type && initialCountdown > 0) {
+    if (persist && storageKey && initialCountdown > 0) {
       setIsActive(true);
       startCountdown(initialCountdown);
     }
@@ -31,26 +31,27 @@ const useTemporaryState = ({
     return () => {
       clearInterval(countdownIntervalRef.current!);
     };
-  }, [type, duration, persist]);
+  }, [storageKey, duration, persist]);
 
   // 카운트 다운 함수
   const startCountdown = (duration: number) => {
     setCountdown(duration);
-    if (persist && type) localStorage.setItem(type, duration.toString());
+    if (persist && storageKey)
+      localStorage.setItem(storageKey, duration.toString());
 
     countdownIntervalRef.current = window.setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(countdownIntervalRef.current!);
-          if (persist && type) {
-            localStorage.setItem(type, '0');
+          if (persist && storageKey) {
+            localStorage.setItem(storageKey, '0');
             setIsActive(false);
           }
           return 0;
         }
         const newCountdown = prev - 1;
-        if (persist && type)
-          localStorage.setItem(type, newCountdown.toString());
+        if (persist && storageKey)
+          localStorage.setItem(storageKey, newCountdown.toString());
         return newCountdown;
       });
     }, 1000);

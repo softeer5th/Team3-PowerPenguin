@@ -24,7 +24,7 @@ const RequestCard = ({
     countdown,
     trigger,
   } = useTemporaryState({
-    type: `requests_block_${type}`,
+    storageKey: `requests_block_${type}`,
     duration: 60,
     persist: true,
   });

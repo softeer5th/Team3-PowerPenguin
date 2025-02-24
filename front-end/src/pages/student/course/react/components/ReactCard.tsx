@@ -16,7 +16,7 @@ const ReactCard = ({ type, Icon, onCardClick }: ReactCardProps) => {
     countdown,
     trigger,
   } = useTemporaryState({
-    type: `reactions_block_${type}`,
+    storageKey: `reactions_block_${type}`,
     duration: 10,
     persist: true,
   });
