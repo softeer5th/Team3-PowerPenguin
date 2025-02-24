@@ -62,7 +62,7 @@
 |:---:|:---:|:---:|:---:|
 |[김선오](https://github.com/sunohkim)|[김유리](https://github.com/uri010)|[김동영](https://github.com/wwweric12)|[김민교](https://github.com/DrCloy)
 |BackEnd|BackEnd|FrontEnd|FrontEnd|
-|BackEnd|협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>S3 파일 관련 API<br>회원, 수업 관련 API |학생 페이지|교수 페이지|
+|SSE 서버 구축<br>성능 테스트<br>DB 최적화<br>실시간 수업 API<br>조회 API|협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>S3 파일 관련 API<br>회원, 수업 관련 API |학생 페이지|교수 페이지|
  
 
 </br>
