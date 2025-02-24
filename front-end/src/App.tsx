@@ -4,7 +4,6 @@ import { Suspense, lazy } from 'react';
 import Home from './pages/home/Home';
 import ProfessorLoading from './pages/professor/loading/ProfessorLoading';
 import ProfessorLayout from './pages/professor/ProfessorLayout';
-import StudentLayout from './pages/student/StudentLayout';
 import ProfessorHomeLayout from './pages/professor/home/layout/ProfessorHomeLayout';
 import StudentHome from './pages/student/home/StudentHome';
 import Loading from './pages/loading/Loading';
@@ -99,7 +98,7 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="student" element={<StudentLayout />}>
+        <Route path="student">
           <Route index element={<StudentHome />} />
           <Route
             path="course"

@@ -25,6 +25,6 @@
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .TabContainer {
-    font: var(--web-button2-bold);
+    font: var(--web-button4-bold);
   }
 }
