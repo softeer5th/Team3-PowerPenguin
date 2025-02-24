@@ -110,10 +110,6 @@ public class Course extends BaseEntity {
     }
 
     public void activate() {
-        if (this.isActive) {
-            log.warn("이미 시작 상태인 수업입니다. : isActive = true");
-            throw new BaseException(CourseErrorCode.COURSE_ALREADY_ACTIVE);
-        }
         this.isActive = true;
     }
 

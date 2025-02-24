@@ -18,4 +18,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "  AND r.type = :type")
     int incrementCount(@Param("course") Course course,
                        @Param("type") String type);
+
+    @Modifying
+    @Query("UPDATE Request r SET r.count = 0 WHERE r.course = :course")
+    void resetCountByCourse(@Param("course") Course course);
 }
