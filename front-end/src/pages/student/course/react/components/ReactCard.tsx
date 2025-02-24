@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import S from './ReactCard.module.css';
-import useBlockTimer from '@/hooks/useBlockTimer';
 import { Reaction } from '@/core/model';
+import useTemporaryState from '@/hooks/useTemporaryState';
 
 type ReactCardProps = {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -11,36 +11,36 @@ type ReactCardProps = {
 
 const ReactCard = ({ type, Icon, onCardClick }: ReactCardProps) => {
   const [isSelected, setIsSelected] = useState(false);
-  const { isBlocked, countdown, startBlock } = useBlockTimer(
-    `reactions_block_${type}`,
-    10000,
-    2000
-  );
+  const { isActive, countdown, trigger } = useTemporaryState({
+    type: `reactions_block_${type}`,
+    duration: 10,
+    persist: true,
+  });
 
   useEffect(() => {
-    if (isBlocked) {
+    if (isActive) {
       setIsSelected(true);
     } else {
       setIsSelected(false);
     }
-  }, [isBlocked]);
+  }, [isActive]);
 
   const handleButtonClick = async () => {
     const success = await onCardClick();
     if (success) {
-      setIsSelected(true);
-      startBlock();
+      trigger();
     }
   };
 
   return (
     <button
-      className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isBlocked ? S.blocked : ''} `}
-      disabled={!!isSelected || isBlocked}
-      onClick={handleButtonClick}
+      className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isActive ? S.blocked : ''} `}
+      disabled={!!isSelected || isActive}
+      onClick={() => setIsSelected(true)}
+      onAnimationEnd={handleButtonClick}
     >
       <Icon className={S.icon}></Icon>
-      {isBlocked && <div className={S.countdownText}>{countdown}</div>}
+      {isActive && <div className={S.countdownText}>{countdown}</div>}
     </button>
   );
 };
