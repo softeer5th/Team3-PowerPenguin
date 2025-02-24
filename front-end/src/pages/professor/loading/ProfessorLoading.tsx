@@ -1,5 +1,3 @@
-import S from './ProfessorLoading.module.css';
-import LoadingIcon from '@/assets/icons/loading.svg?react';
 import useModal from '@/hooks/useModal';
 import React, { useEffect, useState } from 'react';
 import { courseRepository } from '@/di';
@@ -7,6 +5,7 @@ import ClassStartModal from '@/components/modal/ClassStartModal';
 import ProfessorError from '@/pages/professor/professorError';
 import { useNavigate } from 'react-router';
 import { Course } from '@/core/model';
+import Loading from '@/pages/loading/Loading';
 
 const ProfessorLoading = () => {
   const { openModal, closeModal, Modal } = useModal();
@@ -56,12 +55,7 @@ const ProfessorLoading = () => {
 
   return (
     <>
-      <div className={S.loading}>
-        <div className={S.loadingContainer}>
-          <LoadingIcon className={S.loadingIcon} />
-          <div className={S.loadingText}>Loading...</div>
-        </div>
-      </div>
+      <Loading />
       {modal && <Modal>{modal}</Modal>}
       <ErrorModal />
     </>

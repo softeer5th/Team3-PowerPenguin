@@ -1,0 +1,69 @@
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100dvh;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin: auto;
+  transform: translate(0, 50%);
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingIcon {
+  width: 36px;
+  height: 36px;
+  animation: rotate 4s linear infinite;
+}
+
+.loadingText {
+  font: var(--mobile-title1-bold);
+  color: var(--gray-900);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .loadingContainer {
+    gap: 18px;
+  }
+
+  .loadingIcon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .loadingText {
+    font: var(--web-header1-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .loadingContainer {
+    gap: 24px;
+  }
+
+  .loadingIcon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .loadingText {
+    font: var(--web-display1-bold);
+  }
+}
