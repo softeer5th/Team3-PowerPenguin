@@ -220,7 +220,7 @@ public class ProfessorCourseService {
 
         for (Course course : activeCourses) {
             if (course.getId() != courseId) {
-                course.deactivate();
+                professorCourseTransactionService.closeCourse(course);
             }
         }
 
