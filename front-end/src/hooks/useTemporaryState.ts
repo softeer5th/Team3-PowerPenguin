@@ -18,7 +18,8 @@ const useTemporaryState = ({
   const [isActive, setIsActive] = useState(initialCountdown > 0);
   const [countdown, setCountdown] = useState(initialCountdown);
 
-  const countdownIntervalRef = useRef<number | null>(null);
+  const countdownTimeoutRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
 
   //storageKey가 있으면 localStorage에 값이 있으면 countdown 시작
   useEffect(() => {
@@ -28,31 +29,45 @@ const useTemporaryState = ({
     }
 
     return () => {
-      clearInterval(countdownIntervalRef.current!);
+      if (countdownTimeoutRef.current) {
+        clearInterval(countdownTimeoutRef.current);
+        countdownTimeoutRef.current = null;
+      }
     };
   }, [storageKey, duration]);
 
-  // 카운트 다운 함수
-  const startCountdown = (duration: number) => {
-    setCountdown(duration);
-    if (storageKey) localStorage.setItem(storageKey, duration.toString());
+  //countdown이 바뀔때 localstorage에 저장
+  useEffect(() => {
+    if (storageKey) localStorage.setItem(storageKey, countdown.toString());
+  }, [countdown, storageKey]);
 
-    countdownIntervalRef.current = window.setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownIntervalRef.current!);
-          if (storageKey) {
-            localStorage.setItem(storageKey, '0');
-            setIsActive(false);
-          }
-          return 0;
-        }
-        const newCountdown = prev - 1;
-        if (storageKey)
-          localStorage.setItem(storageKey, newCountdown.toString());
-        return newCountdown;
-      });
-    }, 1000);
+  // 카운트 다운 함수
+  const startCountdown = (timeLeft: number) => {
+    startTimeRef.current = Date.now(); // 카운트 다운 할때 현재 시간
+    setCountdown(timeLeft);
+
+    const handleCount = () => {
+      if (!startTimeRef.current) return;
+
+      const elapsedTime = Math.floor(
+        (Date.now() - startTimeRef.current) / 1000
+      ); // 경과시간
+
+      //남은시간-경과시간 으로 음수가 될경우 대비하여 max 사용
+      const remainingTime = Math.max(timeLeft - elapsedTime, 0);
+      setCountdown(remainingTime);
+
+      //다음 interval에 보정값 적용
+      if (remainingTime > 0) {
+        const nextInterval =
+          1000 - ((Date.now() - startTimeRef.current) % 1000);
+        countdownTimeoutRef.current = setTimeout(handleCount, nextInterval);
+      } else {
+        setIsActive(false);
+        if (storageKey) localStorage.setItem(storageKey, '0');
+      }
+    };
+    handleCount();
   };
 
   // 외부에서 호출할 블록 시작 함수 (즉시 실행)
