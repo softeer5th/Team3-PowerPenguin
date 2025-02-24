@@ -65,6 +65,10 @@ const PDFMainComponent = ({
         openModal();
         const pdfUrl = await courseRepository.getCourseFileUrl(courseInfo.id);
         if (!pdfUrl) {
+          setIsPDFLoading(false);
+          closeModal();
+          setModal(null);
+
           return;
         }
 
@@ -145,8 +149,6 @@ const PDFMainComponent = ({
       }
     }
   }
-
-  
 
   return (
     <div className={S.mainContainer}>

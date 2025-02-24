@@ -52,25 +52,36 @@ const makeFullUniversity = (university: string) => {
   return university;
 };
 
-const checkFormError = (courseError: CourseError): boolean => {
-  if (courseError.name) {
+const checkFormError = (
+  courseError: CourseError,
+  courseForm: CourseForm
+): boolean => {
+  if (courseError.name || courseForm.name === '') {
     return true;
   }
-  if (courseError.code) {
+  if (courseError.code || courseForm.code === '') {
     return true;
   }
-  if (courseError.capacity) {
+  if (courseError.capacity || courseForm.capacity === '') {
     return true;
   }
-  if (courseError.university) {
+  if (courseError.university || courseForm.university === '') {
     return true;
   }
-  if (courseError.classType) {
+  if (courseError.classType || courseForm.classType === '') {
     return true;
   }
   if (courseError.schedule) {
     return true;
   }
+  courseForm.schedule.forEach((schedule) => {
+    if (schedule.day === '') {
+      return true;
+    }
+    if (schedule.start > schedule.end) {
+      return true;
+    }
+  });
   return false;
 };
 
@@ -365,7 +376,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
           height="80px"
           text={course ? '정보 수정하기' : '강의 만들기'}
           onClick={() => {}}
-          isActive={!checkFormError(formError)}
+          isActive={!checkFormError(formError, courseForm)}
         />
       </div>
     </form>

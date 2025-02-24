@@ -112,12 +112,12 @@ const ProfessorError = () => {
           <AlertModal
             type="caution"
             message="알 수 없는 오류가 발생했습니다."
-            description="이전 페이지로 돌아갑니다."
+            description="홈 페이지로 돌아갑니다."
             buttonText="확인"
             onClickModalButton={() => {
               setModal(null);
               closeModal();
-              navigate(-1);
+              navigate('/professor');
             }}
           />
         );
