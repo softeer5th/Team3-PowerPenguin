@@ -26,7 +26,6 @@ const RequestCard = ({
   } = useTemporaryState({
     storageKey: `requests_block_${type}`,
     duration: 60,
-    persist: true,
   });
 
   useEffect(() => {

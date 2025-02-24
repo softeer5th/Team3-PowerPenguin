@@ -18,7 +18,6 @@ const ReactCard = ({ type, Icon, onCardClick }: ReactCardProps) => {
   } = useTemporaryState({
     storageKey: `reactions_block_${type}`,
     duration: 10,
-    persist: true,
   });
 
   useEffect(() => {
