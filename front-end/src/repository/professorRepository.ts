@@ -1,6 +1,8 @@
 import { Professor } from '@/core/model';
 import { throwError } from './throwError';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 class ProfessorRepository {
   private ProfessorCache: Professor | null = null;
 
@@ -19,7 +21,7 @@ class ProfessorRepository {
       form.append('profileImage', profile);
     }
 
-    const response = await fetch('/api/professors/signup', {
+    const response = await fetch(`${API_URL}/professors/signup`, {
       method: 'POST',
       body: form,
     });
@@ -42,7 +44,7 @@ class ProfessorRepository {
       return this.ProfessorCache;
     }
 
-    const response = await fetch('/api/professors', {
+    const response = await fetch(`${API_URL}/professors`, {
       method: 'GET',
     });
 
@@ -68,7 +70,7 @@ class ProfessorRepository {
       return this.ProfessorCache.profileURL;
     }
 
-    const response = await fetch('/api/professors/image', {
+    const response = await fetch(`${API_URL}/professors/image`, {
       method: 'GET',
     });
 
@@ -87,7 +89,7 @@ class ProfessorRepository {
   async logout(): Promise<void> {
     // API: POST /professors/logout
 
-    const response = await fetch('/api/professors/logout', {
+    const response = await fetch(`${API_URL}/professors/logout`, {
       method: 'POST',
     });
 
@@ -112,7 +114,7 @@ class ProfessorRepository {
       name: newName,
     };
 
-    const response = await fetch('/api/professors/name', {
+    const response = await fetch(`${API_URL}/professors/name`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -144,7 +146,7 @@ class ProfessorRepository {
     const form = new FormData();
     if (newProfile) form.append('profileImage', newProfile);
 
-    const response = await fetch('/api/professors/image', {
+    const response = await fetch(`${API_URL}/professors/image`, {
       method: 'PATCH',
       body: form,
     });
@@ -165,7 +167,7 @@ class ProfessorRepository {
   async deleteProfessor(): Promise<void> {
     // API: DELETE /professors
 
-    const response = await fetch('/api/professors', {
+    const response = await fetch(`${API_URL}/professors`, {
       method: 'DELETE',
       redirect: 'follow',
     });

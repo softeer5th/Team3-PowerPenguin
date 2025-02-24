@@ -11,6 +11,8 @@ import {
 } from '@/core/model';
 import { throwError } from './throwError';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 type BackendSchedule = {
   day: '월' | '화' | '수' | '목' | '금' | '토' | '일';
   startTime: string;
@@ -83,7 +85,7 @@ class CourseRepository {
       })),
     };
 
-    const response = await fetch('/api/professors/courses', {
+    const response = await fetch(`${API_URL}/professors/courses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -100,7 +102,7 @@ class CourseRepository {
   }> {
     // API: GET /professors/courses/home
 
-    const response = await fetch('/api/professors/courses/home', {
+    const response = await fetch(`${API_URL}/professors/courses/home`, {
       method: 'GET',
     });
 
@@ -163,7 +165,7 @@ class CourseRepository {
   async getOpenedCourse(): Promise<CourseMeta> {
     // API: GET /professor/courses/active
 
-    const response = await fetch('/api/professors/courses/active', {
+    const response = await fetch(`${API_URL}/professors/courses/active`, {
       method: 'GET',
       redirect: 'follow',
     });
@@ -204,9 +206,12 @@ class CourseRepository {
   async searchCourses(keyword: string): Promise<CourseMeta[]> {
     // API: GET /professors/courses?keyword={keyword}
 
-    const response = await fetch(`/api/professors/courses?keyword=${keyword}`, {
-      method: 'GET',
-    });
+    const response = await fetch(
+      `${API_URL}/professors/courses?keyword=${keyword}`,
+      {
+        method: 'GET',
+      }
+    );
 
     await throwError(response);
 
@@ -243,7 +248,7 @@ class CourseRepository {
   async getCourseById(courseId: Course['id']): Promise<Course> {
     // API: GET /professors/courses/{courseId}
 
-    const response = await fetch(`/api/professors/courses/${courseId}`, {
+    const response = await fetch(`${API_URL}/professors/courses/${courseId}`, {
       method: 'GET',
     });
 
@@ -314,9 +319,12 @@ class CourseRepository {
   async getCourseFileUrl(courseId: Course['id']): Promise<string> {
     // API: GET /professors/courses/{courseId}/file
 
-    const response = await fetch(`/api/professors/courses/${courseId}/file`, {
-      method: 'GET',
-    });
+    const response = await fetch(
+      `${API_URL}/professors/courses/${courseId}/file`,
+      {
+        method: 'GET',
+      }
+    );
 
     await throwError(response);
 
@@ -330,7 +338,7 @@ class CourseRepository {
     // API: GET /students/courses/${accessCode}/summary
 
     const response = await fetch(
-      `/api/students/courses/${accessCode}/summary`,
+      `${API_URL}/students/courses/${accessCode}/summary`,
       {
         method: 'GET',
       }
@@ -387,7 +395,7 @@ class CourseRepository {
       })),
     };
 
-    const response = await fetch(`/api/professors/courses/${course.id}`, {
+    const response = await fetch(`${API_URL}/professors/courses/${course.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -405,10 +413,13 @@ class CourseRepository {
     const form = new FormData();
     form.append('file', file);
 
-    const response = await fetch(`/api/professors/courses/${courseId}/file`, {
-      method: 'POST',
-      body: form,
-    });
+    const response = await fetch(
+      `${API_URL}/professors/courses/${courseId}/file`,
+      {
+        method: 'POST',
+        body: form,
+      }
+    );
 
     await throwError(response);
 
@@ -419,7 +430,7 @@ class CourseRepository {
   async deleteCourse(courseId: Course['id']): Promise<void> {
     // API: DELETE /professors/courses/{courseId}
 
-    const response = await fetch(`/api/professors/courses/${courseId}`, {
+    const response = await fetch(`${API_URL}/professors/courses/${courseId}`, {
       method: 'DELETE',
     });
 
