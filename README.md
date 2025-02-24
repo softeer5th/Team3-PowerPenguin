@@ -62,7 +62,7 @@
 |:---:|:---:|:---:|:---:|
 |[김선오](https://github.com/sunohkim)|[김유리](https://github.com/uri010)|[김동영](https://github.com/wwweric12)|[김민교](https://github.com/DrCloy)
 |BackEnd|BackEnd|FrontEnd|FrontEnd|
-|BackEnd|BackEnd|학생 페이지|교수 페이지|
+|BackEnd|협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>S3 파일 관련 API<br>회원, 수업 관련 API |학생 페이지|교수 페이지|
  
 
 </br>
@@ -95,18 +95,21 @@
 
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
-![Amazon EC2](https://img.shields.io/badge/AmazonEC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
-![Amazon S3](https://img.shields.io/badge/AmazonS3-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+![Amazon EC2](https://img.shields.io/badge/EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
+![Amazon S3](https://img.shields.io/badge/S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHubActions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 
 
 ### Collaboration
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white)
+![GithubProjects](https://img.shields.io/badge/GithubProjects-181717?style=for-the-badge&logo=github&logoColor=white)
 
 
-### Architecture
+## Architecture
 
-![aws_diagram-Page-3](https://github.com/user-attachments/assets/1056b375-c070-4f52-8e77-0a48790ea998)
+![aws_diagram-Page-4](https://github.com/user-attachments/assets/864a484c-edd6-41d9-b8ad-ab8df57430ae)
+
 
 
 
