@@ -8,6 +8,7 @@ import com.softeer.reacton.global.exception.code.RequestErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -24,10 +25,15 @@ public class RequestService {
         checkIfOpen(course);
 
         log.debug("요청을 저장합니다.");
-        int updatedRows = requestRepository.incrementCount(course, content);
-        if (updatedRows == 0) {
-            log.debug("요청 데이터를 처리하는 과정에서 발생한 에러입니다. : Request does not exist.");
-            throw new BaseException(RequestErrorCode.REQUEST_NOT_FOUND);
+        try {
+            int updatedRows = requestRepository.incrementCount(course, content);
+            if (updatedRows == 0) {
+                log.debug("요청 데이터를 처리하는 과정에서 발생한 에러입니다. : Request does not exist.");
+                throw new BaseException(RequestErrorCode.REQUEST_NOT_FOUND);
+            }
+        } catch (DataIntegrityViolationException e) {
+            log.debug("요청 데이터를 처리하는 과정에서 발생한 에러입니다. : {}", e.getMessage());
+            throw new BaseException(RequestErrorCode.REQUEST_OVERFLOW);
         }
     }
 
