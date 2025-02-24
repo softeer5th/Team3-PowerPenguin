@@ -33,6 +33,7 @@ public class SseService {
                 .build();
 
         log.debug("교수와 연결 가능한 SSE 통신을 찾았습니다.");
+        log.debug("현재 SSE 통신 개수: {}", sinks.size());
         return openCourseConnection(sink, initEvent, courseId);
     }
 

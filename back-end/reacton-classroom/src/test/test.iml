@@ -45,5 +45,6 @@
     </orderEntry>
     <orderEntry type="library" scope="TEST" name="Gradle: org.springframework.boot:spring-boot-test:3.4.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.springframework:spring-beans:6.2.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.springframework:spring-test:6.2.2" level="project" />
   </component>
 </module>
