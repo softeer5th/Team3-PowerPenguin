@@ -21,6 +21,8 @@ const TAB_OPTIONS = [
   { key: 'question', label: '질문하기' },
 ];
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const StudentCourse = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(TAB_OPTIONS[0].key);
@@ -51,7 +53,7 @@ const StudentCourse = () => {
         eventSourceRef.current.close();
       }
 
-      const eventSource = new EventSource('${API_URL}/sse/connection/student', {
+      const eventSource = new EventSource(`${API_URL}/sse/connection/student`, {
         withCredentials: true,
       });
 
