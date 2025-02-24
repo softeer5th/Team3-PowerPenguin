@@ -1,49 +1,127 @@
-# Team3-PowerPenguin
 
+
+
+
+<div align=center>
+<h1>🐧 React:ON</h1>
 </div>
 
-<div >
-	<h2>🐧 Developers 🐧</h2>
+![Cover](https://github.com/user-attachments/assets/acd7233f-189f-472e-9d22-9994c7ad9e8b)
 
+</br>
+
+<!--목차-->
+# 목차
+- [서비스 소개](#1-서비스-소개)
+  - [기획 배경](#1-1-기획-배경)
+  - [주요 기능](#1-2-주요-기능)
+  - [기대 효과](#1-3-기대-효과) 
+- [팀원별 역할](#2-팀원별-역할)
+- [기술 스택](#3-기술-스택)
+- [그라운드 룰](#4-그라운드-룰)
+- [개발 룰](#5-개발-룰)
+
+
+# [1] 서비스 소개
+<strong>React:ON</strong>은 교수와 학생 간의 실시간 상호작용을 촉진하는 웹 서비스입니다.  
+수업 중 학생들이 보다 능동적으로 의견을 표현하고, 교수는 즉각적인 피드백을 받을 수 있도록 돕습니다.
+
+</br>
+
+## 1-1 기획 배경
+🎯 문제점: 대면 강의에서 학생들의 적극적인 참여 부족  
+✅ 해결책: 실시간 리액션과 익명 질문 기능 제공
+
+✔ 학생들이 질문하기 어려운 환경에서 손쉽게 의견을 표현할 수 있도록 합니다.  
+✔ 교수는 학생들의 반응을 실시간으로 확인하고, 수업 몰입도를 높이는 피드백을 제공합니다.  
+✔ 학생과 교수 간의 소통을 활성화하여 능동적인 수업 환경을 조성합니다.  
+
+</br>
+
+## 1-2 주요 기능 
+![서비스 소개 - 학생](https://github.com/user-attachments/assets/83b1ee11-1830-4b6e-bb4b-ea9c199d784f)
+![서비스 소개 - 교수](https://github.com/user-attachments/assets/c6f064c1-8a24-47ad-a250-cc69730501ce)
+![서비스 소개 - 수업통계](https://github.com/user-attachments/assets/80565260-031d-40d7-bef4-2f04cd67114d)
+![사용 시나리오](https://github.com/user-attachments/assets/d0039991-6e12-4996-8c65-93f3306ebc52)
+
+
+## 1-3 기대 효과 
+✔ 기존 수업에서 질문하지 않던 학생들도 더 적극적으로 참여  
+✔ 교수는 학생들의 반응을 주기적으로 확인하여 강의 개선이 용이  
+✔ 교수와 학생 간의 소통이 증가하여 수업 만족도 상승  
+
+</br>
+
+
+
+
+
+## [2] 팀원별 역할
+	
 |<img src="https://github.com/sunohkim.png" width="80">|<img src="https://github.com/uri010.png" width="80">|<img src="https://github.com/wwweric12.png" width="80">|<img src="https://github.com/DrCloy.png" width="80">|
 |:---:|:---:|:---:|:---:|
 |[김선오](https://github.com/sunohkim)|[김유리](https://github.com/uri010)|[김동영](https://github.com/wwweric12)|[김민교](https://github.com/DrCloy)
 |BackEnd|BackEnd|FrontEnd|FrontEnd|
-
+|BackEnd|BackEnd|학생 페이지|교수 페이지|
  
+
+</br>
+
+# [3] 기술 스택
+
+<div align=center>
+
+## Config
+
+![yarn](https://img.shields.io/badge/npm-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+
+## Development
+
+### Front-End
+
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![ReactRouter](https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)
+![pdf.js](https://img.shields.io/badge/pdf.js-FF0000?style=for-the-badge&logo=adobe&logoColor=white)
+
+
+### Back-End
+![JAVA](https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white)
+![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![JPA](https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=jpa&logoColor=white)
+![OAuth 2.0](https://img.shields.io/badge/OAuth2.0-2088FF?style=for-the-badge&logo=oauth2.0&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Amazon EC2](https://img.shields.io/badge/AmazonEC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
+![Amazon S3](https://img.shields.io/badge/AmazonS3-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHubActions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
+
+
+### Collaboration
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
+
+
+### Architecture
+
+![aws_diagram-Page-3](https://github.com/user-attachments/assets/1056b375-c070-4f52-8e77-0a48790ea998)
+
+
+
 </div>
 
-## 📜 그라운드 룰 
-### 🛠️ 기본 규칙
-- 서로 존중하는 것이 기본! 구박하지 않기
-- 눈치 보지 말고 필요한 사항은 즉시 공유하기
-- 매주 금요일, 책상 정리 및 청소하기
 
-### 🔥 회의 규칙
-- **최대 2시간 진행**, 초과 시 15분 이상 휴식 후 재개
-- 데일리 스크럼: <ins>매일 10:00 ~ 10:30 진행</ins>
-- 데일리 회고: <ins>매일 18:30 ~ 19:00 진행</ins>
-- 긴급 회의: 최대 30분 정도 기다린 후 회의 요청
-- 서기 역할: 매일 돌아가며 담당
-- 작업이 없던 날도 공유 필수: "오늘은 작업 없음"도 기록
+</br>
 
-### 🔄 Sprint 기준
-- `금` / `토일월` / `화수목` 주기로 진행
-- 금요일 오전: 스프린트 마무리 및 다음 스프린트 계획
-- 금요일 오후: 스쿼드 세션 후 스프린트 구체화 및 주간 회고
+# [4] 그라운드 룰 
 
-### 📞 비대면 소통 방식
-- Slack을 기본 소통 채널로 사용
-    - 스레드 활용하여 답글 정리
-    - 음성 대화도 Slack 사용
-    - 반응 이모지 활용
-        - 👀 : 확인 중
-        - ✅ : 읽음
-        - ❓ : 이해 안 됨
-- KakaoTalk은 사담 전용
+[그라운드 룰](https://github.com/softeer5th/Team3-PowerPenguin/wiki/%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)
 
+</br>
 
-## 💻 개발 룰
+# [5] 개발 룰
 
 ### 🌿 브랜치 전략
 > Git Flow 기반의 단순화된 전략
