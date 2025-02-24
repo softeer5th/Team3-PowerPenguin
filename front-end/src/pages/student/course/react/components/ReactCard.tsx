@@ -11,19 +11,23 @@ type ReactCardProps = {
 
 const ReactCard = ({ type, Icon, onCardClick }: ReactCardProps) => {
   const [isSelected, setIsSelected] = useState(false);
-  const { isActive, countdown, trigger } = useTemporaryState({
+  const {
+    isActive: isBlocked,
+    countdown,
+    trigger,
+  } = useTemporaryState({
     type: `reactions_block_${type}`,
     duration: 10,
     persist: true,
   });
 
   useEffect(() => {
-    if (isActive) {
+    if (isBlocked) {
       setIsSelected(true);
     } else {
       setIsSelected(false);
     }
-  }, [isActive]);
+  }, [isBlocked]);
 
   const handleButtonClick = async () => {
     const success = await onCardClick();
@@ -34,13 +38,13 @@ const ReactCard = ({ type, Icon, onCardClick }: ReactCardProps) => {
 
   return (
     <button
-      className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isActive ? S.blocked : ''} `}
-      disabled={!!isSelected || isActive}
+      className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isBlocked ? S.blocked : ''} `}
+      disabled={!!isSelected || isBlocked}
       onClick={() => setIsSelected(true)}
       onAnimationEnd={handleButtonClick}
     >
       <Icon className={S.icon}></Icon>
-      {isActive && <div className={S.countdownText}>{countdown}</div>}
+      {isBlocked && <div className={S.countdownText}>{countdown}</div>}
     </button>
   );
 };

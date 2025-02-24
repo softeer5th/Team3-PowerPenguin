@@ -19,19 +19,23 @@ const RequestCard = ({
   type,
 }: RequestCardProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const { isActive, countdown, trigger } = useTemporaryState({
+  const {
+    isActive: isBlocked,
+    countdown,
+    trigger,
+  } = useTemporaryState({
     type: `requests_block_${type}`,
     duration: 60,
     persist: true,
   });
 
   useEffect(() => {
-    if (isActive) {
+    if (isBlocked) {
       setIsSelected(true);
     } else {
       setIsSelected(false);
     }
-  }, [isActive]);
+  }, [isBlocked]);
 
   const handleButtonClick = async () => {
     const success = await onCardClick();
@@ -42,10 +46,10 @@ const RequestCard = ({
 
   return (
     <button
-      className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isActive ? S.blocked : ''} `}
+      className={`${S.cardContainer} ${isSelected ? S.active : ''} ${isBlocked ? S.blocked : ''} `}
       onClick={() => setIsSelected(true)}
       onAnimationEnd={handleButtonClick}
-      disabled={!!isSelected || isActive}
+      disabled={!!isSelected || isBlocked}
     >
       <div className={S.iconBg}>
         <Icon className={S.icon} />
@@ -54,7 +58,7 @@ const RequestCard = ({
         <div className={S.cardTitle}>{title}</div>
         <div className={S.cardDesc}>{description}</div>
       </div>
-      {isActive && <div className={S.countdownText}>{countdown}</div>}
+      {isBlocked && <div className={S.countdownText}>{countdown}</div>}
     </button>
   );
 };
