@@ -69,8 +69,6 @@ jobs:
           script: |
             set +x  
             set -e
-            echo "🔄 Switching to reacton-deployer user..."
-            sudo su - reacton-deployer -c '
 
             cd ~/app/back-end/reacton
 
