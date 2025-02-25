@@ -18,10 +18,12 @@ class ClassroomRepository {
       method: 'POST',
       credentials: 'include',
     });
-    await throwError(response);
+
     if (response.redirected) {
       window.location.href = response.url;
     }
+
+    await throwError(response);
   }
 
   async closeCourse(courseId: string): Promise<void> {
@@ -31,6 +33,7 @@ class ClassroomRepository {
       method: 'PATCH',
       credentials: 'include',
     });
+
     await throwError(response);
   }
 
@@ -46,6 +49,7 @@ class ClassroomRepository {
         credentials: 'include',
       }
     );
+
     await throwError(response);
   }
 
@@ -61,6 +65,7 @@ class ClassroomRepository {
         credentials: 'include',
       }
     );
+
     await throwError(response);
   }
 
@@ -76,7 +81,9 @@ class ClassroomRepository {
       body: JSON.stringify(requestBody),
       credentials: 'include',
     });
+
     await throwError(response);
+
     const data = await response.json();
     return {
       id: data.data.id,
@@ -97,6 +104,7 @@ class ClassroomRepository {
       body: JSON.stringify(requestBody),
       credentials: 'include',
     });
+
     await throwError(response);
   }
 
@@ -111,6 +119,7 @@ class ClassroomRepository {
       body: JSON.stringify(requestBody),
       credentials: 'include',
     });
+
     await throwError(response);
   }
 

@@ -37,19 +37,17 @@ const FilterDropDown = ({ title, options, setTitle }: FilterDropDownProps) => {
               className={S.filterDropDownContent}
               onMouseDown={(e) => e.preventDefault()}
             >
-              {title !== initialTitleRef.current && (
-                <div
-                  key="all"
-                  className={S.filterDropDownOption}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setTitle(initialTitleRef.current);
-                    setIsOpen(false);
-                  }}
-                >
-                  전체
-                </div>
-              )}
+              <div
+                key="all"
+                className={S.filterDropDownOption}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTitle(initialTitleRef.current);
+                  setIsOpen(false);
+                }}
+              >
+                전체
+              </div>
               {options.map((option) => (
                 <div
                   key={option}

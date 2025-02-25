@@ -83,14 +83,22 @@ function usePDF() {
   const renderTaskRef = useRef<pdfjsLib.RenderTask | null>(null);
 
   const loadPdf = async (pdfSource: File | string) => {
+    const cMapUrl = '/cmaps/';
+    const cMapPacked = true;
     try {
       let loadingTask;
       if (typeof pdfSource === 'string') {
-        loadingTask = pdfjsLib.getDocument(pdfSource);
+        loadingTask = pdfjsLib.getDocument({
+          url: pdfSource,
+          cMapUrl,
+          cMapPacked,
+        });
       } else {
         const arrayBuffer = await pdfSource.arrayBuffer();
         loadingTask = pdfjsLib.getDocument({
           data: new Uint8Array(arrayBuffer),
+          cMapUrl,
+          cMapPacked,
         });
       }
       const pdfDoc = await loadingTask.promise;

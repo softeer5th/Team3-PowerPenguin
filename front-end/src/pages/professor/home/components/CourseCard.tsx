@@ -78,6 +78,10 @@ const CourseCard = ({
 }: CourseCardProps) => {
   const [popup, setPopup] = useState(false);
   const today = new Date();
+  const todayString = `${today.getHours().toString().padStart(2, '0')}:${today
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
   const todaySchedule = course.schedule.find(
     (schedule) => schedule.day === getDayString(today.getDay())
   );
@@ -98,7 +102,7 @@ const CourseCard = ({
         <div className={S.info}>
           <span
             className={`${S.time} ${
-              todaySchedule && isSoon(todaySchedule.start) ? S.soon : ''
+              todaySchedule && todaySchedule.start > todayString && S.soon
             }`}
           >
             {todaySchedule

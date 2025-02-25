@@ -171,11 +171,11 @@ class CourseRepository {
       credentials: 'include',
     });
 
-    await throwError(response);
-
     if (response.redirected) {
       window.location.href = response.url;
     }
+
+    await throwError(response);
 
     const json = await response.json();
     const data = json.data as BackendCourse;

@@ -361,3 +361,7 @@ button:hover {
   --medium: 12px;
   --large: 20px;
 }
+
+.body {
+  background-color: var(--bg);
+}
