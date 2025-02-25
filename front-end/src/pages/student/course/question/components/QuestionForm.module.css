@@ -53,8 +53,8 @@
 /*스플릿 뷰 */
 @media all and (min-width: 600px) {
   .formContainer {
-    max-width: 652px;
-    height: 216px;
+    max-width: 600px;
+    height: 180px;
     padding: 20px;
     border-radius: 20px;
   }
@@ -80,8 +80,8 @@
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .formContainer {
-    max-width: 908px;
-    height: 282px;
+    max-width: 800px;
+    height: 180px;
     padding: 20px;
     border-radius: 20px;
   }

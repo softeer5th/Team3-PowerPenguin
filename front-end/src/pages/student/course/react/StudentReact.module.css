@@ -38,13 +38,17 @@
 
 /*스플릿 뷰 */
 @media all and (min-width: 600px) {
+  .pageLayout {
+    padding: 64px 20px;
+  }
+
   .reactTitle {
-    font: var(--web-title3-bold);
+    font: var(--web-body1-bold);
     margin-bottom: 8px;
   }
 
   .reactDesc {
-    font: var(--web-body2-medium);
+    font: var(--web-body2-bold);
     margin-bottom: 80px;
   }
 
@@ -56,12 +60,12 @@
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .reactTitle {
-    font: var(--web-header3-bold);
-    margin-bottom: 12px;
+    font: var(--web-title4-bold);
+    margin-bottom: 10px;
   }
 
   .reactDesc {
-    font: var(--web-title3-medium);
+    font: var(--web-body2-medium);
     margin-bottom: 64px;
   }
 

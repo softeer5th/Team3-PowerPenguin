@@ -76,6 +76,43 @@
   }
 
   .popupTitle {
+    font: var(--web-title4-bold);
+    margin-bottom: 12px;
+  }
+
+  .popupDesc {
+    font: var(--web-body3-medium);
+    margin-bottom: 24px;
+  }
+
+  .checkButton {
+    font: var(--web-button3-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .popupContainer {
+    max-width: 540px;
+    padding: 36px 28px;
+  }
+
+  .closeButton {
+    top: 45px;
+    right: 45px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .warnSvg {
+    width: 56px;
+    height: 56px;
+    padding: 16px 14px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+  }
+
+  .popupTitle {
     font: var(--web-title3-bold);
     margin-bottom: 12px;
   }
@@ -87,41 +124,5 @@
 
   .checkButton {
     font: var(--web-button2-bold);
-  }
-}
-
-/*웹 뷰 */
-@media all and (min-width: 961px) {
-  .popupContainer {
-    max-width: 676px;
-    padding: 42px 36px;
-  }
-
-  .closeButton {
-    top: 50px;
-    right: 50px;
-    width: 19px;
-    height: 19px;
-  }
-
-  .warnSvg {
-    width: 78px;
-    height: 78px;
-    padding: 20px;
-    border-radius: 40px;
-    margin-bottom: 32px;
-  }
-
-  .popupTitle {
-    font: var(--web-title1-bold);
-  }
-
-  .popupDesc {
-    font: var(--web-body1-medium);
-    margin-bottom: 36px;
-  }
-
-  .checkButton {
-    font: var(--web-button1-bold);
   }
 }

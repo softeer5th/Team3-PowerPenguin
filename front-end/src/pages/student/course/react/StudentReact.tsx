@@ -6,11 +6,11 @@ import HeartSvg from '@/assets/icons/heart-emoji.svg?react';
 import CrySvg from '@/assets/icons/cry-emoji.svg?react';
 import ScreamSvg from '@/assets/icons/scream-emoji.svg?react';
 import SuccessPopup from '../components/SuccessPopup';
-import { useState } from 'react';
 import ReactCard from './components/ReactCard';
 import { classroomRepository } from '@/di';
 import { Reaction } from '@/core/model';
 import { ClientError, ServerError } from '@/core/errorType';
+import useTemporaryState from '@/hooks/useTemporaryState';
 
 const CARD_List = [
   { type: 'OKAY', icon: OkaySvg },
@@ -27,12 +27,14 @@ type StudentReactProps = {
 };
 
 const StudentReact = ({ setModalType, openModal }: StudentReactProps) => {
-  const [successPopup, setSuccessPopup] = useState<boolean>(false);
+  const { isActive, trigger } = useTemporaryState({
+    duration: 2,
+  });
 
   const handleCardClick = async (reaction: Reaction) => {
     try {
       await classroomRepository.sendReaction(reaction);
-      setSuccessPopup(true);
+      trigger();
       return true;
     } catch (error) {
       if (error instanceof ClientError) {
@@ -69,12 +71,7 @@ const StudentReact = ({ setModalType, openModal }: StudentReactProps) => {
           />
         ))}
       </div>
-      {successPopup && (
-        <SuccessPopup
-          text="라이브 이모지 전송 성공"
-          onClose={() => setSuccessPopup(false)}
-        />
-      )}
+      {isActive && <SuccessPopup text="라이브 이모지 전송 성공" />}
     </div>
   );
 };

@@ -35,7 +35,7 @@
 }
 
 .active {
-  animation: activeAnimation 2s ease-in-out forwards;
+  animation: activeAnimation 1s ease-in-out forwards;
 }
 
 .blocked {
@@ -68,10 +68,10 @@
 /*스플릿 뷰 */
 @media all and (min-width: 600px) {
   .cardContainer {
-    width: 144px;
-    height: 144px;
+    width: 122px;
+    height: 122px;
     padding: 31px;
-    border-radius: 108px;
+    border-radius: 86px;
   }
   .countdownText {
     border-radius: 108px;

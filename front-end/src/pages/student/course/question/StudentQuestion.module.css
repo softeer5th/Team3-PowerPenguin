@@ -62,12 +62,12 @@
 /*스플릿 뷰 */
 @media all and (min-width: 600px) {
   .questionTitle {
-    font: var(--web-title3-bold);
+    font: var(--web-title4-bold);
     margin-bottom: 8px;
   }
 
   .questionDesc {
-    font: var(--web-body2-medium);
+    font: var(--web-body3-medium);
     margin-bottom: 128px;
   }
 
@@ -76,10 +76,10 @@
   }
 
   .cardContainer {
-    gap: 24px;
+    gap: 18px;
   }
   .questionContainer {
-    max-width: 652px;
+    max-width: 600px;
     margin-bottom: 40px;
   }
 }
@@ -87,17 +87,17 @@
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .questionTitle {
-    font: var(--web-header3-bold);
+    font: var(--web-title3-bold);
     margin-bottom: 12px;
   }
 
   .questionDesc {
-    font: var(--web-title3-medium);
+    font: var(--web-body2-medium);
     margin-bottom: 128px;
   }
 
   .cardContainer {
-    gap: 24px;
+    gap: 20px;
   }
 
   .contentContainer {
@@ -105,7 +105,7 @@
   }
 
   .questionContainer {
-    max-width: 908px;
+    max-width: 800px;
     margin-bottom: 40px;
   }
 }

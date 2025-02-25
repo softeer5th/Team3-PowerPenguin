@@ -30,7 +30,7 @@
 }
 
 .active {
-  animation: activeAnimation 2s ease-in-out forwards;
+  animation: activeAnimation 1s ease-in-out forwards;
 }
 
 .blocked {
@@ -94,55 +94,39 @@
   }
 
   .icon {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
   }
 
   .iconBg {
-    width: 64px;
-    height: 64px;
-    border-radius: 36px;
+    width: 52px;
+    height: 52px;
+    border-radius: 26px;
   }
 
   .cardContentContainer {
     margin-left: 24px;
-  }
-  .cardTitle {
-    font: var(--web-title5-bold);
-  }
-
-  .cardDesc {
-    font: var(--web-body3-medium);
   }
 }
 
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .cardContainer {
-    padding: 16px 40px;
-    border-radius: 12px;
+    padding: 8px 12px;
   }
-
   .icon {
-    width: 56px;
-    height: 56px;
+    width: 36px;
+    height: 36px;
   }
 
   .iconBg {
-    width: 88px;
-    height: 88px;
-    border-radius: 64px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
   }
 
   .cardContentContainer {
     gap: 8px;
     margin-left: 40px;
-  }
-  .cardTitle {
-    font: var(--web-title1-bold);
-  }
-
-  .cardDesc {
-    font: var(--web-title4-medium);
   }
 }

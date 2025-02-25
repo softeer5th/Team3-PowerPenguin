@@ -38,12 +38,10 @@
 /*스플릿 뷰 */
 @media all and (min-width: 600px) {
   .requestTitle {
-    font: var(--web-title3-bold);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .requestDesc {
-    font: var(--web-body2-medium);
     margin-bottom: 40px;
   }
 
@@ -54,18 +52,20 @@
 
 /*웹 뷰 */
 @media all and (min-width: 961px) {
+  .pageLayout {
+    padding: 34px 20px;
+  }
+
   .requestTitle {
-    font: var(--web-header3-bold);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
   .requestDesc {
-    font: var(--web-title3-medium);
     margin-bottom: 44px;
   }
 
   .cardContainer {
-    max-width: 676px;
+    max-width: 600px;
     gap: 12px;
   }
 }

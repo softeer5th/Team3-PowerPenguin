@@ -1,5 +1,7 @@
 .homeLayout {
   display: flex;
+  width: 100%;
+  height: 100dvh;
   flex-direction: column;
   align-items: center;
   padding: 175px 20px;
@@ -54,13 +56,12 @@
 /*스플릿 뷰 */
 @media all and (min-width: 600px) {
   .homeLayout {
-    padding: 331px 20px;
     gap: 160px;
   }
 
   .logo {
-    width: 435px;
-    height: 68px;
+    width: 325px;
+    height: 54px;
   }
 
   .classForm {
@@ -83,18 +84,17 @@
 /*웹 뷰 */
 @media all and (min-width: 961px) {
   .homeLayout {
-    padding: 272px 20px;
     gap: 160px;
   }
 
   .logo {
-    width: 435px;
-    height: 68px;
+    width: 325px;
+    height: 54px;
   }
 
   .classForm {
     max-width: 908px;
-    gap: 40px;
+    gap: 20px;
   }
 
   .classInput {
