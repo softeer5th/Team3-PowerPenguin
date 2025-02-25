@@ -69,18 +69,18 @@ jobs:
           script: |
             set +x
             set -e
+            echo "🔄 Switching to reacton-deployer user..."
+            sudo su - reacton-deployer -c '
+            
             cd ~/app/back-end/reacton-classroom
-            echo "🔄 Pulling latest Docker images..."
-            sudo docker-compose pull --quiet || { echo "❌ Failed to pull Docker images"; exit 1; }
-            echo "🚀 Running Docker containers..."
-            sudo docker-compose up -d --remove-orphans || { echo "❌ Failed to start containers"; exit 1; }
-            echo "🧹 Deleting .env file for security..."
-            rm -f .env
             
             echo "🛑 Stopping and removing existing container..."
             docker stop reacton-classroom-back || true
             docker rm reacton-classroom-back || true
             
+            echo "🔄 Logging in to Docker Hub..."
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
             echo "🔄 Pulling latest Docker image..."
             docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest
             
@@ -94,6 +94,10 @@ jobs:
             
             echo "🧹 Cleaning up unused images..."
             sudo docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
+            
+            echo "🔐 Logging out from Docker Hub..."
+            docker logout
+
             echo "✅ Deployment completed successfully!"
             '
             
