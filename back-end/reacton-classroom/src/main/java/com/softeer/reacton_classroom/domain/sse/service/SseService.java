@@ -22,7 +22,8 @@ public class SseService {
 
     private final Map<String, Sinks.Many<MessageResponse<?>>> sinks = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> courseStudentMap = new ConcurrentHashMap<>();
-    private final int MAX_CONNECTION_TIMEOUT_MINUTES = 10;
+    private final int CONNECTION_TIMEOUT_MINUTES_COURSE = 10;
+    private final int CONNECTION_TIMEOUT_MINUTES_STUDENT = 5;
     private final int RETRY_INTERVAL_SECONDS = 1;
 
     public Flux<ServerSentEvent<MessageResponse<?>>> subscribeCourseMessages(String courseId) {
@@ -81,7 +82,7 @@ public class SseService {
                         sink.asFlux()
                                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
                 )
-                .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
+                .timeout(Duration.ofMinutes(CONNECTION_TIMEOUT_MINUTES_COURSE))
                 .onErrorResume(TimeoutException.class, e -> {
                     log.warn("SSE 연결 제한 시간이 초과되었습니다. : courseId={}", courseId);
                     closeConnection(sink, courseId);
@@ -98,7 +99,7 @@ public class SseService {
                         sink.asFlux()
                                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
                 )
-                .timeout(Duration.ofMinutes(MAX_CONNECTION_TIMEOUT_MINUTES))
+                .timeout(Duration.ofMinutes(CONNECTION_TIMEOUT_MINUTES_STUDENT))
                 .onErrorResume(TimeoutException.class, e -> {
                     log.warn("학생 SSE 연결 제한 시간이 초과되었습니다. : studentId={}", studentId);
                     closeConnection(sink, studentId);
