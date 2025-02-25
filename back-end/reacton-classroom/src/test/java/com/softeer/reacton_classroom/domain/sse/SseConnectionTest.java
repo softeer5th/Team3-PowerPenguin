@@ -30,11 +30,11 @@ public class SseConnectionTest {
     void testSseConnectionTest() throws Exception {
         System.out.println("SSE 연결 부하 테스트");
 
-        int maxConnections = 1000;
+        int maxConnections = 10000;
         List<CompletableFuture<HttpResponse<String>>> connectionFutures = new ArrayList<>();
 
         for (int courseId = 1; courseId <= maxConnections; courseId++) {
-            String url = URL + "/sse/connection/course/" + courseId;
+            String url = URL + "/sse/connection/course/" + (1000 + courseId);
             HttpRequest connectionRequest = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Cookie", "access_token=" + PROFESSOR_ACCESS_TOKEN + "; Path=/; Domain=.softeer-reacton.shop; Secure; HttpOnly; SameSite=Strict")
@@ -44,6 +44,10 @@ public class SseConnectionTest {
             // 비동기로 요청을 보내고, SSE 연결 응답을 기다림
             CompletableFuture<HttpResponse<String>> future = client.sendAsync(connectionRequest, HttpResponse.BodyHandlers.ofString());
             connectionFutures.add(future);
+            if (courseId % 100 == 0) {
+                System.out.println(courseId + "개의 요청을 보낸 상태입니다.");
+                Thread.sleep(10000);
+            }
         }
 
         Thread.sleep(3600000);
