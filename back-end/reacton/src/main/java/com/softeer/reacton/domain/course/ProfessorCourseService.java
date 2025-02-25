@@ -303,7 +303,7 @@ public class ProfessorCourseService {
                 .filter(course -> hasScheduleInDay(course, currentDay))
                 .sorted(Comparator
                         .comparing(course -> getEarliestStartTime(course, currentDay)))
-                .map(course -> CourseSummaryResponse.of(course, getSchedulesForToday(course, currentDay)))
+                .map(course -> CourseSummaryResponse.of(course, getSchedulesByCourse(course)))
                 .collect(Collectors.toList());
     }
 
@@ -324,16 +324,6 @@ public class ProfessorCourseService {
                 .map(Schedule::getStartTime)
                 .min(Comparator.naturalOrder())
                 .orElse(LocalTime.MAX);
-    }
-
-    private List<CourseScheduleResponse> getSchedulesForToday(Course course, String currentDay) {
-        return course.getSchedules().stream()
-                .filter(schedule -> schedule.getDay().equals(currentDay))
-                .map(schedule -> new CourseScheduleResponse(
-                        schedule.getDay(),
-                        schedule.getStartTime().toString(),
-                        schedule.getEndTime().toString()))
-                .collect(Collectors.toList());
     }
 
     private List<Schedule> createSchedules(CourseRequest request, Course course) {
