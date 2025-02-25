@@ -373,7 +373,7 @@ public class ProfessorCourseService {
     }
 
     private int generateUniqueAccessCode() {
-        return 100000 + secureRandom.nextInt(1000000); // 100000~999999
+        return 100000 + secureRandom.nextInt(900000); // 100000~999999
     }
 
     private boolean validateFile(MultipartFile file) {
