@@ -6,6 +6,7 @@ import StudentMessage from './components/StudentMessage';
 import { classroomRepository } from '@/di';
 import { Question } from '@/core/model';
 import { handleStudentError } from '@/utils/studentPopupUtils';
+import useTemporaryState from '@/hooks/useTemporaryState';
 
 type StudentQuestionProps = {
   setModalType: React.Dispatch<React.SetStateAction<string | null>>;
@@ -20,9 +21,11 @@ const StudentQuestion = ({
   setQuestions,
   questions,
 }: StudentQuestionProps) => {
-  const [successPopup, setSuccessPopup] = useState(false);
-
   const [inputValue, setInputValue] = useState('');
+
+  const { isActive, trigger } = useTemporaryState({
+    duration: 2,
+  });
 
   const handleInputSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,7 +40,7 @@ const StudentQuestion = ({
         };
         setQuestions((prev) => [...prev, newQuestion]);
         setInputValue('');
-        setSuccessPopup(true);
+        trigger();
       } catch (error) {
         handleStudentError({ error, setModalType, openModal });
       }
@@ -95,11 +98,8 @@ const StudentQuestion = ({
             onInputSubmit={handleInputSubmit}
             placeholder="완전 익명으로 안심하고 질문해보세요"
           />
-          {successPopup && (
-            <SuccessPopup
-              text="전송 성공! 답변을 듣고 난 후 질문 체크 잊지마세요!"
-              onClose={() => setSuccessPopup(false)}
-            />
+          {isActive && (
+            <SuccessPopup text="전송 성공! 답변을 듣고 난 후 질문 체크 잊지마세요!" />
           )}
         </div>
       )}

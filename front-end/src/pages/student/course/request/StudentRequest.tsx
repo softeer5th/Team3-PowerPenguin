@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import RequestCard from './components/RequestCard';
 import S from './StudentRequest.module.css';
 import { classroomRepository } from '@/di';
@@ -17,6 +16,7 @@ import {
   RequestType,
 } from '@/core/model';
 import { handleStudentError } from '@/utils/studentPopupUtils';
+import useTemporaryState from '@/hooks/useTemporaryState';
 
 const CARD_CONTENT = [
   {
@@ -57,12 +57,14 @@ type StudentRequestProps = {
 };
 
 const StudentRequest = ({ setModalType, openModal }: StudentRequestProps) => {
-  const [successPopup, setSuccessPopup] = useState<boolean>(false);
+  const { isActive, trigger: successPopup } = useTemporaryState({
+    duration: 2,
+  });
 
   const handleCardClick = async (type: RequestType) => {
     try {
       await classroomRepository.sendRequest(type);
-      setSuccessPopup(true);
+      successPopup();
       return true;
     } catch (error) {
       handleStudentError({ error, setModalType, openModal });
@@ -90,12 +92,7 @@ const StudentRequest = ({ setModalType, openModal }: StudentRequestProps) => {
           />
         ))}
       </div>
-      {successPopup && (
-        <SuccessPopup
-          text="라이브 피드백 전송 성공"
-          onClose={() => setSuccessPopup(false)}
-        />
-      )}
+      {isActive && <SuccessPopup text="라이브 피드백 전송 성공" />}
     </div>
   );
 };
