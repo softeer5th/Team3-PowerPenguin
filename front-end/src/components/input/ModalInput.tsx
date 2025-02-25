@@ -26,6 +26,11 @@ const ModalInput = ({
         className={`${S.input} ${size === 'full' && S.full} ${desc && S.withDesc}`}
         placeholder={placeholder}
         value={value}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        }}
         onChange={(e) => onInputChange(e.target.value)}
         onBlur={onBlur}
       />

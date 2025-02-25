@@ -362,6 +362,6 @@ button:hover {
   --large: 20px;
 }
 
-.body {
+body {
   background-color: var(--bg);
 }

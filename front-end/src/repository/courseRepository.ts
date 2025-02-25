@@ -162,7 +162,7 @@ class CourseRepository {
     return { todayCourse: todayCourse, totalCourse: totalCourse };
   }
 
-  async getOpenedCourse(): Promise<CourseMeta> {
+  async getOpenedCourse(): Promise<CourseMeta | void> {
     // API: GET /professor/courses/active
 
     const response = await fetch(`/api/professors/courses/active`, {
@@ -173,6 +173,7 @@ class CourseRepository {
 
     if (response.redirected) {
       window.location.href = response.url;
+      return;
     }
 
     await throwError(response);
