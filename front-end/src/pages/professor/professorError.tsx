@@ -11,10 +11,15 @@ interface ProfessorErrorContentType {
 }
 
 const ProfessorErrorContent: Record<string, ProfessorErrorContentType> = {
+  ACCESS_TOKEN_ERROR: {
+    message: '사용자 정보를 불러오는 중 오류가 발생했습니다.',
+    description: '로그인 페이지로 돌아갑니다.',
+    navigateTo: '/professor/login',
+  },
   UNAUTHORIZED_PROFESSOR: {
     message: '사용자 정보를 불러오는 중 오류가 발생했습니다.',
     description: '로그인 페이지로 돌아갑니다.',
-    navigateTo: '/login',
+    navigateTo: '/professor/login',
   },
   PROFESSOR_NOT_FOUND: {
     message: '사용자 정보를 불러오는 중 오류가 발생했습니다.',
@@ -76,6 +81,11 @@ const ProfessorErrorContent: Record<string, ProfessorErrorContentType> = {
     description: '홈 화면으로 돌아갑니다.',
     navigateTo: '/professor',
   },
+  VALIDATION_FAILURE: {
+    message: '',
+    description: '다시 시도해주세요.',
+    navigateTo: null,
+  },
 };
 
 const ProfessorError = () => {
@@ -112,7 +122,7 @@ const ProfessorError = () => {
           <AlertModal
             type="caution"
             message="알 수 없는 오류가 발생했습니다."
-            description="홈 페이지로 돌아갑니다."
+            description="홈 화면으로 돌아갑니다."
             buttonText="확인"
             onClickModalButton={() => {
               setModal(null);
@@ -126,7 +136,11 @@ const ProfessorError = () => {
       setModal(
         <AlertModal
           type="caution"
-          message={errorContent.message}
+          message={
+            errorContent.message === ''
+              ? (error as ClientError | ServerError).message
+              : errorContent.message
+          }
           description={errorContent.description}
           buttonText="확인"
           onClickModalButton={() => {

@@ -96,13 +96,12 @@ class ProfessorRepository {
       credentials: 'include',
     });
 
-    await throwError(response);
-
-    this.ProfessorCache = null;
-
     if (response.redirected) {
+      this.ProfessorCache = null;
       window.location.href = response.url;
     }
+
+    await throwError(response);
   }
 
   /**
@@ -178,13 +177,12 @@ class ProfessorRepository {
       credentials: 'include',
     });
 
-    await throwError(response);
-
-    this.ProfessorCache = null;
-
     if (response.redirected) {
       window.location.href = response.url;
+      this.ProfessorCache = null;
     }
+
+    await throwError(response);
   }
 }
 

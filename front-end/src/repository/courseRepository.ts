@@ -162,7 +162,7 @@ class CourseRepository {
     return { todayCourse: todayCourse, totalCourse: totalCourse };
   }
 
-  async getOpenedCourse(): Promise<CourseMeta> {
+  async getOpenedCourse(): Promise<CourseMeta | void> {
     // API: GET /professor/courses/active
 
     const response = await fetch(`/api/professors/courses/active`, {
@@ -171,11 +171,12 @@ class CourseRepository {
       credentials: 'include',
     });
 
-    await throwError(response);
-
     if (response.redirected) {
       window.location.href = response.url;
+      return;
     }
+
+    await throwError(response);
 
     const json = await response.json();
     const data = json.data as BackendCourse;

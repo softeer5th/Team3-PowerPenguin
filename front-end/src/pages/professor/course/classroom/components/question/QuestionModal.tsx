@@ -10,6 +10,7 @@ type QuestionModalProps = {
   questions: ProfessorQuestion[];
   handleResolveClick: (id: ProfessorQuestion['id']) => void;
   closeModal: () => void;
+  setCurrentModalQuestion: (page: number) => void;
   initialPage?: number;
 };
 
@@ -17,18 +18,25 @@ const QuestionModal = ({
   questions,
   handleResolveClick,
   closeModal,
-  initialPage = 1,
+  setCurrentModalQuestion,
+  initialPage = 0,
 }: QuestionModalProps) => {
   const { setPage, prevPage, nextPage, PaginationDiv, page, totalPages } =
     usePagination();
 
   useEffect(() => {
-    setPage(initialPage);
+    setPage(Math.max(initialPage, 0));
   }, [initialPage]);
 
   return (
     <div className={S.modalContainer} onClick={(e) => e.stopPropagation()}>
-      <button className={S.closeButton} onClick={closeModal}>
+      <button
+        className={S.closeButton}
+        onClick={() => {
+          setCurrentModalQuestion(-1);
+          closeModal();
+        }}
+      >
         <CloseSvg className={S.closeSvg} />
       </button>
       {questions.length === 0 ? (
@@ -37,7 +45,10 @@ const QuestionModal = ({
         <div className={S.pageController}>
           <button
             className={S.buttonContainer}
-            onClick={prevPage}
+            onClick={() => {
+              setCurrentModalQuestion(Math.max(page - 1, 0));
+              prevPage();
+            }}
             disabled={page === 0}
           >
             <PrevIcon className={S.icon} />
@@ -49,7 +60,10 @@ const QuestionModal = ({
           </div>
           <button
             className={S.buttonContainer}
-            onClick={nextPage}
+            onClick={() => {
+              setCurrentModalQuestion(Math.min(page + 1, totalPages - 1));
+              nextPage();
+            }}
             disabled={page >= totalPages - 1}
           >
             <NextIcon className={S.icon} />

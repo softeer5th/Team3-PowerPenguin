@@ -4,7 +4,7 @@ import S from './ProfessorProfile.module.css';
 import { professorRepository } from '@/di';
 import BasicProfile from '@/assets/icons/basic-profile.svg?react';
 import TextButton from '@/components/button/text/TextButton';
-import { validateImage } from '@/utils/util';
+import { validateImage, validateName } from '@/utils/util';
 import AlertModal from '@/components/modal/AlertModal';
 import { OutletContext } from '../layout/ProfessorHomeLayout';
 
@@ -115,6 +115,7 @@ const ProfessorProfile = () => {
 
   const handleEditName = async () => {
     try {
+      validateName(profile.name);
       const newName = await professorRepository.updateProfessorName(
         profile.name
       );

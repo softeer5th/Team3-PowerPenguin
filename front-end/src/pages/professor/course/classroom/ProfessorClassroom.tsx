@@ -71,6 +71,7 @@ const ProfessorClassroom = () => {
 
   const reactionsRef = useRef(reactionsCount);
   const sseRef = useRef<EventSource | null>(null);
+  const questionModalRef = useRef<string>('');
 
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
@@ -197,6 +198,21 @@ const ProfessorClassroom = () => {
     }
   };
 
+  const setCurrentModalQuestion = (page: number) => {
+    if (page === -1) {
+      questionModalRef.current = '';
+      return;
+    }
+    if (questions.length === 0) {
+      return;
+    }
+    if (page > questions.length - 1) {
+      questionModalRef.current = questions[questions.length - 1].id;
+      return;
+    }
+    questionModalRef.current = questions[page].id;
+  };
+
   // 가장 처음 course 정보 받아오기
   useEffect(() => {
     async function fetchCourse() {
@@ -219,12 +235,16 @@ const ProfessorClassroom = () => {
 
   // questions가 바뀔때마다(모달에서 삭제될때 반영하기 위해) 모달 변경
   useEffect(() => {
-    if (modal) {
+    if (modal && questionModalRef.current !== '') {
       setModal(
         <QuestionModal
           questions={questions}
           handleResolveClick={handleResolveClick}
           closeModal={closeModal}
+          setCurrentModalQuestion={setCurrentModalQuestion}
+          initialPage={questions.findIndex(
+            (question) => question.id === questionModalRef.current
+          )}
         />
       );
     }
@@ -260,6 +280,7 @@ const ProfessorClassroom = () => {
           openModal={openModal}
           closeModal={closeModal}
           handleCloseClass={handleCloseClass}
+          setCurrentModalQuestion={setCurrentModalQuestion}
         />
       </div>
       {modal && <Modal>{modal}</Modal>}

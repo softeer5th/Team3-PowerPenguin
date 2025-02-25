@@ -13,6 +13,7 @@ type PDFSideBarProps = {
   closeModal: () => void;
   openModal: () => void;
   handleCloseClass: () => void;
+  setCurrentModalQuestion: (page: number) => void;
 };
 
 const PDFSideBar = ({
@@ -23,18 +24,23 @@ const PDFSideBar = ({
   openModal,
   closeModal,
   handleCloseClass,
+  setCurrentModalQuestion,
 }: PDFSideBarProps) => {
   const handleQuestionModalOpen = (page: number) => {
     const handleCloseModal = () => {
+      setCurrentModalQuestion(-1);
       closeModal();
       setModal(null);
     };
+
+    setCurrentModalQuestion(page);
 
     setModal(
       <QuestionModal
         questions={questions}
         handleResolveClick={handleResolveClick}
         closeModal={handleCloseModal}
+        setCurrentModalQuestion={setCurrentModalQuestion}
         initialPage={page}
       />
     );

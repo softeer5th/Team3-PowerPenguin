@@ -38,6 +38,8 @@ type CourseError = {
   schedule: string;
 };
 
+const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])$/;
+
 const makeFullUniversity = (university: string) => {
   if (university === '') {
     return '';
@@ -74,15 +76,23 @@ const checkFormError = (
   if (courseError.schedule) {
     return true;
   }
+
+  let isScheduleError = false;
   courseForm.schedule.forEach((schedule) => {
+    if (isScheduleError) return;
+
     if (schedule.day === '') {
-      return true;
+      isScheduleError = true;
     }
-    if (schedule.start > schedule.end) {
-      return true;
+    if (!timeRegex.test(schedule.start) || !timeRegex.test(schedule.end)) {
+      isScheduleError = true;
+    }
+    if (schedule.start >= schedule.end) {
+      isScheduleError = true;
     }
   });
-  return false;
+
+  return isScheduleError;
 };
 
 const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
@@ -111,6 +121,10 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
   });
 
   const handleSubmit = () => {
+    if (checkFormError(formError, courseForm)) {
+      return false;
+    }
+
     onSubmit({
       ...courseForm,
       id: course?.id || '',
@@ -196,7 +210,7 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
       }}
       onSubmit={(e) => {
         e.preventDefault();
-        handleSubmit();
+        return handleSubmit();
       }}
       className={S.courseModal}
     >
@@ -342,7 +356,19 @@ const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
                 capacity: '숫자만 입력해 주세요',
               }));
             } else {
-              setFormError((prev) => ({ ...prev, capacity: '' }));
+              if (parseInt(courseForm.capacity) < 1) {
+                setFormError((prev) => ({
+                  ...prev,
+                  capacity: '1명 이상 입력해 주세요',
+                }));
+              } else if (parseInt(courseForm.capacity) > 1000) {
+                setFormError((prev) => ({
+                  ...prev,
+                  capacity: '1000명 이하로 입력해 주세요',
+                }));
+              } else {
+                setFormError((prev) => ({ ...prev, capacity: '' }));
+              }
             }
           }}
         />
