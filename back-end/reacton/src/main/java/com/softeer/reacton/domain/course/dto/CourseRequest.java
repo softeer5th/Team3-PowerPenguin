@@ -19,6 +19,8 @@ public class CourseRequest {
     private String courseCode;
 
     @Positive(message = "수업 정원이 입력되지 않았습니다.")
+    @Min(value = 1, message = "수업 정원은 1명 이상이어야 합니다.")
+    @Max(value = 1000, message = "수업 정원은 1000명 이하여야 합니다.")
     private int capacity;
 
     @NotBlank(message = "대학 이름이 입력되지 않았습니다.")

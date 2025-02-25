@@ -10,6 +10,8 @@ import com.softeer.reacton.global.entity.BaseEntity;
 import com.softeer.reacton.global.exception.BaseException;
 import com.softeer.reacton.global.exception.code.CourseErrorCode;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +37,8 @@ public class Course extends BaseEntity {
     private String courseCode;
 
     @Column(nullable = false)
+    @Min(1)
+    @Max(1000)
     private int capacity;
 
     @Column(nullable = false, length = 100)
