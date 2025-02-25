@@ -64,16 +64,36 @@
 
 
 
-
-
 ## [2] 팀원별 역할
-	
-|<img src="https://github.com/sunohkim.png" width="80">|<img src="https://github.com/uri010.png" width="80">|<img src="https://github.com/wwweric12.png" width="80">|<img src="https://github.com/DrCloy.png" width="80">|
-|:---:|:---:|:---:|:---:|
-|[김선오](https://github.com/sunohkim)|[김유리](https://github.com/uri010)|[김동영](https://github.com/wwweric12)|[김민교](https://github.com/DrCloy)
-|BackEnd|BackEnd|FrontEnd|FrontEnd|
-|SSE 서버 구축<br>성능 테스트<br>DB 최적화<br>실시간 수업 API<br>조회 API|협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>S3 파일 관련 API<br>회원, 수업 관련 API |학생 페이지|교수 페이지|
- 
+
+<p align="center">
+    <table align="center">
+        <tr>
+            <th><a href="https://github.com/sunohkim">김선오</a></th>
+            <th><a href="https://github.com/uri010">김유리</a></th>
+            <th><a href="https://github.com/wwweric12">김동영</a></th>
+            <th><a href="https://github.com/DrCloy">김동영</a></th>
+        </tr>
+        <tr>
+            <td><img width="150" src="https://github.com/sunohkim.png"></td>
+            <td><img width="150" src="https://github.com/uri010.png"></td>
+            <td><img width="150" src="https://github.com/wwweric12.png"></td>
+            <td><img width="150" src="https://github.com/DrCloy.png"></td>
+        </tr>
+        <tr>
+            <td align="center">BE</td>
+            <td align="center">BE</td>
+            <td align="center">FE</td>
+            <td align="center">FE</td>
+        </tr>
+	<tr>
+	    <td align="center">SSE 서버 구축<br>성능 테스트<br>DB 최적화<br>실시간 수업 API<br>조회 API</td>
+	    <td align="center">협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>DB 최적화<br>S3 파일 관련 API<br>회원, 수업 관련 API</td>
+	    <td align="center">학생 페이지</td>
+	    <td align="center">교수 페이지</td>
+	</tr>
+    </table>
+</p>
 
 </br>
 
@@ -119,7 +139,6 @@
 ## Architecture
 
 ![aws_diagram-Page-4](https://github.com/user-attachments/assets/864a484c-edd6-41d9-b8ad-ab8df57430ae)
-
 
 
 
