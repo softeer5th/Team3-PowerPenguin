@@ -142,7 +142,10 @@ React:ON은 교수와 학생 간의 실시간 상호작용을 촉진하는 웹 �
 <img src="https://github.com/user-attachments/assets/d72c8182-081f-43dc-a8df-1d5db4a6eafb" width=65% height=65%/>
 </div>
 
-## 프론트엔드 아키텍처 
+## 프론트엔드 CI/CD
+<div align="center">
+<img src="https://github.com/user-attachments/assets/df1c2791-38b0-4763-a21b-de06582b76da" width=65% height=65% />
+</div>
 
 # [5] 그라운드 룰 
 우리 팀의 원활한 협업을 위한 기본 규칙과 회의, 스프린트 기준, 소통 방식을 정리했습니다. 
