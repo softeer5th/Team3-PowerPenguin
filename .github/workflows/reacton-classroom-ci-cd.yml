@@ -90,7 +90,7 @@ jobs:
               --network reacton_network \
               -p 8080:8080 \
               -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_CLASSROOM }} \
-              "${{ secrets.DOCKER_USERNAME }}/reacton-back:latest"
+              "${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest"
             
             echo "🧹 Cleaning up unused images..."
             sudo docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
