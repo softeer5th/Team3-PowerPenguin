@@ -60,20 +60,6 @@ jobs:
             -t ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest back-end/reacton-classroom
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest
 
-      - name: Create .env file
-        run: |
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_CLASSROOM }}" >> .env
-          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-
-      - name: Upload .env file using rsync
-        run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton-classroom/
-      
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
