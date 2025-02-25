@@ -18,40 +18,40 @@
   - [기대 효과](#1-3-기대-효과) 
 - [팀원별 역할](#2-팀원별-역할)
 - [기술 스택](#3-기술-스택)
-- [그라운드 룰](#4-그라운드-룰)
-- [개발 룰](#5-개발-룰)
+- [아키텍처](#4-아키텍처-&-CI/CD)
+- [그라운드 룰](#5-그라운드-룰)
+- [개발 룰](#6-개발-룰)
 
 
 # [1] 서비스 소개
-<strong>React:ON</strong>은 교수와 학생 간의 실시간 상호작용을 촉진하는 웹 서비스입니다.  
-수업 중 학생들이 보다 능동적으로 의견을 표현하고, 교수는 즉각적인 피드백을 받을 수 있도록 돕습니다.
+### 🎯 React:ON이란?
 
-</br>
+React:ON은 교수와 학생 간의 실시간 상호작용을 촉진하는 웹 서비스입니다.
+학생들은 보다 능동적으로 의견을 표현할 수 있으며, 교수는 즉각적인 피드백을 받을 수 있도록 돕습니다.
+
 
 ## 1-1 기획 배경
-🎯 문제점: 대면 강의에서 학생들의 적극적인 참여 부족  
-✅ 해결책: 실시간 리액션과 익명 질문 기능 제공
+### 📌 문제점
+🎓 대면 강의에서 학생들의 적극적인 참여 부족
 
-✔ 학생들이 질문하기 어려운 환경에서 손쉽게 의견을 표현할 수 있도록 합니다.  
-✔ 교수는 학생들의 반응을 실시간으로 확인하고, 수업 몰입도를 높이는 피드백을 제공합니다.  
-✔ 학생과 교수 간의 소통을 활성화하여 능동적인 수업 환경을 조성합니다.  
+### ✅ 해결책
+💡 실시간 리액션과 익명 질문 기능 제공
+<br>
+🤝 학생들이 질문하기 어려운 환경에서도 쉽게 의견을 표현할 수 있도록 합니다.
+<br>
+📊 교수는 학생들의 반응을 실시간으로 확인하고, 수업 몰입도를 높이는 피드백을 제공합니다.
+<br>
+🔗 학생과 교수 간의 소통을 활성화하여 능동적인 수업 환경을 조성합니다.
 
 </br>
 
 ## 1-2 주요 기능 
 
 <div align=center>
-	
 <img src="https://github.com/user-attachments/assets/83b1ee11-1830-4b6e-bb4b-ea9c199d784f" alt="서비스 소개 - 학생" width="750">
-
 <img src="https://github.com/user-attachments/assets/c6f064c1-8a24-47ad-a250-cc69730501ce" alt="서비스 소개 - 교수" width="750">
-
-	
 <img src="https://github.com/user-attachments/assets/80565260-031d-40d7-bef4-2f04cd67114d" alt="서비스 소개 - 수업통계" width="750">
-
-	
-<img src="https://github.com/user-attachments/assets/d0039991-6e12-4996-8c65-93f3306ebc52" alt="사용 시나리오" width="750">
-		
+<img src="https://github.com/user-attachments/assets/d0039991-6e12-4996-8c65-93f3306ebc52" alt="사용 시나리오" width="750">		
 </div>
 
 ## 1-3 기대 효과 
@@ -63,7 +63,7 @@
 
 
 
-## [2] 팀원별 역할
+# [2] 팀원별 역할
 
 <p align="center">
     <table align="center">
@@ -100,22 +100,16 @@
 
 <div align=center>
 
-## Config
-
-![yarn](https://img.shields.io/badge/npm-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)
-![Vite](https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-
-## Development
-
-### Front-End
+### 프론트엔드
 
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![ReactRouter](https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)
 ![pdf.js](https://img.shields.io/badge/pdf.js-FF0000?style=for-the-badge&logo=adobe&logoColor=white)
+![yarn](https://img.shields.io/badge/npm-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
-
-### Back-End
+### 백엔드
 ![JAVA](https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white)
 ![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![JPA](https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=jpa&logoColor=white)
@@ -129,31 +123,35 @@
 ![GitHub Actions](https://img.shields.io/badge/GitHubActions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 
 
-### Collaboration
+### 협업
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
 ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white)
 ![GithubProjects](https://img.shields.io/badge/GithubProjects-181717?style=for-the-badge&logo=github&logoColor=white)
-
-
-## Architecture
-
-![aws_diagram-Page-4](https://github.com/user-attachments/assets/864a484c-edd6-41d9-b8ad-ab8df57430ae)
-
-
-
 </div>
-
-
 </br>
 
-# [4] 그라운드 룰 
+# [4] 아키텍처 & CI/CD
+## 🛠️ 백엔드 아키텍처
+<div align="center">
+<img src="https://github.com/user-attachments/assets/bf4e5247-7dca-478d-9c0a-f69d6008ebe7" width=75% height=75%/>
+</div>
+
+## 🚀 백엔드 CI/CD 
+
+<div align="center">
+<img src="https://github.com/user-attachments/assets/d72c8182-081f-43dc-a8df-1d5db4a6eafb" width=65% height=65%/>
+</div>
+
+## 프론트엔드 아키텍처 
+
+# [5] 그라운드 룰 
 우리 팀의 원활한 협업을 위한 기본 규칙과 회의, 스프린트 기준, 소통 방식을 정리했습니다. 
  
 궁금하시다면 [링크](https://github.com/softeer5th/Team3-PowerPenguin/wiki/%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)를 클릭해 주세요! 🚀
 
 </br>
 
-# [5] 개발 룰
+# [6] 개발 룰
 
 ### 🌿 브랜치 전략
 > Git Flow 기반의 단순화된 전략
