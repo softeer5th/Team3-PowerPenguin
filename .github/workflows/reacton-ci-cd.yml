@@ -45,7 +45,7 @@ jobs:
         run: chmod +x back-end/reacton/gradlew
 
       - name: Build with Gradle
-        run: cd back-end/reacton && ./gradlew clean build -x test --build-cache
+        run: cd back-end/reacton && ./gradlew clean build -x test --build-cache --parallel --configure-on-demand
 
       - name: Check Build Artifact
         run: ls -lh back-end/reacton/build/libs/ || (echo "Build artifact missing!" && exit 1)
@@ -55,32 +55,11 @@ jobs:
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest || true
           sudo docker build --platform linux/arm64 \
+            --cache-from=${{ secrets.DOCKER_USERNAME }}/reacton-back:latest \
             -f back-end/reacton/Dockerfile \
             -t ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest back-end/reacton
           sudo docker push ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest
 
-      - name: Create .env file
-        run: |
-          echo "SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}" > .env
-          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "SPRING_JPA_HIBERNATE_DDL_AUTO=${{ secrets.SPRING_JPA_HIBERNATE_DDL_AUTO }}" >> .env
-          echo "OAUTH_GOOGLE_CLIENT_ID=${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}" >> .env
-          echo "OAUTH_GOOGLE_CLIENT_SECRET=${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}" >> .env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
-          echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
-          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-
-      - name: Upload .env file using rsync
-        run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" .env ubuntu@${{ secrets.HOST }}:/home/ubuntu/app/back-end/reacton/
-    
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -88,14 +67,44 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            set +x  
             set -e
+
             cd ~/app/back-end/reacton
-            echo "🔄 Pulling latest Docker images..."
-            sudo docker-compose pull --quiet || { echo "❌ Failed to pull Docker images"; exit 1; }
-            echo "🚀 Running Docker containers..."
-            sudo docker-compose up -d --remove-orphans || { echo "❌ Failed to start containers"; exit 1; }
-            echo "🧹 Deleting .env file for security..."
-            rm -f .env 
+
+            echo "🛑 Stopping and removing existing container..."
+            docker stop reacton-back || true
+            docker rm reacton-back || true
+
+            echo "🔄 Logging in to Docker Hub..."
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            echo "🔄 Pulling latest Docker image..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest
+
+            echo "🚀 Running new container..."
+            docker run -d --name reacton-back \
+              --restart always \
+              --network reacton_network \
+              -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
+              -e SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}" \
+              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              -e SPRING_JPA_HIBERNATE_DDL_AUTO="${{ secrets.SPRING_JPA_HIBERNATE_DDL_AUTO }}" \
+              -e OAUTH_GOOGLE_CLIENT_ID="${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}" \
+              -e OAUTH_GOOGLE_CLIENT_SECRET="${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}" \
+              -e JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}" \
+              -e AWS_REGION="${{ secrets.AWS_REGION }}" \
+              -e AWS_BUCKET_NAME="${{ secrets.AWS_BUCKET_NAME }}" \
+              "${{ secrets.DOCKER_USERNAME }}/reacton-back:latest"
+
             echo "🧹 Cleaning up unused images..."
-            sudo docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
+            docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
+
+            echo "🔐 Logging out from Docker Hub..."
+            docker logout
+
             echo "✅ Deployment completed successfully!"
+            '
+
+            set -x 
