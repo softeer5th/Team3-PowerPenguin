@@ -39,11 +39,21 @@
 </br>
 
 ## 1-2 주요 기능 
-![서비스 소개 - 학생](https://github.com/user-attachments/assets/83b1ee11-1830-4b6e-bb4b-ea9c199d784f)
-![서비스 소개 - 교수](https://github.com/user-attachments/assets/c6f064c1-8a24-47ad-a250-cc69730501ce)
-![서비스 소개 - 수업통계](https://github.com/user-attachments/assets/80565260-031d-40d7-bef4-2f04cd67114d)
-![사용 시나리오](https://github.com/user-attachments/assets/d0039991-6e12-4996-8c65-93f3306ebc52)
 
+## 서비스 소개
+<div align=center>
+	
+<img src="https://github.com/user-attachments/assets/83b1ee11-1830-4b6e-bb4b-ea9c199d784f" alt="서비스 소개 - 학생" width="750">
+
+<img src="https://github.com/user-attachments/assets/c6f064c1-8a24-47ad-a250-cc69730501ce" alt="서비스 소개 - 교수" width="750">
+
+	
+<img src="https://github.com/user-attachments/assets/80565260-031d-40d7-bef4-2f04cd67114d" alt="서비스 소개 - 수업통계" width="750">
+
+	
+<img src="https://github.com/user-attachments/assets/d0039991-6e12-4996-8c65-93f3306ebc52" alt="사용 시나리오" width="750">
+		
+</div>
 
 ## 1-3 기대 효과 
 ✔ 기존 수업에서 질문하지 않던 학생들도 더 적극적으로 참여  
@@ -119,8 +129,9 @@
 </br>
 
 # [4] 그라운드 룰 
-
-[그라운드 룰](https://github.com/softeer5th/Team3-PowerPenguin/wiki/%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)
+우리 팀의 원활한 협업을 위한 기본 규칙과 회의, 스프린트 기준, 소통 방식을 정리했습니다. 
+ 
+궁금하시다면 [링크](https://github.com/softeer5th/Team3-PowerPenguin/wiki/%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)를 클릭해 주세요! 🚀
 
 </br>
 
