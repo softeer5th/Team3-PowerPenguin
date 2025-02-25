@@ -87,7 +87,7 @@
             <td align="center">FE</td>
         </tr>
 	<tr>
-	    <td align="center">SSE 서버 구축<br>성능 테스트<br>DB 최적화<br>실시간 수업 API<br>조회 API</td>
+	    <td align="center">SSE 서버 구축<br>성능 테스트<br>DB 최적화<br>Oauth 로그인 구현<br>실시간 수업 API<br>조회 API</td>
 	    <td align="center">협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>DB 최적화<br>S3 파일 관련 API<br>회원, 수업 관련 API</td>
 	    <td align="center">학생 페이지</td>
 	    <td align="center">교수 페이지</td>
