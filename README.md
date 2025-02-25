@@ -40,7 +40,6 @@
 
 ## 1-2 주요 기능 
 
-## 서비스 소개
 <div align=center>
 	
 <img src="https://github.com/user-attachments/assets/83b1ee11-1830-4b6e-bb4b-ea9c199d784f" alt="서비스 소개 - 학생" width="750">
@@ -72,7 +71,7 @@
             <th><a href="https://github.com/sunohkim">김선오</a></th>
             <th><a href="https://github.com/uri010">김유리</a></th>
             <th><a href="https://github.com/wwweric12">김동영</a></th>
-            <th><a href="https://github.com/DrCloy">김동영</a></th>
+            <th><a href="https://github.com/DrCloy">김민교</a></th>
         </tr>
         <tr>
             <td><img width="150" src="https://github.com/sunohkim.png"></td>
@@ -89,8 +88,8 @@
 	<tr>
 	    <td align="center">SSE 서버 구축<br>성능 테스트<br>DB 최적화<br>Oauth 로그인 구현<br>실시간 수업 API<br>조회 API</td>
 	    <td align="center">협업 관련 자동화<br>OAuth 로그인 구현<br>서버 인프라 구축<br>CI/CD 구축<br>DB 최적화<br>S3 파일 관련 API<br>회원, 수업 관련 API</td>
-	    <td align="center">학생 페이지</td>
-	    <td align="center">교수 페이지</td>
+	    <td align="center">학생 페이지 및 기능 구현<br>PDF 기능 구현 </td>
+	    <td align="center">교수 페이지 및 기능 구현<br>PDF 기능 구현 <br> 프론트엔드 배포</td>
 	</tr>
     </table>
 </p>
