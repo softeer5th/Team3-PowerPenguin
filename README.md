@@ -144,7 +144,8 @@ React:ON은 교수와 학생 간의 실시간 상호작용을 촉진하는 웹 �
 
 ## 프론트엔드 CI/CD
 <div align="center">
-<img src="https://github.com/user-attachments/assets/df1c2791-38b0-4763-a21b-de06582b76da" width=65% height=65% />
+<img src="https://github.com/user-attachments/assets/5a8ea311-2881-435b-913b-661a7d41d691" width=65% height=65% />
+
 </div>
 
 # [5] 그라운드 룰 
