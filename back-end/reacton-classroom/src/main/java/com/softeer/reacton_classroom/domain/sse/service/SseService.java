@@ -85,6 +85,7 @@ public class SseService {
     }
 
     private Flux<ServerSentEvent<MessageResponse<?>>> openCourseConnection(Sinks.Many<MessageResponse<?>> sink, ServerSentEvent<MessageResponse<?>> initEvent, String courseId) {
+        showCurrentUsers();
         return Flux.concat(Mono.just(initEvent),
                         sink.asFlux()
                                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
@@ -102,6 +103,7 @@ public class SseService {
     }
 
     private Flux<ServerSentEvent<MessageResponse<?>>> openStudentConnection(Sinks.Many<MessageResponse<?>> sink, ServerSentEvent<MessageResponse<?>> initEvent, String studentId, String courseId) {
+        showCurrentUsers();
         return Flux.concat(Mono.just(initEvent),
                         sink.asFlux()
                                 .map(data -> ServerSentEvent.<MessageResponse<?>>builder(data).build())
@@ -149,5 +151,9 @@ public class SseService {
             return true;
         }
         return false;
+    }
+
+    private void showCurrentUsers() {
+        log.debug("현재 {} 명의 사용자가 연결 중입니다. ", sinks.size());
     }
 }
