@@ -7,6 +7,7 @@ import ProfessorLayout from './pages/professor/ProfessorLayout';
 import ProfessorHomeLayout from './pages/professor/home/layout/ProfessorHomeLayout';
 import StudentHome from './pages/student/home/StudentHome';
 import Loading from './pages/loading/Loading';
+import StudentLayout from './pages/student/StudentLayout';
 
 const ProfessorHome = lazy(
   () => import('./pages/professor/home/ProfessorHome')
@@ -98,7 +99,7 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="student">
+        <Route path="student" element={<StudentLayout />}>
           <Route index element={<StudentHome />} />
           <Route
             path="course"
