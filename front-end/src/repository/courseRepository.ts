@@ -208,10 +208,13 @@ class CourseRepository {
   async searchCourses(keyword: string): Promise<CourseMeta[]> {
     // API: GET /professors/courses?keyword={keyword}
 
-    const response = await fetch(`/api/professors/courses?keyword=${keyword}`, {
-      method: 'GET',
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `/api/professors/courses?keyword=${encodeURIComponent(keyword)}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
+    );
 
     await throwError(response);
 
