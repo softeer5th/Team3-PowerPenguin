@@ -69,7 +69,7 @@ const courseActions = ({
             await courseRepository.deleteCourse(course.id);
             offModal();
             setModal(null);
-            navigate(0);
+            navigate('/professor');
           } catch (error) {
             popupError(error);
           }
