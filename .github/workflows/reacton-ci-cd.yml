@@ -105,6 +105,5 @@ jobs:
             docker logout
 
             echo "✅ Deployment completed successfully!"
-            '
 
             set -x 
