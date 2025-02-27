@@ -27,4 +27,4 @@ dist-ssr
 
 *.pem
 
-vercel.json
+vercel*
