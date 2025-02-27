@@ -18,20 +18,23 @@ type courseActionsProps = {
 const fileSuccessModal = (
   setModal: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
   openModal: () => void,
-  closeModal: () => void
+  closeModal: () => void,
+  navigate: NavigateFunction
 ) => {
   setModal(
     <AlertModal
       type="success"
-      message="파일이 성공적으로 업로드되었습니다."
+      message="파일이 성공적으로 수정되었습니다."
       buttonText="확인"
       onClickCloseButton={() => {
         closeModal();
         setModal(null);
+        navigate(0);
       }}
       onClickModalButton={async () => {
         closeModal();
         setModal(null);
+        navigate(0);
       }}
     />
   );
@@ -126,27 +129,45 @@ const courseActions = ({
   };
 
   const handleFileCourse = (course: CourseMeta) => {
-    const handleFileSave = async (file: File) => {
+    const handleFileSave = async (file: File | null) => {
       try {
         if (course?.fileName) {
-          setModal(
-            <AlertModal
-              type="caution"
-              message="새 파일을 저장하시겠습니까?"
-              description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
-              buttonText="새 파일 저장"
-              onClickModalButton={async () => {
-                await courseRepository.uploadCourseFile(course.id, file);
-                fileSuccessModal(setModal, openModal, closeModal);
-              }}
-              onClickCloseButton={() => {
-                offModal();
-              }}
-            />
-          );
+          if (file) {
+            setModal(
+              <AlertModal
+                type="caution"
+                message="새 파일을 저장하시겠습니까?"
+                description="이미 저장된 강의자료가 있습니다. 삭제하고 새 파일을 저장하시겠습니까?"
+                buttonText="새 파일 저장"
+                onClickModalButton={async () => {
+                  await courseRepository.uploadCourseFile(course.id, file);
+                  fileSuccessModal(setModal, openModal, closeModal, navigate);
+                }}
+                onClickCloseButton={() => {
+                  offModal();
+                }}
+              />
+            );
+          } else {
+            setModal(
+              <AlertModal
+                type="caution"
+                message="파일을 삭제하시겠습니까?"
+                description="이미 저장된 강의자료를 삭제하시겠습니까?"
+                buttonText="삭제"
+                onClickModalButton={async () => {
+                  await courseRepository.uploadCourseFile(course.id, file);
+                  fileSuccessModal(setModal, openModal, closeModal, navigate);
+                }}
+                onClickCloseButton={() => {
+                  offModal();
+                }}
+              />
+            );
+          }
         } else {
           await courseRepository.uploadCourseFile(course.id, file);
-          fileSuccessModal(setModal, openModal, closeModal);
+          fileSuccessModal(setModal, openModal, closeModal, navigate);
         }
       } catch (error) {
         popupError(error);
@@ -155,6 +176,7 @@ const courseActions = ({
 
     setModal(
       <FileUploadPopupModal
+        fileName={course?.fileName}
         onClickCloseButton={() => {
           offModal();
         }}
