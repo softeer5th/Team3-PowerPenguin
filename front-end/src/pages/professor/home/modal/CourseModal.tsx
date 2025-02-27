@@ -54,6 +54,40 @@ const makeFullUniversity = (university: string) => {
   return university;
 };
 
+const checkScheduleError = (schedules: CourseForm['schedule']): boolean => {
+  let isScheduleError = false;
+
+  schedules.forEach((schedule, index) => {
+    if (isScheduleError) return;
+
+    if (schedule.day === '') {
+      isScheduleError = true;
+    }
+    if (!timeRegex.test(schedule.start) || !timeRegex.test(schedule.end)) {
+      isScheduleError = true;
+    }
+    if (schedule.start >= schedule.end) {
+      isScheduleError = true;
+    }
+
+    schedules.forEach((otherSchedule, otherIndex) => {
+      if (isScheduleError) return;
+
+      if (index >= otherIndex) return;
+
+      if (
+        schedule.day === otherSchedule.day &&
+        schedule.start < otherSchedule.end &&
+        schedule.end > otherSchedule.start
+      ) {
+        isScheduleError = true;
+      }
+    });
+  });
+
+  return isScheduleError;
+};
+
 const checkFormError = (
   courseError: CourseError,
   courseForm: CourseForm
@@ -77,22 +111,7 @@ const checkFormError = (
     return true;
   }
 
-  let isScheduleError = false;
-  courseForm.schedule.forEach((schedule) => {
-    if (isScheduleError) return;
-
-    if (schedule.day === '') {
-      isScheduleError = true;
-    }
-    if (!timeRegex.test(schedule.start) || !timeRegex.test(schedule.end)) {
-      isScheduleError = true;
-    }
-    if (schedule.start >= schedule.end) {
-      isScheduleError = true;
-    }
-  });
-
-  return isScheduleError;
+  return checkScheduleError(courseForm.schedule);
 };
 
 const CourseModal = ({ course, onSubmit, onClose }: CourseModalProps) => {
