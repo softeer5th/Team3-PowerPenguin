@@ -67,7 +67,7 @@ public class StudentCourseController {
         log.debug("입장 코드와 일치하는 수업 참여를 요청합니다. : accessCode = {}", accessCode);
 
         String newAccessToken = studentCourseService.registerCourse(accessCode);
-        ResponseCookie jwtCookie = ResponseCookie.from("access_token", newAccessToken)
+        ResponseCookie jwtCookie = ResponseCookie.from("student_access_token", newAccessToken)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
