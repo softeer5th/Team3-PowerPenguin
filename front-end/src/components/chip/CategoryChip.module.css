@@ -1,0 +1,32 @@
+.chipContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font: inherit;
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+}
+
+.green {
+  margin: auto;
+  background-color: var(--sub-green-200);
+  font: inherit;
+  color: var(--sub-green-500);
+}
+
+.purple {
+  margin: auto;
+  background-color: var(--sub-purple-200);
+  font: inherit;
+  color: var(--sub-purple-500);
+}
+
+.gray {
+  margin: auto;
+  background-color: var(--gray-400);
+  font: inherit;
+  color: var(--gray-700);
+}

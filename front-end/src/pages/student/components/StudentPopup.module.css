@@ -1,0 +1,128 @@
+.popupContainer {
+  position: relative;
+  margin: 0 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 20px 12px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+}
+
+.closeButton {
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  width: 12px;
+  height: 12px;
+  color: var(--gray-600);
+}
+
+.warnSvg {
+  display: flex;
+  width: 46px;
+  height: 46px;
+  padding: 12px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 23px;
+  background: linear-gradient(
+    180deg,
+    var(--error-red-200, rgba(255, 236, 236, 0.2)) 0%,
+    var(--error-red-500, rgba(255, 58, 58, 0.2)) 100%
+  );
+  margin-bottom: 12px;
+}
+.popupTitle {
+  font: var(--mobile-title3-bold);
+  color: var(--gray-900);
+  margin-bottom: 8px;
+}
+
+.popupDesc {
+  font: var(--mobile-body3-medium);
+  color: var(--gray-500);
+  margin-bottom: 16px;
+}
+
+.checkButton {
+  font: var(--mobile-button1-bold);
+  color: var(--error-red-500);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .popupContainer {
+    max-width: 540px;
+    padding: 36px 28px;
+  }
+
+  .closeButton {
+    top: 45px;
+    right: 45px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .warnSvg {
+    width: 56px;
+    height: 56px;
+    padding: 16px 14px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+  }
+
+  .popupTitle {
+    font: var(--web-title4-bold);
+    margin-bottom: 12px;
+  }
+
+  .popupDesc {
+    font: var(--web-body3-medium);
+    margin-bottom: 24px;
+  }
+
+  .checkButton {
+    font: var(--web-button3-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .popupContainer {
+    max-width: 540px;
+    padding: 36px 28px;
+  }
+
+  .closeButton {
+    top: 45px;
+    right: 45px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .warnSvg {
+    width: 56px;
+    height: 56px;
+    padding: 16px 14px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+  }
+
+  .popupTitle {
+    font: var(--web-title3-bold);
+    margin-bottom: 12px;
+  }
+
+  .popupDesc {
+    font: var(--web-body2-medium);
+    margin-bottom: 24px;
+  }
+
+  .checkButton {
+    font: var(--web-button2-bold);
+  }
+}

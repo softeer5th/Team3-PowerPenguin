@@ -1,0 +1,96 @@
+.modalContainer {
+  width: 908px;
+  height: 534px;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  padding: 58px 60px 57px 60px;
+  background-color: white;
+  gap: 47px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+}
+
+.closeButton {
+  position: absolute;
+  top: 40px;
+  right: 30px;
+}
+
+.closeSvg {
+  width: 19px;
+  height: 20px;
+  color: var(--gray-600);
+}
+
+.noQuestion {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-800);
+  font: var(--web-body-list24-medium);
+}
+
+.pageController {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.buttonContainer {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: rgba(103, 115, 141, 0.2);
+}
+
+.buttonContainer:disabled {
+  background-color: rgba(133, 147, 176, 0.3);
+}
+
+.buttonContainer:disabled .icon {
+  color: white;
+}
+
+.icon {
+  width: 6px;
+  height: 12px;
+  fill: none;
+  color: var(--gray-700);
+}
+
+.page {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--gray-500);
+}
+
+.currentPage {
+  color: var(--gray-600);
+}
+
+.questionContent {
+  width: 100%;
+  height: 210px;
+  color: var(--gray-800);
+  font: var(--web-body-list24-medium);
+  margin-bottom: 47px;
+  scrollbar-width: none;
+  word-wrap: break-word;
+}
+
+.resolveButton {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  background-color: var(--sub-green-500);
+  font: var(--web-button2-bold);
+  color: white;
+  text-align: center;
+}

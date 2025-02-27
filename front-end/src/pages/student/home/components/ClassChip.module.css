@@ -1,0 +1,42 @@
+.chipContainer {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 4px 9px;
+  font: var(--mobile-body3-bold);
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+}
+
+.green {
+  background-color: var(--sub-green-200);
+  color: var(--sub-green-500);
+}
+
+.purple {
+  background-color: var(--sub-purple-200);
+  color: var(--sub-purple-500);
+}
+
+.gray {
+  background-color: var(--gray-400);
+  color: var(--gray-700);
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .chipContainer {
+    padding: 6px 12px;
+    font: var(--web-body3-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .chipContainer {
+    padding: 8px 18px;
+    font: var(--web-body2-bold);
+  }
+}

@@ -1,0 +1,113 @@
+.gnb {
+  width: 1920px;
+  height: 122px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  margin-left: 44px;
+  gap: 50px;
+}
+
+.logo {
+  width: 181px;
+  height: 28px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  color: var(--gray-600);
+}
+
+.input {
+  width: 636px;
+  height: 62px;
+  background-color: var(--gray-100);
+  padding: 16px 24px;
+  border-radius: var(--medium);
+  font: var(--web-caption1-medium);
+}
+
+.input::placeholder {
+  color: var(--gray-500);
+}
+
+.input:focus {
+  outline: 2px solid var(--blue-400);
+  color: var(--blue-400);
+}
+
+.searchButton {
+  position: absolute;
+  right: 16px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.closeIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--gray-600);
+  flex-shrink: 0;
+}
+
+.searchIcon {
+  width: 23px;
+  height: 23px;
+  color: var(--gray-600);
+  flex-shrink: 0;
+}
+
+.inputContainer:focus-within {
+  color: var(--blue-400);
+}
+
+.inputContainer:focus-within .searchIcon {
+  color: var(--blue-400);
+}
+
+.inputContainer:focus-within .closeIcon {
+  color: var(--blue-400);
+}
+
+.profile {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 54px;
+  border-radius: 50%;
+  background-color: var(--gray-200);
+  overflow: hidden;
+}
+
+svg.profileImage {
+  width: 36px;
+  height: 36px;
+  margin: 14px;
+}
+
+img.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.container {
+  width: 1920px;
+}

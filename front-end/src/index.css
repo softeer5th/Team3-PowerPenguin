@@ -1,0 +1,367 @@
+/* Reset CSS */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-size: 100%;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button:hover {
+  cursor: pointer;
+}
+/* Custom Style */
+/* Font Family */
+@font-face {
+  font-family: 'Pretendard Variable';
+  src: url('./assets/font/PretendardVariable.woff2') format('woff2');
+}
+
+/* Typography */
+:root {
+  /* Text Size */
+
+  /* Web */
+
+  /* Display */
+  --web-display1: 50px;
+
+  /* Header */
+  --web-header1: 36px;
+  --web-header2: 32px;
+  --web-header3: 30px;
+
+  /* Title */
+  --web-title1: 28px;
+  --web-title2: 26px;
+  --web-title3: 24px;
+  --web-title4: 22px;
+  --web-title5: 20px;
+
+  /* Body */
+  --web-body1: 20px;
+  --web-body2: 18px;
+  --web-body3: 16px;
+
+  /* Body List */
+  --web-body-list1: 28px;
+  --web-body-list2: 24px;
+  --web-body-list3: 20px;
+  --web-body-list4: 18px;
+
+  /* Caption */
+  --web-caption1: 18px;
+  --web-caption2: 16px;
+  --web-caption3: 15px;
+  --web-caption4: 14px;
+
+  /* Button */
+  --web-button1: 28px;
+  --web-button2: 24px;
+  --web-button3: 18px;
+  --web-button4: 22px;
+
+  /* Mobile */
+
+  /* Title */
+  --mobile-title1: 20px;
+  --mobile-title2: 18px;
+  --mobile-title3: 16px;
+
+  /* Body */
+  --mobile-body1: 16px;
+  --mobile-body2: 14px;
+  --mobile-body3: 12px;
+
+  /* Caption */
+  --mobile-caption1: 14px;
+  --mobile-caption2: 12px;
+  --mobile-caption3: 10px;
+
+  /* Button */
+  --mobile-button1: 16px;
+  --mobile-button2: 14px;
+
+  /* Text Weight */
+  --text-bold: 700;
+  --text-medium: 500;
+  --text-regular: 400;
+}
+
+/* Typography System */
+:root {
+  /* Web */
+
+  /* Display */
+  --web-display1-bold: var(--text-bold) var(--web-display1) / normal
+    'Pretendard Variable';
+
+  /* Header */
+  --web-header1-bold: var(--text-bold) var(--web-header1) / normal
+    'Pretendard Variable';
+  --web-header1-medium: var(--text-medium) var(--web-header1) / normal
+    'Pretendard Variable';
+  --web-header2-bold: var(--text-bold) var(--web-header2) / normal
+    'Pretendard Variable';
+  --web-header2-medium: var(--text-medium) var(--web-header2) / normal
+    'Pretendard Variable';
+  --web-header3-bold: var(--text-bold) var(--web-header3) / normal
+    'Pretendard Variable';
+  --web-header3-medium: var(--text-medium) var(--web-header3) / normal
+    'Pretendard Variable';
+
+  /* Title */
+  --web-title1-bold: var(--text-bold) var(--web-title1) / normal
+    'Pretendard Variable';
+  --web-title1-medium: var(--text-medium) var(--web-title1) / normal
+    'Pretendard Variable';
+  --web-title2-bold: var(--text-bold) var(--web-title2) / normal
+    'Pretendard Variable';
+  --web-title2-medium: var(--text-medium) var(--web-title2) / normal
+    'Pretendard Variable';
+  --web-title3-bold: var(--text-bold) var(--web-title3) / normal
+    'Pretendard Variable';
+  --web-title3-medium: var(--text-medium) var(--web-title3) / normal
+    'Pretendard Variable';
+  --web-title4-bold: var(--text-bold) var(--web-title4) / normal
+    'Pretendard Variable';
+  --web-title4-medium: var(--text-medium) var(--web-title4) / normal
+    'Pretendard Variable';
+  --web-title5-bold: var(--text-bold) var(--web-title5) / normal
+    'Pretendard Variable';
+  --web-title5-medium: var(--text-medium) var(--web-title5) / normal
+    'Pretendard Variable';
+
+  /* Body */
+  --web-body1-bold: var(--text-bold) var(--web-body1) / normal
+    'Pretendard Variable';
+  --web-body1-medium: var(--text-medium) var(--web-body1) / normal
+    'Pretendard Variable';
+  --web-body2-bold: var(--text-bold) var(--web-body2) / normal
+    'Pretendard Variable';
+  --web-body2-medium: var(--text-medium) var(--web-body2) / normal
+    'Pretendard Variable';
+  --web-body3-bold: var(--text-bold) var(--web-body3) / normal
+    'Pretendard Variable';
+  --web-body3-medium: var(--text-medium) var(--web-body3) / normal
+    'Pretendard Variable';
+
+  /* Body List */
+  --web-body-list28-medium: var(--text-medium) var(--web-body-list1) / 40px
+    'Pretendard Variable';
+  --web-body-list24-medium: var(--text-medium) var(--web-body-list2) / 42px
+    'Pretendard Variable';
+  --web-body-list20-medium: var(--text-medium) var(--web-body-list3) / 30px
+    'Pretendard Variable';
+  --web-body-list20-regular: var(--text-regular) var(--web-body-list3) / 32px
+    'Pretendard Variable';
+  --web-body-list18-medium: var(--text-medium) var(--web-body-list4) / 30px
+    'Pretendard Variable';
+
+  /* Caption */
+  --web-caption1-bold: var(--text-bold) var(--web-caption1) / normal
+    'Pretendard Variable';
+  --web-caption1-medium: var(--text-medium) var(--web-caption1) / normal
+    'Pretendard Variable';
+  --web-caption2-bold: var(--text-bold) var(--web-caption2) / normal
+    'Pretendard Variable';
+  --web-caption2-medium: var(--text-medium) var(--web-caption2) / normal
+    'Pretendard Variable';
+  --web-caption3-medium: var(--text-medium) var(--web-caption3) / normal
+    'Pretendard Variable';
+  --web-caption4-bold: var(--text-bold) var(--web-caption4) / normal
+    'Pretendard Variable';
+  --web-caption4-medium: var(--text-medium) var(--web-caption4) / normal
+    'Pretendard Variable';
+
+  /* Button */
+  --web-button1-bold: var(--text-bold) var(--web-button1) / normal
+    'Pretendard Variable';
+  --web-button2-bold: var(--text-bold) var(--web-button2) / normal
+    'Pretendard Variable';
+  --web-button3-bold: var(--text-bold) var(--web-button3) / normal
+    'Pretendard Variable';
+  --web-button4-bold: var(--text-bold) var(--web-button4) / normal
+    'Pretendard Variable';
+
+  /* Mobile */
+
+  /* Title */
+  --mobile-title1-bold: var(--text-bold) var(--mobile-title1) / normal
+    'Pretendard Variable';
+  --mobile-title1-medium: var(--text-medium) var(--mobile-title1) / normal
+    'Pretendard Variable';
+  --mobile-title1-regular: var(--text-regular) var(--mobile-title1) / normal
+    'Pretendard Variable';
+  --mobile-title2-bold: var(--text-bold) var(--mobile-title2) / normal
+    'Pretendard Variable';
+  --mobile-title2-medium: var(--text-medium) var(--mobile-title2) / normal
+    'Pretendard Variable';
+  --mobile-title2-regular: var(--text-regular) var(--mobile-title2) / normal
+    'Pretendard Variable';
+  --mobile-title3-bold: var(--text-bold) var(--mobile-title3) / normal
+    'Pretendard Variable';
+  --mobile-title3-medium: var(--text-medium) var(--mobile-title3) / normal
+    'Pretendard Variable';
+  --mobile-title3-regular: var(--text-regular) var(--mobile-title3) / normal
+    'Pretendard Variable';
+
+  /* Body */
+  --mobile-body1-bold: var(--text-bold) var(--mobile-body1) / normal
+    'Pretendard Variable';
+  --mobile-body1-medium: var(--text-medium) var(--mobile-body1) / normal
+    'Pretendard Variable';
+  --mobile-body1-regular: var(--text-regular) var(--mobile-body1) / normal
+    'Pretendard Variable';
+  --mobile-body2-bold: var(--text-bold) var(--mobile-body2) / normal
+    'Pretendard Variable';
+  --mobile-body2-medium: var(--text-medium) var(--mobile-body2) / normal
+    'Pretendard Variable';
+  --mobile-body2-regular: var(--text-regular) var(--mobile-body2) / normal
+    'Pretendard Variable';
+  --mobile-body3-bold: var(--text-bold) var(--mobile-body3) / normal
+    'Pretendard Variable';
+  --mobile-body3-medium: var(--text-medium) var(--mobile-body3) / normal
+    'Pretendard Variable';
+  --mobile-body3-regular: var(--text-regular) var(--mobile-body3) / normal
+    'Pretendard Variable';
+
+  /* Caption */
+  --mobile-caption1-bold: var(--text-bold) var(--mobile-caption1) / normal
+    'Pretendard Variable';
+  --mobile-caption1-medium: var(--text-medium) var(--mobile-caption1) / normal
+    'Pretendard Variable';
+  --mobile-caption1-regular: var(--text-regular) var(--mobile-caption1) / normal
+    'Pretendard Variable';
+  --mobile-caption2-bold: var(--text-bold) var(--mobile-caption2) / normal
+    'Pretendard Variable';
+  --mobile-caption2-medium: var(--text-medium) var(--mobile-caption2) / normal
+    'Pretendard Variable';
+  --mobile-caption2-regular: var(--text-regular) var(--mobile-caption2) / normal
+    'Pretendard Variable';
+  --mobile-caption3-bold: var(--text-bold) var(--mobile-caption3) / normal
+    'Pretendard Variable';
+  --mobile-caption3-medium: var(--text-medium) var(--mobile-caption3) / normal
+    'Pretendard Variable';
+  --mobile-caption3-regular: var(--text-regular) var(--mobile-caption3) / normal
+    'Pretendard Variable';
+
+  /* Button */
+  --mobile-button1-bold: var(--text-bold) var(--mobile-button1) / normal
+    'Pretendard Variable';
+  --mobile-button1-medium: var(--text-medium) var(--mobile-button1) / normal
+    'Pretendard Variable';
+  --mobile-button1-regular: var(--text-regular) var(--mobile-button1) / normal
+    'Pretendard Variable';
+  --mobile-button2-bold: var(--text-bold) var(--mobile-button2) / normal
+    'Pretendard Variable';
+  --mobile-button2-medium: var(--text-medium) var(--mobile-button2) / normal
+    'Pretendard Variable';
+  --mobile-button2-regular: var(--text-regular) var(--mobile-button2) / normal
+    'Pretendard Variable';
+}
+
+/* Color System */
+:root {
+  /* Primary */
+  --blue-100: #e6eaff;
+  --blue-200: #d9dfff;
+  --blue-300: #b0bcfe;
+  --blue-400: #0028fd;
+  --blue-500: #0024e4;
+  --blue-600: #0020ca;
+  --blue-700: #001ebe;
+  --blue-800: #001898;
+  --blue-900: #001272;
+
+  /* Grayscale */
+  --gray-100: #edf1f7;
+  --gray-200: #ecf2fb;
+  --gray-300: #e0e6f1;
+  --gray-400: #c6d0e2;
+  --gray-500: #8593b0;
+  --gray-600: #67738d;
+  --gray-700: #4d586f;
+  --gray-800: #3b4559;
+  --gray-900: #010515;
+
+  /* Background */
+  --bg: #f8f9fd;
+
+  /* Secondary Green */
+  --sub-green-200: #d9f9ed;
+  --sub-green-500: #00bc74;
+
+  /* Secondary Purple */
+  --sub-purple-200: #f5e4ff;
+  --sub-purple-500: #6900bc;
+
+  /* Secondary Orange */
+  --sub-orange-200: #feedd9;
+  --sub-orange-500: #fb8500;
+  --sub-orange-800: #f46600;
+
+  /* Alert */
+  --error-red-200: #ffecec;
+  --error-red-500: #ff3a3a;
+
+  /* Black */
+  --black: #222222;
+}
+
+/* Radius */
+:root {
+  --xsmall: 4px;
+  --small: 8px;
+  --medium: 12px;
+  --large: 20px;
+}
+
+body {
+  background-color: var(--bg);
+}

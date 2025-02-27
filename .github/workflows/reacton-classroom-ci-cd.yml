@@ -1,0 +1,103 @@
+name: Deploy ReactON Classroom
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+    paths:
+      - "back-end/reacton-classroom/**"
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Generate application.properties from GitHub Secrets
+        run: |
+          mkdir -p back-end/reacton-classroom/src/main/resources
+          rm -f back-end/reacton-classroom/src/main/resources/application.properties
+          touch back-end/reacton-classroom/src/main/resources/application.properties
+          echo "${{ secrets.PROPERTIES_CLASSROOM }}" | tr -d '\r' > back-end/reacton-classroom/src/main/resources/application.properties
+          ls -lh back-end/reacton-classroom/src/main/resources/
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x back-end/reacton-classroom/gradlew
+
+      - name: Build with Gradle
+        run: cd back-end/reacton-classroom && ./gradlew clean build -x test --build-cache
+
+      - name: Check Build Artifact
+        run: ls -lh back-end/reacton-classroom/build/libs/ || (echo "Build artifact missing!" && exit 1)
+
+      - name: Docker Build and Push
+        run: |
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest || true
+          sudo docker build --platform linux/arm64 \
+            --cache-from=${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest \
+            -f back-end/reacton-classroom/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest back-end/reacton-classroom
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            set +x
+            set -e
+            
+            cd ~/app/back-end/reacton-classroom
+            
+            echo "🛑 Stopping and removing existing container..."
+            docker stop reacton-classroom-back || true
+            docker rm reacton-classroom-back || true
+            
+            echo "🔄 Logging in to Docker Hub..."
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            echo "🔄 Pulling latest Docker image..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest
+            
+            echo "🚀 Running new container..."
+            docker run -d --name reacton-classroom-back \
+              --restart always \
+              --network reacton_network \
+              -p 8081:8081 \
+              -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_CLASSROOM }} \
+              "${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest"
+            
+            echo "🧹 Cleaning up unused images..."
+            sudo docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
+            
+            echo "🔐 Logging out from Docker Hub..."
+            docker logout
+
+            echo "✅ Deployment completed successfully!"
+            
+            set -x
+
+            

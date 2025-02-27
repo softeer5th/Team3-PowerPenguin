@@ -1,0 +1,122 @@
+.background {
+  background-color: var(--bg);
+}
+
+.container {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 92px;
+  justify-content: center;
+  padding: 65px 274px;
+  padding-bottom: 131px;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font: var(--web-header3-bold);
+  color: var(--gray-900);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: var(--medium);
+  outline: 2px solid var(--gray-200);
+}
+
+.profileContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  padding: 30px 40px;
+  padding-left: 60px;
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.profileContent:last-child {
+  border-bottom: none;
+}
+
+.subTitle {
+  font: var(--web-title5-bold);
+  color: var(--gray-900);
+}
+
+.profileWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profileImageContainer {
+  width: 464px;
+  display: flex;
+  align-items: center;
+  gap: 37px;
+}
+
+.profileImage {
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  background-color: var(--gray-200);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.profileImage > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileImage > svg {
+  width: 65px;
+  height: 65px;
+}
+
+.profileInput {
+  display: none;
+}
+
+.profileButtonContainer {
+  display: flex;
+  gap: 12px;
+}
+
+.text {
+  width: 464px;
+  height: 53px;
+  padding: 16px 20px;
+  border-radius: var(--small);
+  outline: 1.5px solid var(--gray-200);
+  background-color: var(--bg);
+  font: var(--web-body2-medium);
+  color: var(--gray-700);
+}
+
+input.text:focus {
+  outline: 1.5px solid var(--blue-400);
+}
+
+.accountContentText {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subDescription {
+  font: var(--web-body2-medium);
+  color: var(--gray-500);
+}

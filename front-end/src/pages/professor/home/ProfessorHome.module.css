@@ -1,0 +1,160 @@
+.container {
+  width: 1920px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  user-select: none;
+}
+
+.header {
+  width: 1920px;
+  height: 721px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    to top right,
+    #0024e04d 0%,
+    #eaf1fa 50%,
+    #88e2d680 100%
+  );
+  overflow: hidden;
+  position: relative;
+}
+
+.header::before,
+.header::after {
+  content: '';
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.header::before {
+  background-image: url('./assets/torus1.png');
+  background-position: left;
+  width: 651px;
+  height: 630px;
+  top: 110px;
+  left: -280px;
+  opacity: 0.25;
+}
+
+.header::after {
+  background-image: url('./assets/torus2.png');
+  background-position: right;
+  width: 655px;
+  height: 655px;
+  top: 48px;
+  right: -100px;
+  opacity: 0.45;
+}
+
+.headerContainer {
+  width: 1371px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.noTodayCourse {
+  width: 1371px;
+  height: 495px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: var(--large);
+  gap: 52px;
+}
+
+.rocket {
+  width: 133px;
+  height: 133px;
+  background: linear-gradient(180deg, #e6eaff 0%, #b0bcfe 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rocketIcon {
+  width: 81px;
+  height: 81px;
+}
+
+.noTodayCourseText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.noTodayCourse .title {
+  font: var(--web-title1-bold);
+  color: var(--gray-900);
+}
+
+.noTodayCourse .title > span {
+  color: var(--blue-400);
+}
+
+.noTodayCourse .description {
+  font: var(--web-body1-medium);
+  color: var(--gray-500);
+}
+
+.content {
+  width: 1920px;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.courseList {
+  width: auto;
+  height: auto;
+  margin: 0 274px;
+  margin-top: 80px;
+  margin-bottom: 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.courseListHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.courseListHeader .title {
+  font: var(--web-header3-bold);
+  color: var(--gray-900);
+}
+
+.courseAdd {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  float: right;
+  bottom: 82px;
+  right: 82px;
+  z-index: 1;
+}
+
+.dropdownContainer {
+  position: relative;
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+  height: 53px;
+  overflow: visible;
+}

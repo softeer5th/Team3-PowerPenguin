@@ -1,0 +1,112 @@
+.container {
+  background-color: var(--bg);
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 33px;
+  padding-left: 80px;
+  padding-top: 84px;
+  background: linear-gradient(
+    to top right,
+    #0024e04d 0%,
+    #eaf1fa 50%,
+    #88e2d680 100%
+  );
+}
+
+.logo {
+  width: 174px;
+  height: 27px;
+}
+
+.mainDescription {
+  font: var(--web-display1-bold);
+  color: black;
+  line-height: 63px;
+}
+
+.subDescription {
+  font: var(--web-body1-medium);
+  color: var(--gray-600);
+}
+
+.divider {
+  width: 970px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.loginArea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+}
+
+.image {
+  width: 300px;
+  height: 300px;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.loginText {
+  font: var(--web-header1-bold);
+  color: var(--gray-900);
+  margin-top: 33px;
+}
+
+.buttonContainer {
+  width: 676px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 103px;
+}
+
+.private {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 70px;
+  margin-top: auto;
+  border-top: 1px solid var(--gray-300);
+}
+
+.privateButton {
+  font: var(--web-caption2-bold);
+  color: var(--gray-500);
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}

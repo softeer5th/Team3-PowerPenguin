@@ -1,0 +1,81 @@
+.todayCourse {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 116px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.todayCourse .title {
+  font: var(--web-header3-bold);
+  color: var(--gray-700);
+}
+
+.todayCourse .title > span {
+  color: var(--blue-400);
+}
+
+.noLargeCourse {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 579px;
+  height: 495px;
+  border-radius: var(--large);
+  background-color: rgba(255, 255, 255, 0.5);
+  outline: 1px solid var(--gray-400);
+}
+
+.noLargeCourse > span {
+  font: var(--web-title1-medium);
+  color: var(--gray-700);
+}
+
+.todayCourseList {
+  width: 676px;
+  height: 495px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 34px;
+  border-radius: var(--large);
+  background-color: rgba(255, 255, 255, 0.5);
+  outline: 1px solid var(--gray-400);
+}
+
+.todayCourseList > .title {
+  font: var(--web-title3-bold);
+  color: var(--gray-700);
+  margin-bottom: 18px;
+}
+
+.courseRow {
+  display: flex;
+  width: 608px;
+  height: 325px;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.todayCourseController {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  gap: 62px;
+}
+
+.page {
+  font: var(--web-body3-medium);
+  color: var(--gray-500);
+}
+
+.page > span {
+  font: var(--web-body3-bold);
+  color: var(--gray-600);
+}

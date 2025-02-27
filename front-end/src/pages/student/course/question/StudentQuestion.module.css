@@ -1,0 +1,111 @@
+.pageLayout {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 20px 20px 20px;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.questionTitle {
+  font: var(--mobile-title1-bold);
+  color: var(--gray-900);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.titleStrong {
+  color: var(--blue-400);
+}
+
+.questionDesc {
+  font: var(--mobile-body1-medium);
+  color: var(--gray-500);
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.questionLayout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 20px;
+}
+
+.questionContainer {
+  display: flex;
+  max-width: 390px;
+  max-height: 350px;
+  overflow-y: scroll;
+  width: 100%;
+  flex-direction: column;
+  align-items: end;
+  flex: 1;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.questionContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .questionTitle {
+    font: var(--web-title4-bold);
+    margin-bottom: 8px;
+  }
+
+  .questionDesc {
+    font: var(--web-body3-medium);
+    margin-bottom: 128px;
+  }
+
+  .contentContainer {
+    flex: 0;
+  }
+
+  .cardContainer {
+    gap: 18px;
+  }
+  .questionContainer {
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .questionTitle {
+    font: var(--web-title3-bold);
+    margin-bottom: 12px;
+  }
+
+  .questionDesc {
+    font: var(--web-body2-medium);
+    margin-bottom: 128px;
+  }
+
+  .cardContainer {
+    gap: 20px;
+  }
+
+  .contentContainer {
+    flex: 0;
+  }
+
+  .questionContainer {
+    max-width: 800px;
+    margin-bottom: 40px;
+  }
+}

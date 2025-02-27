@@ -1,0 +1,24 @@
+.PDFContainer {
+  overflow: scroll;
+  background-color: gray;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
+.PDFContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.PDFContainer:focus {
+  outline: none;
+}
+
+.PDFContainer > canvas {
+  display: block;
+  margin: auto;
+}
+
+.PDFContainer > canvas:hover {
+  user-select: none;
+}

@@ -1,0 +1,98 @@
+.homeLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 175px 20px;
+  gap: 110px;
+  background-color: white;
+}
+
+.logo {
+  width: 160px;
+  height: 25px;
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.professorButton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: keep-all;
+  font: var(--mobile-button1-bold);
+  padding: 16px;
+  background-color: var(--blue-400);
+  color: white;
+  border-radius: 8px;
+}
+
+.studentButton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: keep-all;
+  font: var(--mobile-button1-bold);
+  padding: 16px;
+  background-color: var(--blue-400);
+  color: white;
+  border-radius: 8px;
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .homeLayout {
+    padding: 331px 20px;
+    gap: 160px;
+  }
+
+  .logo {
+    width: 435px;
+    height: 68px;
+  }
+
+  .buttonContainer {
+    gap: 20px;
+    max-width: 652px;
+  }
+
+  .professorButton {
+    font: var(--web-button3-bold);
+  }
+
+  .studentButton {
+    font: var(--web-button3-bold);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .homeLayout {
+    padding: 272px 20px;
+    gap: 160px;
+  }
+
+  .logo {
+    width: 435px;
+    height: 68px;
+  }
+
+  .buttonContainer {
+    max-width: 908px;
+    gap: 40px;
+  }
+
+  .professorButton {
+    font: var(--web-button3-bold);
+  }
+
+  .studentButton {
+    font: var(--web-button3-bold);
+  }
+}

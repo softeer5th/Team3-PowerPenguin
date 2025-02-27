@@ -1,0 +1,110 @@
+.homeLayout {
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  padding: 175px 20px;
+  gap: 110px;
+  background-color: white;
+}
+
+.logo {
+  width: 160px;
+  height: 25px;
+}
+
+.classForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.classInput {
+  height: 52px;
+  border: 1px solid var(--gray-300);
+  color: var(--blue-400);
+  font: var(--mobile-button1-medium);
+  outline: none;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.classInput:focus {
+  border-color: var(--blue-400);
+}
+
+.formButton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: keep-all;
+  font: var(--mobile-button1-bold);
+  padding: 16px;
+  background-color: var(--blue-400);
+  color: white;
+  border-radius: 8px;
+}
+
+.formButton:disabled {
+  font: var(--mobile-button1-medium);
+  background-color: var(--gray-300);
+  color: var(--gray-500);
+}
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .homeLayout {
+    gap: 160px;
+  }
+
+  .logo {
+    width: 325px;
+    height: 54px;
+  }
+
+  .classForm {
+    gap: 20px;
+    max-width: 652px;
+  }
+
+  .classInput {
+    font: var(--web-button3);
+  }
+
+  .formButton {
+    font: var(--web-button3-bold);
+  }
+  .formButton:disabled {
+    font: var(--web-button3);
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .homeLayout {
+    gap: 160px;
+  }
+
+  .logo {
+    width: 325px;
+    height: 54px;
+  }
+
+  .classForm {
+    max-width: 908px;
+    gap: 20px;
+  }
+
+  .classInput {
+    font: var(--web-button2);
+  }
+
+  .formButton {
+    font: var(--web-button2-bold);
+  }
+  .formButton:disabled {
+    font: var(--web-button2);
+  }
+}

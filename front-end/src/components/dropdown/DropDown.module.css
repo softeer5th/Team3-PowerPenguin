@@ -1,0 +1,79 @@
+.dropDown {
+  z-index: 99;
+}
+
+.dropDownActive {
+  z-index: 100;
+}
+
+.dropDownWrapper {
+  position: relative;
+  display: flex;
+  min-height: 50px;
+  max-height: 259px;
+  justify-content: space-between;
+  margin-bottom: 1px;
+  background-color: var(--gray-200);
+  outline: 1px solid var(--gray-300);
+  border-radius: var(--small);
+  color: var(--gray-500);
+  font: var(--web-body1-medium);
+}
+
+.dropDownActive .dropDownWrapper {
+  outline: 1px solid var(--blue-400);
+}
+
+.dropDownContainer {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 13px 0px;
+  gap: 20px;
+}
+
+.dropDownActive .titleContainer {
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.dropDownTitle {
+  white-space: pre;
+}
+
+.dropDownIcon {
+  fill: var(--blue-400);
+  color: var(--blue-400);
+}
+
+.labelContainer {
+  margin-top: 2px;
+  display: flex;
+  height: 209px;
+  padding-top: 112px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -webkit-scrollbar-width: none;
+}
+
+.label {
+  padding: 12px 0px;
+  width: 100%;
+  /* height: 100%; */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label:hover {
+  color: var(--blue-400);
+}

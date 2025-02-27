@@ -1,0 +1,51 @@
+.popupContainer {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: 90%;
+  max-width: 427px;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 8px;
+  color: white;
+  font: var(--mobile-button1-medium);
+  background-color: #010515;
+  opacity: 0.8;
+  animation: move 2s ease-in-out forwards;
+}
+
+@keyframes move {
+  0% {
+    bottom: 0;
+    opacity: 0;
+  }
+  50% {
+    bottom: 47px;
+    opacity: 1;
+  }
+  100% {
+    bottom: 0;
+    opacity: 0;
+    display: none;
+  }
+}
+
+/*스플릿 뷰 */
+@media all and (min-width: 600px) {
+  .popupContainer {
+    max-width: 427px;
+    height: 52px;
+  }
+}
+
+/*웹 뷰 */
+@media all and (min-width: 961px) {
+  .popupContainer {
+    max-width: 676px;
+    height: 66px;
+  }
+}

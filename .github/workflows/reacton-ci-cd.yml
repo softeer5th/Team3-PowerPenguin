@@ -1,0 +1,109 @@
+name: Deploy ReactON
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+    paths:
+      - "back-end/reacton/**"
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Generate application.properties from GitHub Secrets
+        run: |
+          mkdir -p back-end/reacton/src/main/resources
+          rm -f back-end/reacton/src/main/resources/application.properties
+          touch back-end/reacton/src/main/resources/application.properties
+          echo "${{ secrets.PROPERTIES }}" | tr -d '\r' > back-end/reacton/src/main/resources/application.properties
+          ls -lh back-end/reacton/src/main/resources/
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x back-end/reacton/gradlew
+
+      - name: Build with Gradle
+        run: cd back-end/reacton && ./gradlew clean build -x test --build-cache --parallel --configure-on-demand
+
+      - name: Check Build Artifact
+        run: ls -lh back-end/reacton/build/libs/ || (echo "Build artifact missing!" && exit 1)
+
+      - name: Docker Build and Push
+        run: |
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest || true
+          sudo docker build --platform linux/arm64 \
+            --cache-from=${{ secrets.DOCKER_USERNAME }}/reacton-back:latest \
+            -f back-end/reacton/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest back-end/reacton
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            set +x  
+            set -e
+
+            cd ~/app/back-end/reacton
+
+            echo "🛑 Stopping and removing existing container..."
+            docker stop reacton-back || true
+            docker rm reacton-back || true
+
+            echo "🔄 Logging in to Docker Hub..."
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            echo "🔄 Pulling latest Docker image..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/reacton-back:latest
+
+            echo "🚀 Running new container..."
+            docker run -d --name reacton-back \
+              --restart always \
+              --network reacton_network \
+              -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
+              -e SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}" \
+              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              -e SPRING_JPA_HIBERNATE_DDL_AUTO="${{ secrets.SPRING_JPA_HIBERNATE_DDL_AUTO }}" \
+              -e OAUTH_GOOGLE_CLIENT_ID="${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}" \
+              -e OAUTH_GOOGLE_CLIENT_SECRET="${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}" \
+              -e JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}" \
+              -e AWS_REGION="${{ secrets.AWS_REGION }}" \
+              -e AWS_BUCKET_NAME="${{ secrets.AWS_BUCKET_NAME }}" \
+              "${{ secrets.DOCKER_USERNAME }}/reacton-back:latest"
+
+            echo "🧹 Cleaning up unused images..."
+            docker image prune -f || { echo "❌ Failed to prune Docker images"; exit 1; }
+
+            echo "🔐 Logging out from Docker Hub..."
+            docker logout
+
+            echo "✅ Deployment completed successfully!"
+
+            set -x 

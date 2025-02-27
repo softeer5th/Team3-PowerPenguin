@@ -1,0 +1,99 @@
+.modal {
+  width: 652px;
+  height: 391px;
+  background-color: white;
+  border-radius: var(--large);
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+  position: relative;
+  user-select: none;
+}
+
+.modalContainer {
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 36px;
+  gap: 36px;
+}
+
+.title {
+  font: var(--web-title1-bold);
+  color: var(--gray-900);
+  text-align: center;
+  width: 100%;
+}
+
+.courseInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 28px 0px;
+}
+
+.courseInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.university {
+  font: var(--web-caption1-bold);
+  color: var(--sub-orange-500);
+}
+
+.courseName {
+  font: var(--web-title2-bold);
+  color: var(--gray-900);
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-grow: 0;
+  gap: 16px;
+}
+
+.schedule {
+  min-width: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-grow: 0;
+}
+
+.schedule > span {
+  flex: 1 1 0;
+  margin: auto 0;
+  font: var(--web-body3-medium);
+  color: var(--gray-500);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.capacity {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.capacity > span {
+  font: var(--web-body3-medium);
+  color: var(--gray-500);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin: auto;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  height: 60px;
+}

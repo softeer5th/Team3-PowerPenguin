@@ -1,0 +1,141 @@
+.courseModal {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  width: 908px;
+  height: 930px;
+  background-color: white;
+  border-radius: var(--large);
+  box-shadow: 0px 0px 50px 0px rgba(34, 34, 34, 0.3);
+  user-select: none;
+}
+
+.closeButton {
+  position: absolute;
+  float: right;
+  top: 30px;
+  right: 30px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.closeIcon {
+  width: 19px;
+  height: 19px;
+  color: var(--gray-600);
+}
+
+.title {
+  margin: 60px;
+  margin-bottom: 54px;
+  font: var(--web-header2-bold);
+  color: var(--gray-900);
+}
+
+.modalContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: 532px;
+  padding: 0px 60px;
+  padding-top: 0px;
+  margin-bottom: 60px;
+  overflow-y: scroll;
+  gap: 39px;
+  scrollbar-width: thin;
+  -webkit-scrollbar-width: thin;
+}
+
+.inputContainer {
+  display: flex;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.inputTitle {
+  width: 113px;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.inputTitle > span {
+  font: var(--web-title5-bold);
+  color: var(--gray-900);
+}
+
+.categoryContainer {
+  display: flex;
+  align-content: center;
+  width: auto;
+  height: auto;
+  gap: 15px;
+}
+
+.categoryChip {
+  width: 71px;
+  height: 44px;
+  font: var(--web-body1-medium);
+}
+
+.errorText {
+  color: var(--error-red-500);
+  font: var(--web-caption3-medium);
+  margin: auto;
+}
+
+.scheduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.scheduleContainer {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 50px;
+}
+
+.scheduleContainer:focus {
+  z-index: 100;
+}
+
+.timeInputContainer {
+  display: flex;
+  width: auto;
+  height: 50px;
+  gap: 10px;
+  margin-left: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeDivider {
+  font: var(--web-title3-medium);
+  color: var(--gray-400);
+}
+
+.deleteButton {
+  margin-left: 30px;
+}
+
+.addButton {
+  margin-left: auto;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 60px;
+  margin-top: auto;
+  padding: 0px 60px;
+}
