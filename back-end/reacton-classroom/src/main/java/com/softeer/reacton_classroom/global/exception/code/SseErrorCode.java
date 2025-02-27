@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum SseErrorCode implements ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "전송 대상을 찾을 수 없습니다."),
+    CONNECTION_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "현재 사용자가 너무 많습니다."),
     MESSAGE_SEND_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "서버 문제로 메시지 전송에 실패했습니다.");
 
     private final HttpStatus status;
