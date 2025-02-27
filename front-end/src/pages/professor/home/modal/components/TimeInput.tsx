@@ -37,11 +37,12 @@ const TimeInput = ({ time, setTime }: TimeInputProps) => {
             setLocalHour('00');
             setTime(`00:${localMinute}`);
           } else if (parseInt(inputHour) > 23) {
+            setLocalHour('23');
             setTime(`23:${localMinute}`);
           } else {
-            setTime(
-              `${parseInt(inputHour).toString().padStart(2, '0')}:${localMinute}`
-            );
+            const parsedHour = parseInt(inputHour).toString().padStart(2, '0');
+            setLocalHour(parsedHour);
+            setTime(`${parsedHour}:${localMinute}`);
           }
         }}
       />
@@ -64,11 +65,14 @@ const TimeInput = ({ time, setTime }: TimeInputProps) => {
             setLocalMinute('00');
             setTime(`${localHour}:00`);
           } else if (parseInt(inputMinute) > 59) {
+            setLocalMinute('59');
             setTime(`${localHour}:59`);
           } else {
-            setTime(
-              `${localHour}:${parseInt(inputMinute).toString().padStart(2, '0')}`
-            );
+            const parsedMinute = parseInt(inputMinute)
+              .toString()
+              .padStart(2, '0');
+            setLocalMinute(parsedMinute);
+            setTime(`${localHour}:${parsedMinute}`);
           }
         }}
       />

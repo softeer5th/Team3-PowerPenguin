@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node copyCmaps.js && node vercelRewrite.js",
+    "prebuild": "node copyCmaps.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
