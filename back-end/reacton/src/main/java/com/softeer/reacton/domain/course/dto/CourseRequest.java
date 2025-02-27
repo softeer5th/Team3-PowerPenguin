@@ -13,9 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class CourseRequest {
     @NotBlank(message = "수업 이름이 입력되지 않았습니다.")
+    @Size(max = 35, message = "수업 이름은 35자 이내여야 합니다.")
     private String name;
 
     @NotBlank(message = "학수번호가 입력되지 않았습니다.")
+    @Size(max = 10, message = "학수 번호는 10자 이내여야 합니다.")
     private String courseCode;
 
     @Positive(message = "수업 정원이 입력되지 않았습니다.")
@@ -24,6 +26,7 @@ public class CourseRequest {
     private int capacity;
 
     @NotBlank(message = "대학 이름이 입력되지 않았습니다.")
+    @Size(max = 20, message = "대학 이름은 20자 이내여야 합니다.")
     private String university;
 
     @NotNull(message = "수업 종류가 선택되지 않았습니다.")
