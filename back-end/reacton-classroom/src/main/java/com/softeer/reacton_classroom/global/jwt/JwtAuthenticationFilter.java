@@ -25,7 +25,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    private static final String TOKEN_COOKIE_NAME = "access_token";
+    private static final String PROFESSOR_COOKIE_NAME = "access_token";
+    private static final String STUDENT_COOKIE_NAME = "student_access_token";
+
     private static final String STUDENT_ACCESS_URL = "/sse/connection/student";
     private static final List<String> WHITE_LIST_URLS = List.of(
             "/sse/message"
@@ -53,11 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            String token = getJwtFromCookie(request);
-            jwtTokenUtil.validateToken(token);
-
             if ((isStudentRequest(requestUri))) {
-                filterStudent(request, token);
+                filterStudent(request);
+            } else {
+                filterProfessor(request);
             }
 
             chain.doFilter(request, response);
@@ -66,27 +67,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void filterStudent(HttpServletRequest request, String token) {
+    private void filterStudent(HttpServletRequest request) {
+        String token = getStudentJwtFromCookie(request);
+        jwtTokenUtil.validateToken(token);
         Map<String, Object> userInfo = jwtTokenUtil.getStudentInfoFromToken(token);
 
         request.setAttribute("studentId", userInfo.get("studentId"));
         request.setAttribute("courseId", userInfo.get("courseId"));
 
-        log.debug("JWT 검증에 성공했습니다. : studentId = {}", userInfo.get("studentId"));
+        log.debug("학생 사용자의 JWT 검증에 성공했습니다. : studentId = {}", userInfo.get("studentId"));
+    }
+
+    private void filterProfessor(HttpServletRequest request) {
+        String token = getProfessorJwtFromCookie(request);
+        jwtTokenUtil.validateToken(token);
+
+        log.debug("교수 사용자의 JWT 검증에 성공했습니다.");
     }
 
     private boolean isWhiteListed(String requestUri) {
         return WHITE_LIST_URLS.stream().anyMatch(requestUri::startsWith);
     }
 
-    private String getJwtFromCookie(HttpServletRequest request) {
+    private String getProfessorJwtFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) {
-            log.debug("쿠키가 존재하지 않습니다.");
+            log.debug("교수 사용자의 쿠키가 존재하지 않습니다.");
             return null;
         }
 
         return Arrays.stream(request.getCookies())
-                .filter(cookie -> TOKEN_COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> PROFESSOR_COOKIE_NAME.equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private String getStudentJwtFromCookie(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            log.debug("학생 사용자의 쿠키가 존재하지 않습니다.");
+            return null;
+        }
+
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> STUDENT_COOKIE_NAME.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);
