@@ -86,7 +86,7 @@ jobs:
             docker run -d --name reacton-classroom-back \
               --restart always \
               --network reacton_network \
-              -p 8080:8080 \
+              -p 8081:8081 \
               -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY_CLASSROOM }} \
               "${{ secrets.DOCKER_USERNAME }}/reacton-classroom-back:latest"
             
