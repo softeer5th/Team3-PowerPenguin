@@ -407,12 +407,15 @@ class CourseRepository {
     await throwError(response);
   }
 
-  async uploadCourseFile(courseId: Course['id'], file: File): Promise<string> {
+  async uploadCourseFile(
+    courseId: Course['id'],
+    file: File | null
+  ): Promise<string> {
     // API: POST /professors/courses/{courseId}/file
     // Request body: FormData { key: 'file', value: file }
 
     const form = new FormData();
-    form.append('file', file);
+    if (file) form.append('file', file);
 
     const response = await fetch(`/api/professors/courses/${courseId}/file`, {
       method: 'POST',

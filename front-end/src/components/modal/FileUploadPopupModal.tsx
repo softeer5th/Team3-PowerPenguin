@@ -6,15 +6,20 @@ import CloseIcon from '@/assets/icons/close.svg?react';
 import { validateFile } from '@/utils/util';
 
 type FileUploadPopupModalProps = {
+  fileName?: string;
   onClickCloseButton: () => void;
-  onClickSaveButton: (file: File) => void;
+  onClickSaveButton: (file: File | null) => void;
 };
 
 const FileUploadPopupModal = ({
+  fileName,
   onClickCloseButton,
   onClickSaveButton,
 }: FileUploadPopupModalProps) => {
   const [file, setFile] = useState<File | null>(null);
+  const [currentFileName, setCurrentFileName] = useState<string | null>(
+    fileName || null
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -22,7 +27,21 @@ const FileUploadPopupModal = ({
     if (files) {
       validateFile(files[0]);
       setFile(files[0]);
+      setCurrentFileName(files[0].name);
     }
+  }
+
+  function handleDeleteFile() {
+    setFile(null);
+    setCurrentFileName(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
+  function checkIsFileChanged() {
+    if (!fileName && !file) return false;
+    if (fileName === currentFileName && !file) return false;
+
+    return true;
   }
 
   return (
@@ -38,21 +57,16 @@ const FileUploadPopupModal = ({
             열지 않아도 자동으로 열려요.
           </p>
         </div>
-        {file && (
-          <div className={S.fileContainer}>
-            <span className={S.fileInfo}>{file.name} </span>
-            <p className={S.fileSize}>({Math.floor(file.size / 1000)}K)</p>
-            <button
-              className={S.deleteButton}
-              onClick={() => {
-                setFile(null);
-                if (fileInputRef.current) fileInputRef.current.value = '';
-              }}
-            >
-              <CloseIcon width="16px" height="16px" color="white" />
-            </button>
-          </div>
-        )}
+        <div className={S.fileContainer}>
+          {currentFileName && (
+            <>
+              <span className={S.fileInfo}>{currentFileName} </span>
+              <button className={S.deleteButton} onClick={handleDeleteFile}>
+                <CloseIcon width="16px" height="16px" color="white" />
+              </button>
+            </>
+          )}
+        </div>
         <div className={S.buttonContainer}>
           <input
             type="file"
@@ -74,8 +88,8 @@ const FileUploadPopupModal = ({
             size="web4"
             height="80px"
             text="저장하기"
-            onClick={() => file && onClickSaveButton(file)}
-            isActive={!!file}
+            onClick={() => onClickSaveButton(file)}
+            isActive={checkIsFileChanged()}
           />
         </div>
       </div>
